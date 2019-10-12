@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Platform", "Platform\Platform.csproj", "{2DBB2DA9-DDE6-48AC-8F51-EBEEF1109715}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Platform.Web", "Platform.Web\Platform.Web.csproj", "{2DBB2DA9-DDE6-48AC-8F51-EBEEF1109715}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
