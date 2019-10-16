@@ -10,18 +10,19 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Platform.Models;
 
-
 namespace Platform.Web
 {
-    public class Startup
+	public class Startup
 	{
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddSpaStaticFiles(opt => opt.RootPath = "ClientApp/dist");
+		public void ConfigureServices(IServiceCollection services)
+		{
+			AddJwtAuthentication(services);
 
-            services.AddControllers();
+			services.AddSpaStaticFiles(opt => opt.RootPath = "ClientApp/dist");
 
-            services.AddSwaggerGen(c =>
+			services.AddControllers();
+
+			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo()
 				{
@@ -37,29 +38,46 @@ namespace Platform.Web
 			{
 				app.UseDeveloperExceptionPage();
 			}
-			
+
 			ApplicationConfiguration.Initialize();
 
-            app.UseSwagger();
-			app.UseSwaggerUI(options =>
-			{
-				options.SwaggerEndpoint("/swagger/v1/swagger.json", "Platform API");
-			});
+			app.UseAuthentication();
 
-            app.UseSpaStaticFiles();
+			app.UseSwagger();
+			app.UseSwaggerUI(options => { options.SwaggerEndpoint("/swagger/v1/swagger.json", "Platform API"); });
 
-            app.UseRouting();
-			
+			app.UseSpaStaticFiles();
+
+			app.UseRouting();
+
 			app.UseEndpoints(endpoints =>
 			{
-				endpoints.MapControllers();                
+				endpoints.MapControllers();
 
-                endpoints.MapToVueCliProxy(
-                    "{*path}",
-                    new SpaOptions { SourcePath = "ClientApp" },
-                    npmScript: (System.Diagnostics.Debugger.IsAttached) ? "serve" : null
-                    );
-            });
+				endpoints.MapToVueCliProxy(
+					"{*path}",
+					new SpaOptions {SourcePath = "ClientApp"},
+					npmScript: (System.Diagnostics.Debugger.IsAttached) ? "serve" : null
+				);
+			});
+		}
+
+		public void AddJwtAuthentication(IServiceCollection services)
+		{
+			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+			{
+				options.RequireHttpsMetadata = false;
+				options.TokenValidationParameters = new TokenValidationParameters
+				{
+					ValidateIssuer = true,
+					ValidIssuer = "BarsPlatform",
+					ValidateAudience = true,
+					ValidAudience = "People",
+					ValidateLifetime = true,
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("MySuperSecretKey")),
+					ValidateIssuerSigningKey = true,
+				};
+			});
 		}
 	}
 }
