@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using QuasarCliSample.Models;
+using Platform.Models;
 
-namespace QuasarCliSample.Controllers
+namespace Platform.Web.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
