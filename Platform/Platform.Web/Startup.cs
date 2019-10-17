@@ -46,20 +46,20 @@ namespace Platform.Web
 			app.UseSwagger();
 			app.UseSwaggerUI(options => { options.SwaggerEndpoint("/swagger/v1/swagger.json", "Platform API"); });
 
-			app.UseSpaStaticFiles();
+            app.UseSpaStaticFiles();
 
-			app.UseRouting();
-
+            app.UseRouting();
+			
 			app.UseEndpoints(endpoints =>
 			{
-				endpoints.MapControllers();
+				endpoints.MapControllers();                
 
-				endpoints.MapToVueCliProxy(
-					"{*path}",
-					new SpaOptions {SourcePath = "ClientApp"},
-					npmScript: (System.Diagnostics.Debugger.IsAttached) ? "serve" : null
-				);
-			});
+                endpoints.MapToVueCliProxy(
+                    "{*path}",
+                    new SpaOptions { SourcePath = "ClientApp" },
+                    npmScript: (System.Diagnostics.Debugger.IsAttached) ? "serve" : null
+                    );
+            });
 		}
 
 		public void AddJwtAuthentication(IServiceCollection services)
