@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Platform.Web.Controllers
 {
+	[Route("[controller]/[action]")]
 	public class AuthentificationController : Controller
 	{
 		/// <summary>
@@ -32,15 +33,38 @@ namespace Platform.Web.Controllers
 			return StatusCode(500);
 		}
 
+		[HttpGet]
+		public IActionResult GetToken()
+		{
+			return Ok(new
+			{
+				Token = new JwtSecurityTokenHandler().WriteToken(GenerateToken())
+			});
+		}
+
+		private JwtSecurityToken GenerateToken()
+		{
+			var key = JwtOptions.GetSymmetricSecurityKey();
+			var now = DateTime.Now;
+			var jwt = new JwtSecurityToken(
+				JwtOptions.Issuer,
+				JwtOptions.Audience,
+				GetIdentity(string.Empty).Claims,
+				now,
+				now.AddMinutes(JwtOptions.Lifetime),
+				new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
+			return jwt;
+		}
+
 		private ClaimsIdentity GetIdentity(string login)
 		{
-			var user = new {Login = "", Role = new {Name = ""}}; // get user by login from db
+			var user = new {Login = "d4", Role = new {Name = "admin"}}; // get user by login from db
 			var claims = new List<Claim>
 			{
-				new Claim("Name", user.Login)
+				new Claim(ClaimTypes.Name, user.Login)
 			};
 			if (user.Role != null)
-				claims.Add(new Claim("Role", user.Role.Name));
+				claims.Add(new Claim(ClaimTypes.Role, user.Role.Name));
 
 			var claimsIdentity =
 				new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,

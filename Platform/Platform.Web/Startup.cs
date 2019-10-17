@@ -8,26 +8,42 @@ using Microsoft.OpenApi.Models;
 using VueCliMiddleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Platform.Models;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Platform.Web
 {
 	public class Startup
 	{
+		public static readonly string SwaggerConfigurationName = "v1";
+
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddCors();
+			services.AddControllers();
+
 			AddJwtAuthentication(services);
 
 			services.AddSpaStaticFiles(opt => opt.RootPath = "ClientApp/dist");
 
-			services.AddControllers();
-
 			services.AddSwaggerGen(c =>
 			{
-				c.SwaggerDoc("v1", new OpenApiInfo()
+				c.SwaggerDoc(SwaggerConfigurationName, new OpenApiInfo()
 				{
 					Title = "Platform Swagger API",
-					Version = "v1"
+					Version = SwaggerConfigurationName
+				});
+				c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+				{
+					In = ParameterLocation.Header, Description = "Please insert JWT with Bearer into field",
+					Name = "Authorization", Type = SecuritySchemeType.ApiKey
+				});
+				c.AddSecurityRequirement(new OpenApiSecurityRequirement
+				{
+					{
+						new OpenApiSecurityScheme
+							{Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "Bearer"}},
+						new string[] { }
+					}
 				});
 			});
 		}
@@ -39,27 +55,36 @@ namespace Platform.Web
 				app.UseDeveloperExceptionPage();
 			}
 
-			ApplicationConfiguration.Initialize();
+			app.UseRouting();
+
+			// global cors policy
+			app.UseCors(x => x
+				.AllowAnyOrigin()
+				.AllowAnyMethod()
+				.AllowAnyHeader());
 
 			app.UseAuthentication();
+			app.UseAuthorization();
 
 			app.UseSwagger();
-			app.UseSwaggerUI(options => { options.SwaggerEndpoint("/swagger/v1/swagger.json", "Platform API"); });
+			app.UseSwaggerUI(options =>
+			{
+				options.SwaggerEndpoint($"/swagger/{SwaggerConfigurationName}/swagger.json", "Platform API");
+				options.DocExpansion(DocExpansion.None);
+			});
 
-            app.UseSpaStaticFiles();
+			app.UseSpaStaticFiles();
 
-            app.UseRouting();
-			
 			app.UseEndpoints(endpoints =>
 			{
-				endpoints.MapControllers();                
+				endpoints.MapControllers();
 
-                endpoints.MapToVueCliProxy(
-                    "{*path}",
-                    new SpaOptions { SourcePath = "ClientApp" },
-                    npmScript: (System.Diagnostics.Debugger.IsAttached) ? "serve" : null
-                    );
-            });
+				endpoints.MapToVueCliProxy(
+					"{*path}",
+					new SpaOptions {SourcePath = "ClientApp"},
+					(System.Diagnostics.Debugger.IsAttached) ? "serve" : null
+				);
+			});
 		}
 
 		public void AddJwtAuthentication(IServiceCollection services)
@@ -67,15 +92,16 @@ namespace Platform.Web
 			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 			{
 				options.RequireHttpsMetadata = false;
+				options.SaveToken = true;
 				options.TokenValidationParameters = new TokenValidationParameters
 				{
 					ValidateIssuer = true,
-					ValidIssuer = "BarsPlatform",
+					ValidIssuer = JwtOptions.Issuer,
 					ValidateAudience = true,
-					ValidAudience = "People",
+					ValidAudience = JwtOptions.Audience,
 					ValidateLifetime = true,
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("MySuperSecretKey")),
-					ValidateIssuerSigningKey = true,
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(JwtOptions.Key)),
+					ValidateIssuerSigningKey = true
 				};
 			});
 		}
