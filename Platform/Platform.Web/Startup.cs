@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices;
@@ -5,13 +6,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using VueCliMiddleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Platform.Models;
+
 
 namespace Platform.Web
 {
     public class Startup
 	{
         public void ConfigureServices(IServiceCollection services)
-		{
+        {
             services.AddSpaStaticFiles(opt => opt.RootPath = "ClientApp/dist");
 
             services.AddControllers();
@@ -32,6 +37,8 @@ namespace Platform.Web
 			{
 				app.UseDeveloperExceptionPage();
 			}
+			
+			ApplicationConfiguration.Initialize();
 
             app.UseSwagger();
 			app.UseSwaggerUI(options =>
