@@ -1,4 +1,3 @@
-using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices;
@@ -7,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using VueCliMiddleware;
 using Platform.Models;
-
+using Platform.Web.Services.SwaggerServices;
 
 namespace Platform.Web
 {
@@ -19,14 +18,18 @@ namespace Platform.Web
 
             services.AddControllers();
 
+
             services.AddSwaggerGen(c =>
 			{
-				c.SwaggerDoc("v1", new OpenApiInfo()
-				{
-					Title = "Platform Swagger API",
-					Version = "v1"
-				});
-			});
+                c.SwaggerDoc("v1", new OpenApiInfo()
+                {
+                    Title = "Platform Swagger API",
+                    Version = "v1"
+                });
+
+                c.OperationFilter<PlatformSwaggerOperationFilter>();
+
+            });
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
