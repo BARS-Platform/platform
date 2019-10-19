@@ -1,23 +1,23 @@
 ﻿using System;
 using Platform.Models.Attributes;
+using Platform.Models.Enums;
 
 namespace Platform.Models
 {
     public class WeatherForecast
     {
-        [GridAttribute]
-        [FormAttribute]
+        [PlatformAttribute(AttributesEnum.Grid | AttributesEnum.Form)]
         public DateTime Date { get; set; }
 
-        [GridAttribute]
+        [PlatformAttribute(AttributesEnum.Grid)]
         public int TemperatureC { get; set; }
-        
-        [GridAttribute]
+
+        [PlatformAttribute(AttributesEnum.Form)]
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 
         public string Summary { get; set; }
 
-        [FormAttribute]
+        [PlatformAttribute(AttributesEnum.Form)]
         public int MyProperty { get; set; }
 
         public CurrencyReferenceBook Currency { get; set; }

@@ -1,14 +1,15 @@
 ﻿using Platform.Models.Attributes;
+using Platform.Models.Enums;
 
 namespace Platform.Models
 {
+    [PlatformAttribute(AttributesEnum.Grid | AttributesEnum.Form)]
     public class CurrencyReferenceBook
     {
-        [GridAttribute]
-        [FormAttribute]
+        [PlatformAttribute(AttributesEnum.Grid | AttributesEnum.Form)]
         public string Name { get; set; }
 
-        [GridAttribute]
+        [PlatformAttribute(AttributesEnum.Grid)]
         public string Code { get; set; }
     }
 }

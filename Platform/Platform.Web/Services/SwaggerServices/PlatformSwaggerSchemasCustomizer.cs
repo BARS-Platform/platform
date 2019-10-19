@@ -1,6 +1,7 @@
 ﻿using Microsoft.OpenApi.Models;
 using Platform.Models;
 using Platform.Models.Attributes;
+using Platform.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,27 +41,49 @@ namespace Platform.Web.Services.SwaggerServices
 
             var propAttributesDictionary = new Dictionary<string, string>();
 
+            var modelPlatformAttribute = modelType.GetCustomAttribute(typeof(PlatformAttribute)) as PlatformAttribute;
+
+            if (modelPlatformAttribute != null)
+            {
+                switch (modelPlatformAttribute.Value)
+                {
+                    case (AttributesEnum.Grid | AttributesEnum.Form):
+                        propAttributesDictionary = modelProperties
+                            .ToDictionary(x => x.Name.ToLower(), x => "Both");
+                        break;
+                    case AttributesEnum.Grid:
+                        propAttributesDictionary = modelProperties
+                            .ToDictionary(x => x.Name.ToLower(), x => "Grid");
+                        break;
+                    case AttributesEnum.Form:
+                        propAttributesDictionary = modelProperties
+                            .ToDictionary(x => x.Name.ToLower(), x => "Form");
+                        break;
+                }
+
+                return propAttributesDictionary;
+            }
+
             foreach (var property in modelProperties)
             {
-                var hasGridAttribute = property.GetCustomAttribute(typeof(GridAttribute)) != null 
-                    ? true
-                    : false;
+                var propPlatformAttribute = property.GetCustomAttribute(typeof(PlatformAttribute)) as PlatformAttribute;
 
-                var hasFormAttribute = property.GetCustomAttribute(typeof(FormAttribute)) != null
-                    ? true
-                    : false;
-
-                if (hasGridAttribute && hasFormAttribute)
+                if (propPlatformAttribute == null)
                 {
-                    propAttributesDictionary[property.Name.ToLower()] = "Both";
+                    continue;
                 }
-                else if (hasGridAttribute)
+
+                switch (propPlatformAttribute.Value)
                 {
-                    propAttributesDictionary[property.Name.ToLower()] = "Grid";
-                } 
-                else if (hasFormAttribute)
-                {
-                    propAttributesDictionary[property.Name.ToLower()] = "Form";
+                    case (AttributesEnum.Grid | AttributesEnum.Form):
+                        propAttributesDictionary[property.Name.ToLower()] = "Both";
+                        break;
+                    case AttributesEnum.Grid:
+                        propAttributesDictionary[property.Name.ToLower()] = "Grid";
+                        break;
+                    case AttributesEnum.Form:
+                        propAttributesDictionary[property.Name.ToLower()] = "Form";
+                        break;
                 }
             }
 
