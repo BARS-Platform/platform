@@ -1,11 +1,14 @@
 ﻿using System;
 using Platform.Models.Attributes;
 using Platform.Models.Enums;
+using Platform.Models.Interfaces;
 
 namespace Platform.Models
 {
-    public class WeatherForecast
+    public class WeatherForecast : IPlatformModel
     {
+        public long Id { get; set; }
+
         [PlatformAttribute(AttributesEnum.Grid | AttributesEnum.Form)]
         public DateTime Date { get; set; }
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.OpenApi.Models;
-using Platform.Models;
 using Platform.Models.Attributes;
 using Platform.Models.Enums;
+using Platform.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +18,13 @@ namespace Platform.Web.Services.SwaggerServices
 
         public PlatformSwaggerSchemasCustomizer()
         {
-            _listModels = new List<Type>();
-
-            // Сюда добавлять все модели
-            _listModels.Add(typeof(CurrencyReferenceBook));
-            _listModels.Add(typeof(WeatherForecast));
+            _listModels = AppDomain.CurrentDomain
+                .GetAssemblies()
+                .Where(x => !x.IsDynamic)
+                .SelectMany(x => x.GetExportedTypes()
+                                    .Where(y => y.IsClass)
+                                    .Where(y => typeof(IPlatformModel).IsAssignableFrom(y)))
+                .ToList();
         }
 
         /// <summary>
