@@ -7,7 +7,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using VueCliMiddleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Platform.Database;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Platform.Web
@@ -55,6 +57,11 @@ namespace Platform.Web
 				app.UseDeveloperExceptionPage();
 			}
 
+			using (var context = new ApplicationDbContext())
+			{
+				context.Database.Migrate();
+			}
+			
 			app.UseRouting();
 
 			// global cors policy
