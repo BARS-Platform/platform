@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Platform.Database;
+using Platform.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Platform.Web
@@ -20,11 +21,14 @@ namespace Platform.Web
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddCors();
+//			services.AddCors();
 			services.AddControllers();
 
 			AddJwtAuthentication(services);
 
+			services.AddTransient<ApplicationDbContext>();
+			services.AddSingleton<IRepository<User>, Repository<User>>();
+			
 			services.AddSpaStaticFiles(opt => opt.RootPath = "ClientApp/dist");
 
 			services.AddSwaggerGen(c =>
@@ -59,16 +63,16 @@ namespace Platform.Web
 
 			using (var context = new ApplicationDbContext())
 			{
-				context.Database.Migrate();
+//				context.Database.Migrate();
 			}
-			
+
 			app.UseRouting();
 
 			// global cors policy
-			app.UseCors(x => x
-				.AllowAnyOrigin()
-				.AllowAnyMethod()
-				.AllowAnyHeader());
+//			app.UseCors(x => x
+//				.AllowAnyOrigin()
+//				.AllowAnyMethod()
+//				.AllowAnyHeader());
 
 			app.UseAuthentication();
 			app.UseAuthorization();

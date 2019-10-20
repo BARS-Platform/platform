@@ -2,14 +2,21 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Security.Policy;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Platform.Database;
+using Platform.Models;
 
 namespace Platform.Web.Controllers
 {
 	[Route("[controller]/[action]")]
-	public class AuthentificationController : Controller
+	public class UsersController : Controller
 	{
+		public IRepository<User> Repository { get; set; }
+		
 		/// <summary>
 		/// Used to log in and receive new JWT.
 		/// </summary>
@@ -30,7 +37,14 @@ namespace Platform.Web.Controllers
 			// register user
 			// generate token
 			// return
-			return StatusCode(500);
+
+			//todo 
+//			var repository = new Repository<User>(new ApplicationDbContext());
+
+			Repository.Create(new User() {Login = login, Password = HashPassword(password)});
+			var jwtSecurityToken = GenerateToken(login);
+			
+			return Ok(new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken));
 		}
 
 		[HttpGet]
@@ -38,27 +52,44 @@ namespace Platform.Web.Controllers
 		{
 			return Ok(new
 			{
-				Token = new JwtSecurityTokenHandler().WriteToken(GenerateToken())
+				Token = new JwtSecurityTokenHandler().WriteToken(GenerateToken(string.Empty))
 			});
 		}
 
-		private JwtSecurityToken GenerateToken()
+		private JwtSecurityToken GenerateToken(string login)
 		{
 			var key = JwtOptions.GetSymmetricSecurityKey();
 			var now = DateTime.Now;
 			var jwt = new JwtSecurityToken(
 				JwtOptions.Issuer,
 				JwtOptions.Audience,
-				GetIdentity(string.Empty).Claims,
+				GetIdentity(login).Claims,
 				now,
 				now.AddMinutes(JwtOptions.Lifetime),
 				new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
 			return jwt;
 		}
 
+		private string HashPassword(string password)
+		{
+			// generate a 128-bit salt using a secure PRNG
+			var salt = new byte[128 / 8];
+			using (var rng = RandomNumberGenerator.Create())
+				rng.GetBytes(salt);
+
+			// derive a 256-bit subkey (use HMACSHA1 with 10,000 iterations)
+			var hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+				password,
+				salt,
+				KeyDerivationPrf.HMACSHA1,
+				10000,
+				256 / 8));
+			return hashed;
+		}
+
 		private ClaimsIdentity GetIdentity(string login)
 		{
-			var user = new {Login = "d4", Role = new {Name = "admin"}}; // get user by login from db
+			var user = new {Login = login, Role = new {Name = "admin"}}; // get user by login from db
 			var claims = new List<Claim>
 			{
 				new Claim(ClaimTypes.Name, user.Login)
