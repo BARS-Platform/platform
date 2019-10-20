@@ -5,10 +5,10 @@ namespace Platform.Database
 {
 	public interface IRepository<T>
 	{
-		bool Create(T entity);
+		T Create(T entity);
 		bool Delete(T entity);
 		T Get(object id);
 		T FindByPredicate(Expression<Func<T, bool>> expression);
-		bool Update(T entity);
+		T Update(T entity);
 	}
 }

@@ -13,10 +13,10 @@ namespace Platform.Database
 
 		private readonly ApplicationDbContext _context;
 
-		public bool Create(T entity)
+		public T Create(T entity)
 		{
-			_context.Add(entity);
-			return _context.SaveChanges() > 0;
+			var entry = _context.Add(entity);
+			return _context.SaveChanges() > 0 ? entry.Entity : null;
 		}
 
 		public bool Delete(T entity)
@@ -35,10 +35,10 @@ namespace Platform.Database
 			return _context.Set<T>().SingleOrDefault(expression);
 		}
 
-		public bool Update(T entity)
+		public T Update(T entity)
 		{
-			_context.Update(entity);
-			return _context.SaveChanges() > 0;
+			var entry = _context.Update(entity);
+			return _context.SaveChanges() > 0 ? entry.Entity : null;
 		}
 	}
 }
