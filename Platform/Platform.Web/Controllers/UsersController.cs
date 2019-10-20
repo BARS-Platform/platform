@@ -6,7 +6,7 @@ using Platform.Web.Services;
 
 namespace Platform.Web.Controllers
 {
-	[Route("[controller]/[action]")]
+	[Route("api/[controller]/[action]")]
 	public class UsersController : Controller
 	{
 		public UsersController(IRepository<User> repository,

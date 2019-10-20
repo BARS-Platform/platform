@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Platform.Web.Controllers
 {
 	[Authorize("PlatformUser")]
-	[Route("[controller]/[action]")]
+	[Route("api/[controller]/[action]")]
 	public class MetadataController : Controller
 	{
 		[HttpGet]
