@@ -7,9 +7,8 @@ using Platform.Models;
 
 namespace Platform.Web.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class WeatherForecastController : Controller
     {
         private static readonly string[] Summaries = new[]
         {

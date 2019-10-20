@@ -2,6 +2,6 @@
 {
     public interface IPlatformModel
     {
-        public long Id { get; set; }
+        long Id { get; set; }
     }
 }
