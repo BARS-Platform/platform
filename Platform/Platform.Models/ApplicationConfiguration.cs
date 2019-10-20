@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Platform.Models
 {
@@ -18,6 +19,8 @@ namespace Platform.Models
 		public static IConfigurationRoot Configuration { get; private set; }
 
 		public static IConfigurationSection Database => Configuration.GetSection("Database");
+		
+		public static ILogger Logger { get; set; }
 
 		public static string ConnectionString { get; private set; }
 	}

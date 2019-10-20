@@ -7,6 +7,7 @@ using System.Security.Policy;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Query.ExpressionTranslators.Internal;
 using Platform.Database;
 using Platform.Models;
 
@@ -15,7 +16,12 @@ namespace Platform.Web.Controllers
 	[Route("[controller]/[action]")]
 	public class UsersController : Controller
 	{
-		public IRepository<User> Repository { get; set; }
+		public UsersController(IRepository<User> repository)
+		{
+			_repository = repository;
+		}
+
+		private IRepository<User> _repository;
 		
 		/// <summary>
 		/// Used to log in and receive new JWT.
@@ -41,7 +47,7 @@ namespace Platform.Web.Controllers
 			//todo 
 //			var repository = new Repository<User>(new ApplicationDbContext());
 
-			Repository.Create(new User() {Login = login, Password = HashPassword(password)});
+			_repository.Create(new User() {Login = login, Password = HashPassword(password)});
 			var jwtSecurityToken = GenerateToken(login);
 			
 			return Ok(new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken));

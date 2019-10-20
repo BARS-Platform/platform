@@ -1,14 +1,11 @@
-using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using VueCliMiddleware;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Logging;
 using Platform.Database;
 using Platform.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -21,37 +18,17 @@ namespace Platform.Web
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-//			services.AddCors();
+			services.ConfigureLogger();
+			
 			services.AddControllers();
 
-			AddJwtAuthentication(services);
+			services.AddJwtAuthentication();
 
-			services.AddTransient<ApplicationDbContext>();
-			services.AddSingleton<IRepository<User>, Repository<User>>();
-			
+			services.RegisterServices();
+
 			services.AddSpaStaticFiles(opt => opt.RootPath = "ClientApp/dist");
 
-			services.AddSwaggerGen(c =>
-			{
-				c.SwaggerDoc(SwaggerConfigurationName, new OpenApiInfo()
-				{
-					Title = "Platform Swagger API",
-					Version = SwaggerConfigurationName
-				});
-				c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
-				{
-					In = ParameterLocation.Header, Description = "Please insert JWT with Bearer into field",
-					Name = "Authorization", Type = SecuritySchemeType.ApiKey
-				});
-				c.AddSecurityRequirement(new OpenApiSecurityRequirement
-				{
-					{
-						new OpenApiSecurityScheme
-							{Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "Bearer"}},
-						new string[] { }
-					}
-				});
-			});
+			services.RegisterSwagger();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -63,16 +40,10 @@ namespace Platform.Web
 
 			using (var context = new ApplicationDbContext())
 			{
-//				context.Database.Migrate();
+				context.Database.Migrate();
 			}
 
 			app.UseRouting();
-
-			// global cors policy
-//			app.UseCors(x => x
-//				.AllowAnyOrigin()
-//				.AllowAnyMethod()
-//				.AllowAnyHeader());
 
 			app.UseAuthentication();
 			app.UseAuthorization();
@@ -92,28 +63,8 @@ namespace Platform.Web
 
 				endpoints.MapToVueCliProxy(
 					"{*path}",
-					new SpaOptions {SourcePath = "ClientApp"},
-					(System.Diagnostics.Debugger.IsAttached) ? "serve" : null
+					new SpaOptions {SourcePath = "ClientApp"}
 				);
-			});
-		}
-
-		public void AddJwtAuthentication(IServiceCollection services)
-		{
-			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-			{
-				options.RequireHttpsMetadata = false;
-				options.SaveToken = true;
-				options.TokenValidationParameters = new TokenValidationParameters
-				{
-					ValidateIssuer = true,
-					ValidIssuer = JwtOptions.Issuer,
-					ValidateAudience = true,
-					ValidAudience = JwtOptions.Audience,
-					ValidateLifetime = true,
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(JwtOptions.Key)),
-					ValidateIssuerSigningKey = true
-				};
 			});
 		}
 	}
