@@ -41,11 +41,7 @@ namespace Platform.Web
 				app.UseDeveloperExceptionPage();
 			}
 
-			using (var context = new ApplicationDbContext())
-			{
-				Logger.LogInformation("Perform migrations...");
-				context.Database.Migrate();
-			}
+			ExecuteNewMigrations();
 
 			app.UseRouting();
 
@@ -70,6 +66,13 @@ namespace Platform.Web
 					new SpaOptions {SourcePath = "ClientApp"}
 				);
 			});
+		}
+
+		private void ExecuteNewMigrations()
+		{
+			using var context = new ApplicationDbContext();
+			Logger.LogInformation("Perform migrations...");
+			context.Database.Migrate();
 		}
 	}
 }
