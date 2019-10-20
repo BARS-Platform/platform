@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Platform.Database;
 using Platform.Models;
-using Platform.Web.Services.SwaggerServices;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Platform.Web
@@ -17,31 +16,22 @@ namespace Platform.Web
 	{
 		public static readonly string SwaggerConfigurationName = "v1";
 
+		private ILogger Logger => ApplicationConfiguration.Logger;
+
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.ConfigureLogger();
-			
+
 			services.AddControllers();
 
 			services.AddJwtAuthentication();
+			services.AddPoliciesAuthorization();
 
 			services.RegisterServices();
 
 			services.AddSpaStaticFiles(opt => opt.RootPath = "ClientApp/dist");
 
 			services.RegisterSwagger();
-
-            services.AddSwaggerGen(c =>
-			{
-                c.SwaggerDoc("v1", new OpenApiInfo()
-                {
-                    Title = "Platform Swagger API",
-                    Version = "v1"
-                });
-
-                c.OperationFilter<PlatformSwaggerOperationFilter>();
-
-            });
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -53,6 +43,7 @@ namespace Platform.Web
 
 			using (var context = new ApplicationDbContext())
 			{
+				Logger.LogInformation("Perform migrations...");
 				context.Database.Migrate();
 			}
 

@@ -1,9 +1,14 @@
-﻿namespace Platform.Database
+﻿using System;
+using System.Linq.Expressions;
+
+namespace Platform.Database
 {
-	public interface IRepository<in T>
+	public interface IRepository<T>
 	{
 		bool Create(T entity);
 		bool Delete(T entity);
+		T Get(object id);
+		T FindByPredicate(Expression<Func<T, bool>> expression);
 		bool Update(T entity);
 	}
 }

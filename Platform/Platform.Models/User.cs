@@ -1,15 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Platform.Models.Interfaces;
 
 namespace Platform.Models
 {
-	[Table("users")]
-	public class User
+//	[Table("users")]
+	public class User : IPlatformModel
 	{
-		[Column("login")]
+//[]
+		public long Id { get; set; }
+//		[Column("login")]
 		public string Login { get; set; }
-		[Column("email")]
+//		[Column("email")]
 		public string Email { get; set; }
-		[Column("password")]
+//		[Column("password")]
 		public string Password { get; set; }
 	}
 }
