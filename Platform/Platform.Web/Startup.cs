@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Platform.Database;
 using Platform.Models;
+using Platform.Web.Services.SwaggerServices;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Platform.Web
@@ -29,6 +30,18 @@ namespace Platform.Web
 			services.AddSpaStaticFiles(opt => opt.RootPath = "ClientApp/dist");
 
 			services.RegisterSwagger();
+
+            services.AddSwaggerGen(c =>
+			{
+                c.SwaggerDoc("v1", new OpenApiInfo()
+                {
+                    Title = "Platform Swagger API",
+                    Version = "v1"
+                });
+
+                c.OperationFilter<PlatformSwaggerOperationFilter>();
+
+            });
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
