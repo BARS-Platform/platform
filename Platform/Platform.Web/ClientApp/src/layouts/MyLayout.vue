@@ -10,14 +10,14 @@ q-layout(view='lHh Lpr lFf')
 </template>
 
 <script lang="ts">
-import { openURL } from 'quasar';
-import { Component, Vue} from 'vue-property-decorator';
+import { openURL } from 'quasar'
+import { Component, Vue } from 'vue-property-decorator'
 
 @Component
 export default class MyLayout extends Vue {
-  private leftDrawerOpen: boolean = this.$q.platform.is.desktop;
-  private openUrl = (url: any) => { openURL(url); }
+
 }
+
 </script>
 
 <style lang="stylus">

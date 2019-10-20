@@ -11,6 +11,6 @@ const router = new VueRouter({
 
   mode: process.env.VUE_ROUTER_MODE,
   base: process.env.VUE_ROUTER_BASE
-} as RouterOptions);
+} as RouterOptions)
 
-export default router;
+export default router

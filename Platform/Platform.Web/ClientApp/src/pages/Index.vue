@@ -4,33 +4,48 @@ q-page.flex.flex-center
 </template>
 
 <script lang="ts">
-import { Component, Vue} from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator'
 import { date } from 'quasar'
-import { IWeatherForecast } from '../models/IWeatherForecast';
-import axios from 'axios';
+import { IWeatherForecast } from '../models/IWeatherForecast'
+
+import { getModule } from 'vuex-module-decorators'
+import WeatherForecastModule from '@/store/modules/WeatherForecast'
 
 @Component
 export default class PageIndex extends Vue {
-  private forecasts: IWeatherForecast[] = [{ summary: 'No data.' } as IWeatherForecast];
+  private weatherForecastStore = getModule(WeatherForecastModule)
+
+  mounted() {
+    this.$store.dispatch('weatherForecast/getForecasts')
+  }
+
+  get forecasts() {
+    return this.weatherForecastStore.Forecasts
+  }
+
   private forecastCols: any[] = [
-    { name: 'Summary', label: 'Summary', field: (row: IWeatherForecast) => row.summary },
-    { name: 'F',       label: 'F',       field: (row: IWeatherForecast) => row.temperatureF },
-    { name: 'C',       label: 'C',       field: (row: IWeatherForecast) => row.temperatureC },
+    {
+      name: 'Summary',
+      label: 'Summary',
+      field: (row: IWeatherForecast) => row.summary
+    },
+    {
+      name: 'F',
+      label: 'F',
+      field: (row: IWeatherForecast) => row.temperatureF
+    },
+    {
+      name: 'C',
+      label: 'C',
+      field: (row: IWeatherForecast) => row.temperatureC
+    },
     {
       name: 'Date',
       label: 'Date',
       field: (row: IWeatherForecast) => row.date,
       format: (val: Date) => `${date.formatDate(val, 'YYYY/MM/DD HH:mm:ss')}`
     }
-  ];
-
-  public async mounted() {
-    try {
-      this.forecasts = (await axios.get('api/weatherforecast')).data;
-    } catch {
-      this.forecasts = [{ summary: 'No data.' } as IWeatherForecast];
-    }
-  }
+  ]
 }
 </script>
 
