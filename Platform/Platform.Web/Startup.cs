@@ -36,11 +36,18 @@ namespace Platform.Web
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
+			app.UseHttpsRedirection();
+
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
 			}
-
+			else
+			{
+				app.UseExceptionHandler("/System/Error");
+				app.UseHsts();
+			}
+			
 			ExecuteNewMigrations();
 
 			app.UseRouting();
