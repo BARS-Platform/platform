@@ -16,5 +16,11 @@ namespace Platform.Web.Controllers
 			// TODO: удалить после появления контроллеров, пригодных для подобных тестов.
 			return Ok(new {Result = "!"});
 		}
+
+		[HttpGet]
+		public IActionResult GetCurrentEnvironment()
+		{
+			return Ok(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
+		}
 	}
 }

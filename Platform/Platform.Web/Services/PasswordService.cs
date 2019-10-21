@@ -7,7 +7,7 @@ namespace Platform.Web.Services
 	/// <summary>
 	/// Service that validates user's password.
 	/// </summary>
-	public class PasswordCheckerService
+	public class PasswordService
 	{
 		private const int SaltSize = 16;
 		private const int KeySize = 32;

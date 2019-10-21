@@ -73,7 +73,7 @@ namespace Platform.Web
 			services.AddTransient<ApplicationDbContext>();
 			services.AddSingleton<IRepository<User>, BaseRepository<User>>();
 
-			services.AddSingleton<PasswordCheckerService>();
+			services.AddSingleton<PasswordService>();
 			services.AddSingleton<TokenService>();
 		}
 
