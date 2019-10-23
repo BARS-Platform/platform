@@ -1,63 +1,85 @@
-using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using VueCliMiddleware;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Platform.Database;
 using Platform.Models;
-
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Platform.Web
 {
-    public class Startup
+	public class Startup
 	{
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddSpaStaticFiles(opt => opt.RootPath = "ClientApp/dist");
+		public static readonly string SwaggerConfigurationName = "v1";
 
-            services.AddControllers();
+		private ILogger Logger => ApplicationConfiguration.Logger;
 
-            services.AddSwaggerGen(c =>
-			{
-				c.SwaggerDoc("v1", new OpenApiInfo()
-				{
-					Title = "Platform Swagger API",
-					Version = "v1"
-				});
-			});
+		public void ConfigureServices(IServiceCollection services)
+		{
+			services.ConfigureLogger();
+
+			services.AddControllers();
+
+			services.AddJwtAuthentication();
+			services.AddPoliciesAuthorization();
+
+			services.RegisterServices();
+
+			services.AddSpaStaticFiles(opt => opt.RootPath = "ClientApp/dist");
+
+			services.RegisterSwagger();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
+			app.UseHttpsRedirection();
+
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
 			}
+			else
+			{
+				app.UseExceptionHandler("/System/Error");
+				app.UseHsts();
+			}
 			
-			ApplicationConfiguration.Initialize();
+			ExecuteNewMigrations();
 
-            app.UseSwagger();
+			app.UseRouting();
+
+			app.UseAuthentication();
+			app.UseAuthorization();
+
+			app.UseSwagger();
 			app.UseSwaggerUI(options =>
 			{
-				options.SwaggerEndpoint("/swagger/v1/swagger.json", "Platform API");
+				options.SwaggerEndpoint($"/swagger/{SwaggerConfigurationName}/swagger.json", "Platform API");
+				options.DocExpansion(DocExpansion.None);
 			});
 
-            app.UseSpaStaticFiles();
+			app.UseSpaStaticFiles();
 
-            app.UseRouting();
-			
 			app.UseEndpoints(endpoints =>
 			{
-				endpoints.MapControllers();                
+				endpoints.MapControllers();
 
-                endpoints.MapToVueCliProxy(
-                    "{*path}",
-                    new SpaOptions { SourcePath = "ClientApp" },
-                    npmScript: (System.Diagnostics.Debugger.IsAttached) ? "serve" : null
-                    );
-            });
+				endpoints.MapToVueCliProxy(
+					"{*path}",
+					new SpaOptions {SourcePath = "ClientApp"}
+				);
+			});
+		}
+
+		private void ExecuteNewMigrations()
+		{
+			using var context = new ApplicationDbContext();
+			Logger.LogInformation("Perform migrations...");
+			context.Database.Migrate();
 		}
 	}
 }
