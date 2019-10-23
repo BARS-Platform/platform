@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Platform.Web
+namespace Platform.Domain.Common
 {
 	public static class JwtOptions
 	{
