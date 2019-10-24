@@ -15,27 +15,8 @@ namespace Platform.Web
 {
 	public static class StartupExtensions
 	{
-		private static ILogger Logger => ApplicationConfiguration.Logger;
-
-		public static void ConfigureLogger(this IServiceCollection services)
-		{
-			var loggerFactory = LoggerFactory.Create(builder =>
-			{
-				builder
-					.AddFilter("Microsoft", LogLevel.Warning)
-					.AddFilter("System", LogLevel.Warning)
-					.AddFilter("LoggingConsoleApp.Program", LogLevel.Debug)
-					.AddConsole()
-					.AddEventLog();
-			});
-			ILogger logger = loggerFactory.CreateLogger<Program>();
-			logger.LogInformation("Logger has been configured.");
-			ApplicationConfiguration.Logger = logger;
-		}
-
 		public static void AddJwtAuthentication(this IServiceCollection services)
 		{
-			Logger.LogInformation("Configuring JwtBearer...");
 			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 			{
 				options.RequireHttpsMetadata = false;
@@ -68,8 +49,6 @@ namespace Platform.Web
 		
 		public static void RegisterServices(this IServiceCollection services)
 		{
-			Logger.LogInformation("Configuring Services...");
-
 			services.AddTransient<ApplicationDbContext>();
 			services.AddSingleton<IRepository<User>, BaseRepository<User>>();
 
@@ -79,7 +58,6 @@ namespace Platform.Web
 
 		public static void RegisterSwagger(this IServiceCollection services)
 		{
-			Logger.LogInformation("Configuing SwaggerGen...");
 			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc(Startup.SwaggerConfigurationName, new OpenApiInfo()
