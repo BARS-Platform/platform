@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Mvc;
 using Platform.Database;
-using Platform.DomainServices;
+using Platform.Domain.DomainServices;
 using Platform.Models;
 using Platform.Web.Services;
 
@@ -28,11 +28,11 @@ namespace Platform.Web.Controllers
 
             if (result.Success)
             {
-                return Ok(result.Data);
+                return Ok(result);
             }
             else
             {
-                return Conflict(result.Message);
+                return Conflict(result);
             }
 		}
 
@@ -47,11 +47,11 @@ namespace Platform.Web.Controllers
 
             if (result.Success)
             {
-                return Ok(result.Data);
+                return Ok(result);
             }
             else
             {
-                return Conflict(result.Message);
+                return Conflict(result);
             }
         }
 	}

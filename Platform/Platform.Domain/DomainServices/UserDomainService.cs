@@ -1,10 +1,10 @@
-﻿using Platform.Database;
+﻿using System.IdentityModel.Tokens.Jwt;
+using Platform.Database;
 using Platform.Domain.Common;
 using Platform.Domain.Services;
 using Platform.Models;
-using System.IdentityModel.Tokens.Jwt;
 
-namespace Platform.DomainServices
+namespace Platform.Domain.DomainServices
 {
     public class UserDomainService
     {
