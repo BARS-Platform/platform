@@ -50,17 +50,17 @@ namespace Platform.Web
 			
 			ExecuteNewMigrations();
 
-			app.UseRouting();
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint($"/swagger/{SwaggerConfigurationName}/swagger.json", "Platform API");
+                options.DocExpansion(DocExpansion.None);
+            });
+
+            app.UseRouting();
 
 			app.UseAuthentication();
-			app.UseAuthorization();
-
-			app.UseSwagger();
-			app.UseSwaggerUI(options =>
-			{
-				options.SwaggerEndpoint($"/swagger/{SwaggerConfigurationName}/swagger.json", "Platform API");
-				options.DocExpansion(DocExpansion.None);
-			});
+            app.UseAuthorization();
 
 			app.UseSpaStaticFiles();
 
