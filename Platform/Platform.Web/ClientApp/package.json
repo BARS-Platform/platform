@@ -6,6 +6,7 @@
   "author": "ITIS.Bars",
   "private": true,
   "scripts": {
+    "start": "quasar serve",
     "serve": "quasar dev",
     "build": "quasar build",
     "build:pwa": "quasar build -m pwa",
