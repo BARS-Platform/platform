@@ -6,7 +6,6 @@
   "author": "ITIS.Bars",
   "private": true,
   "scripts": {
-    "heroku-postbuild": "quasar build",
     "serve": "quazar build"
   },
   "dependencies": {
