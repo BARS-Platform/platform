@@ -68,7 +68,7 @@ namespace Platform.Web
 				c.OperationFilter<PlatformSwaggerOperationFilter>();
 				c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
 				{
-					In = ParameterLocation.Header, Description = "Please insert JWT with Bearer into field",
+					In = ParameterLocation.Header, Description = "Please insert JWT in next format: Bearer *token*",
 					Name = "Authorization", Type = SecuritySchemeType.ApiKey
 				});
 				c.AddSecurityRequirement(new OpenApiSecurityRequirement
