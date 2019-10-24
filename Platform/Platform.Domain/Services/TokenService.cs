@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
+using Platform.Domain.Common;
 
-namespace Platform.Web.Services
+namespace Platform.Domain.Services
 {
 	/// <summary>
 	/// Service that generate JWT tokens.

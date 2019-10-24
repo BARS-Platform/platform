@@ -57,6 +57,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Platform.Database\Platform.Database.csproj" />
+    <ProjectReference Include="..\Platform.Domain\Platform.Domain.csproj" />
     <ProjectReference Include="..\Platform.Models\Platform.Models.csproj" />
   </ItemGroup>
 

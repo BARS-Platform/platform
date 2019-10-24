@@ -7,6 +7,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Platform.Database;
+using Platform.Domain.Common;
+using Platform.Domain.DomainServices;
+using Platform.Domain.Services;
 using Platform.Models;
 using Platform.Web.Services;
 using Platform.Web.Services.SwaggerServices;
@@ -54,7 +57,8 @@ namespace Platform.Web
 
 			services.AddSingleton<PasswordCheckerService>();
 			services.AddSingleton<TokenService>();
-		}
+            services.AddSingleton<UserDomainService>();
+        }
 
 		public static void RegisterSwagger(this IServiceCollection services)
 		{
