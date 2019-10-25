@@ -7,6 +7,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Platform.Database;
+using Platform.Domain.Common;
+using Platform.Domain.DomainServices;
+using Platform.Domain.Services;
 using Platform.Models;
 using Platform.Web.Services;
 using Platform.Web.Services.SwaggerServices;
@@ -15,27 +18,8 @@ namespace Platform.Web
 {
 	public static class StartupExtensions
 	{
-		private static ILogger Logger => ApplicationConfiguration.Logger;
-
-		public static void ConfigureLogger(this IServiceCollection services)
-		{
-			var loggerFactory = LoggerFactory.Create(builder =>
-			{
-				builder
-					.AddFilter("Microsoft", LogLevel.Warning)
-					.AddFilter("System", LogLevel.Warning)
-					.AddFilter("LoggingConsoleApp.Program", LogLevel.Debug)
-					.AddConsole()
-					.AddEventLog();
-			});
-			ILogger logger = loggerFactory.CreateLogger<Program>();
-			logger.LogInformation("Logger has been configured.");
-			ApplicationConfiguration.Logger = logger;
-		}
-
 		public static void AddJwtAuthentication(this IServiceCollection services)
 		{
-			Logger.LogInformation("Configuring JwtBearer...");
 			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 			{
 				options.RequireHttpsMetadata = false;
@@ -68,18 +52,16 @@ namespace Platform.Web
 		
 		public static void RegisterServices(this IServiceCollection services)
 		{
-			Logger.LogInformation("Configuring Services...");
-
 			services.AddTransient<ApplicationDbContext>();
 			services.AddSingleton<IRepository<User>, BaseRepository<User>>();
 
 			services.AddSingleton<PasswordService>();
 			services.AddSingleton<TokenService>();
-		}
+            services.AddSingleton<UserDomainService>();
+        }
 
 		public static void RegisterSwagger(this IServiceCollection services)
 		{
-			Logger.LogInformation("Configuing SwaggerGen...");
 			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc(Startup.SwaggerConfigurationName, new OpenApiInfo()
@@ -90,7 +72,7 @@ namespace Platform.Web
 				c.OperationFilter<PlatformSwaggerOperationFilter>();
 				c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
 				{
-					In = ParameterLocation.Header, Description = "Please insert JWT with Bearer into field",
+					In = ParameterLocation.Header, Description = "Please insert JWT in next format: Bearer *token*",
 					Name = "Authorization", Type = SecuritySchemeType.ApiKey
 				});
 				c.AddSecurityRequirement(new OpenApiSecurityRequirement

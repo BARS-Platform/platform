@@ -16,12 +16,8 @@ namespace Platform.Web
 	{
 		public static readonly string SwaggerConfigurationName = "v1";
 
-		private ILogger Logger => ApplicationConfiguration.Logger;
-
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.ConfigureLogger();
-
 			services.AddControllers();
 
 			services.AddJwtAuthentication();
@@ -50,17 +46,17 @@ namespace Platform.Web
 			
 			ExecuteNewMigrations();
 
-			app.UseRouting();
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint($"/swagger/{SwaggerConfigurationName}/swagger.json", "Platform API");
+                options.DocExpansion(DocExpansion.None);
+            });
+
+            app.UseRouting();
 
 			app.UseAuthentication();
-			app.UseAuthorization();
-
-			app.UseSwagger();
-			app.UseSwaggerUI(options =>
-			{
-				options.SwaggerEndpoint($"/swagger/{SwaggerConfigurationName}/swagger.json", "Platform API");
-				options.DocExpansion(DocExpansion.None);
-			});
+            app.UseAuthorization();
 
 			app.UseSpaStaticFiles();
 
@@ -78,7 +74,6 @@ namespace Platform.Web
 		private void ExecuteNewMigrations()
 		{
 			using var context = new ApplicationDbContext();
-			Logger.LogInformation("Perform migrations...");
 			context.Database.Migrate();
 		}
 	}
