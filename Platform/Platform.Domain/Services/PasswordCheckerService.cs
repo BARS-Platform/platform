@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Cryptography;
 
-namespace Platform.Web.Services
+namespace Platform.Domain.Services
 {
 	/// <summary>
 	/// Service that validates user's password.

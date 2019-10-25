@@ -16,12 +16,8 @@ namespace Platform.Web
 	{
 		public static readonly string SwaggerConfigurationName = "v1";
 
-		private ILogger Logger => ApplicationConfiguration.Logger;
-
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.ConfigureLogger();
-
 			services.AddControllers();
 
 			services.AddJwtAuthentication();
@@ -78,7 +74,6 @@ namespace Platform.Web
 		private void ExecuteNewMigrations()
 		{
 			using var context = new ApplicationDbContext();
-			Logger.LogInformation("Perform migrations...");
 			context.Database.Migrate();
 		}
 	}
