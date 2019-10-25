@@ -22,26 +22,19 @@ namespace Platform.Domain.DomainServices
 
         public OperationResult LogIn(string login, string password)
         {
-            try
+            var user = _repository.FindByPredicate(x => x.Login == login)
+                       ?? throw new AuthorizationException("Invalid login. Please check your credentials.");
+
+            if (!_checkerService.Check(user.Password, password))
             {
-                var user = _repository.FindByPredicate(x => x.Login == login)
-                    ?? throw new AuthorizationException("Invalid login. Please check your credentials.");
-                
-                if(!_checkerService.Check(user.Password, password))
-                {
-                    throw new AuthorizationException("Invalid password.Please check your credentials.");
-                }
+                throw new AuthorizationException("Invalid password.Please check your credentials.");
             }
-            catch (AuthorizationException exception)
-            {
-                return new OperationResult(false, exception.Message);
-            }
+
 
             return new OperationResult()
             {
                 Success = true,
                 Data = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateToken(login))
-
             };
         }
 

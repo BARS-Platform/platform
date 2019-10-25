@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Platform.Domain.Common;
 using Platform.Domain.DomainServices;
 
 namespace Platform.Web.Controllers
@@ -25,16 +26,17 @@ namespace Platform.Web.Controllers
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		public IActionResult LogIn(string login, string password)
 		{
-            var result = _userDomainService.LogIn(login, password);
+			OperationResult result;
+			try
+			{
+				result = _userDomainService.LogIn(login, password);
+			}
+			catch (AuthorizationException exception)
+			{
+				return NotFound(exception.Message);
+			}
 
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return Conflict(result);
-            }
+			return result.Success ? (IActionResult) Ok(result) : Conflict(result);
 		}
 
 		/// <summary>
