@@ -1,11 +1,7 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Platform.Database;
 using Platform.Domain.DomainServices;
-using Platform.Models;
-using Platform.Web.Services;
 
 namespace Platform.Web.Controllers
 {
@@ -51,7 +47,7 @@ namespace Platform.Web.Controllers
 		[ProducesResponseType(StatusCodes.Status409Conflict)]
 		public IActionResult Register(string login, string password, string email)
 		{
-            var result = _userDomainService.Register(login, password);
+            var result = _userDomainService.Register(login, password, email);
 
             if (result.Success)
             {

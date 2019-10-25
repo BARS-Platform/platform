@@ -28,8 +28,7 @@ namespace Platform.Web
 				{
 					ValidateIssuer = true,
 					ValidIssuer = JwtOptions.Issuer,
-					ValidateAudience = true,
-					ValidAudience = JwtOptions.Audience,
+					ValidateAudience = false,
 					ValidateLifetime = true,
 					IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(JwtOptions.Key)),
 					ValidateIssuerSigningKey = true
@@ -55,7 +54,7 @@ namespace Platform.Web
 			services.AddTransient<ApplicationDbContext>();
 			services.AddSingleton<IRepository<User>, BaseRepository<User>>();
 
-			services.AddSingleton<PasswordService>();
+			services.AddSingleton<PasswordCheckerService>();
 			services.AddSingleton<TokenService>();
             services.AddSingleton<UserDomainService>();
         }

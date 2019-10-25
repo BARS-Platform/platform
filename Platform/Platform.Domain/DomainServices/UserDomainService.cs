@@ -45,9 +45,9 @@ namespace Platform.Domain.DomainServices
             };
         }
 
-        public OperationResult Register(string login, string password)
+        public OperationResult Register(string login, string password, string email)
         {
-            _repository.Create(new User() { Login = login, Password = _checkerService.HashPassword(password) });
+            _repository.Create(new User(login, _checkerService.HashPassword(password), email));
             
             return new OperationResult()
             {
