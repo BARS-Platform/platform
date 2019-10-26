@@ -53,7 +53,7 @@ namespace Platform.Web
 		public static void RegisterServices(this IServiceCollection services)
 		{
 			services.AddTransient<ApplicationDbContext>();
-			services.AddSingleton<IRepository<User>, BaseRepository<User>>();
+			services.AddSingleton(typeof(IRepository<>), typeof(BaseRepository<>));
 
 			services.AddSingleton<PasswordCheckerService>();
 			services.AddSingleton<TokenService>();

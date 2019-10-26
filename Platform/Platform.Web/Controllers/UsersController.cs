@@ -17,6 +17,17 @@ namespace Platform.Web.Controllers
             _userDomainService = userDomainService;
         }
 
+        /// <summary>
+        /// Used to check, whether application has user, registered under given login
+        /// </summary>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult CheckUserExistence(string login)
+        {
+	        var operationResult = _userDomainService.CheckUserExitence(login);
+	        return operationResult.Success ? (IActionResult) Ok(operationResult) : Conflict(operationResult);
+        }
+        
 		/// <summary>
 		/// Used to log in and receive new JWT.
 		/// </summary>

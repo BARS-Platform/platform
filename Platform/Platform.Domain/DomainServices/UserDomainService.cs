@@ -19,6 +19,13 @@ namespace Platform.Domain.DomainServices
             _checkerService = checkerService;
             _tokenService = tokenService;
         }
+        
+        public OperationResult CheckUserExitence(string login)
+        {
+            var user = _repository.FindByPredicate(x => x.Login == login);
+
+            return new OperationResult(user != null);
+        }
 
         public OperationResult LogIn(string login, string password)
         {
