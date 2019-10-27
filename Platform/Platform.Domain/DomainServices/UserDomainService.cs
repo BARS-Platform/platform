@@ -19,35 +19,35 @@ namespace Platform.Domain.DomainServices
             _checkerService = checkerService;
             _tokenService = tokenService;
         }
+        
+        public OperationResult CheckUserExitence(string login)
+        {
+            var user = _repository.FindByPredicate(x => x.Login == login);
+
+            return new OperationResult(user != null);
+        }
 
         public OperationResult LogIn(string login, string password)
         {
-            try
+            var user = _repository.FindByPredicate(x => x.Login == login)
+                       ?? throw new AuthorizationException("Invalid login. Please check your credentials.");
+
+            if (!_checkerService.Check(user.Password, password))
             {
-                var user = _repository.FindByPredicate(x => x.Login == login)
-                    ?? throw new AuthorizationException("Invalid login. Please check your credentials.");
-                
-                if(!_checkerService.Check(user.Password, password))
-                {
-                    throw new AuthorizationException("Invalid password.Please check your credentials.");
-                }
+                throw new AuthorizationException("Invalid password.Please check your credentials.");
             }
-            catch (AuthorizationException exception)
-            {
-                return new OperationResult(false, exception.Message);
-            }
+
 
             return new OperationResult()
             {
                 Success = true,
                 Data = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateToken(login))
-
             };
         }
 
-        public OperationResult Register(string login, string password)
+        public OperationResult Register(string login, string password, string email)
         {
-            _repository.Create(new User() { Login = login, Password = _checkerService.HashPassword(password) });
+            _repository.Create(new User(login, _checkerService.HashPassword(password), email));
             
             return new OperationResult()
             {
