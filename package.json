@@ -1,12 +1,12 @@
 {
-  "name": "bars.platform",
+  "name": "Platform",
   "version": "0.0.2",
-  "description": "Bars.platform project",
-  "productName": "Bars.platform",
+  "description": "Platform project",
+  "productName": "Platform",
   "author": "ITIS.Bars",
   "private": true,
   "scripts": {
-    "serve": "(cd Platform/Platform.Web/ClientApp && quasar dev)"
+    "serve": "(cd Platform/Platform.Web/ClientApp && quasar serve) & quazar serve"
   },
   "dependencies": {
     "@quasar/app": "^1.2.0",
