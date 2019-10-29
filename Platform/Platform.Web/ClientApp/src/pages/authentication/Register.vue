@@ -1,0 +1,219 @@
+<template>
+  <q-page padding class="flex flex-center">
+    <q-card square style="width: 400px; padding:50px">
+      <q-card-section>
+        <div class="text-h6">
+          Регистрация
+        </div>
+      </q-card-section>
+      <q-card-section>
+        <q-form class="q-gutter-md">
+          <q-input
+            id="login"
+            v-model.trim="login"
+            type="text"
+            label="Логин"
+            counter
+            debounce="1000"
+            bottom-slots
+            :error="$v.login.$error"
+            @blur="$v.login.$touch"
+            @input="$v.login.$touch"
+            lazy-rules
+            autofocus
+            :error-message="`${checkLoginError($v.login)}`"
+          />
+          <q-input
+            id="email"
+            v-model.trim="email"
+            type="email"
+            label="Email"
+            debounce="1000"
+            :error="$v.email.$error"
+            @blur="$v.email.$touch"
+            @input="$v.email.$touch"
+            lazy-rules
+            bottom-slots
+            :error-message="`${checkEmailError($v.email)}`"
+          />
+          <q-input
+            id="password"
+            v-model="password"
+            @blur="$v.password.$touch"
+            @input="$v.password.$touch"
+            :error="$v.password.$error"
+            type="password"
+            label="Пароль"
+            bottom-slots
+            :error-message="`${checkPasswordError($v.password)}`"
+          />
+          <q-input
+            id="repeatPassword"
+            v-model="repeatPassword"
+            :error="$v.repeatPassword.$error"
+            type="password"
+            @blur="$v.repeatPassword.$touch"
+            @input="$v.repeatPassword.$touch"
+            label="Повторите пароль"
+            bottom-slots
+            :error-message="`${checkRepeatPasswordError($v.repeatPassword)}`"
+          />
+        </q-form>
+      </q-card-section>
+      <q-card-actions>
+        <q-btn color="primary" :disabled="$v.$invalid" class="full-width" label="Зарегистрироваться" type="submit" @click="register" />
+      </q-card-actions>
+    </q-card>
+  </q-page>
+</template>
+
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
+
+import { getModule, Action } from 'vuex-module-decorators'
+import LoginModule from '@/store/modules/Login'
+
+import { Validate } from 'vuelidate-property-decorators'
+import { required, minLength, maxLength, email, sameAs } from 'vuelidate/lib/validators'
+
+import { User } from '@/models/user'
+//TODO: Refactor
+function loginExistRule(login: string) {
+  let loginStore = getModule(LoginModule)
+
+  return new Promise((resolve, reject) => {
+    loginStore
+      .checkLogin(login)
+      .then(response => {
+        resolve(response.success)
+      })
+      .catch(error => {
+        resolve(false)
+      })
+  })
+}
+//TODO: Refactor
+function emailExistRule(email: string) {
+  let loginStore = getModule(LoginModule)
+
+  return new Promise((resolve, reject) => {
+    loginStore
+      .checkEmail(email)
+      .then(response => {
+        resolve(response.success)
+      })
+      .catch(error => {
+        resolve(false)
+      })
+  })
+}
+
+@Component({})
+export default class RegisterPage extends Vue {
+  public loginStore = getModule(LoginModule)
+
+  @Validate({ required, maxLength: maxLength(15), minLength: minLength(6), loginExistRule })
+  login = ''
+  @Validate({ required, emailExistRule, email })
+  email = ''
+  @Validate({ required, minLength: minLength(6) })
+  password = ''
+  @Validate({ required, sameAs: sameAs('password') })
+  repeatPassword = ''
+
+  clearForm() {
+    this.$v.$reset()
+    this.login = ''
+    this.email = ''
+    this.password = ''
+    this.repeatPassword = ''
+  }
+
+  //TODO: Refactor
+  checkLoginError(val: any) {
+    if (!val.$error) {
+      return ''
+    }
+    if (!val.required) {
+      return `Это поле обязательное для заполнения`
+    }
+    if (val.hasOwnProperty('maxLength') && !val.maxLength) {
+      return `Поле должно быть короче ${val.$params.maxLength.max} символов`
+    }
+    if (val.hasOwnProperty('minLength') && !val.minLength) {
+      return `Поле должно быть длиннее ${val.$params.minLength.min} символов`
+    }
+    if (val.hasOwnProperty('loginExistRule') && !val.loginExistRule) {
+      return `Данный логин уже используется`
+    }
+  }
+  //TODO: Refactor
+  checkEmailError(val: any) {
+    if (!val.$error) {
+      return ''
+    }
+    if (!val.required) {
+      return `Это поле обязательное для заполнения`
+    }
+    if (val.hasOwnProperty('email') && !val.email) {
+      return `Введите корректный Email`
+    }
+    if (val.hasOwnProperty('emailExistRule') && !val.emailExistRule) {
+      return `Данный Email уже используется`
+    }
+  }
+  //TODO: Refactor
+  checkPasswordError(val: any) {
+    if (!val.$error) {
+      return ''
+    }
+    if (!val.required) {
+      return `Это поле обязательное для заполнения`
+    }
+    if (val.hasOwnProperty('minLength') && !val.minLength) {
+      return `Поле должно быть длиннее ${val.$params.minLength.min} символов`
+    }
+  }
+  //TODO: Refactor
+  checkRepeatPasswordError(val: any) {
+    if (!val.$error) {
+      return ''
+    }
+    if (!val.required) {
+      return `Это поле обязательное для заполнения`
+    }
+    if (val.hasOwnProperty('sameAs') && !val.sameAs) {
+      return `Пароли должны совпадать`
+    }
+  }
+
+  register() {
+    const user: User = { login: this.login, email: this.email, password: this.password }
+    this.$v.$touch()
+    if (!this.$v.$invalid) {
+      this.$q.loading.show()
+      this.loginStore
+        .register(user)
+        .then(() => {
+          this.$q.notify({
+            message: 'Пользователь успешно зарегистрирован',
+            color: 'positive',
+            timeout: 3000
+          })
+        })
+        .catch(() => {
+          this.$q.notify({
+            message: 'Ошибка при регистрации пользователя',
+            color: 'negative',
+            timeout: 3000
+          })
+        })
+        .finally(() => {
+          this.$q.loading.hide()
+          this.clearForm()
+        })
+    }
+  }
+}
+</script>
+
