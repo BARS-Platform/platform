@@ -6,7 +6,7 @@
   "author": "ITIS.Bars",
   "private": true,
   "scripts": {
-    "serve": "(cd Platform/Platform.Web/ClientApp && quasar serve) & quasar serve"
+    "serve": "(cd Platform/Platform.Web/ClientApp && quasar serve) & quasar dev"
   },
   "dependencies": {
     "@quasar/app": "^1.2.0",
