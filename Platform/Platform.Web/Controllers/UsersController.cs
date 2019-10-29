@@ -27,12 +27,23 @@ namespace Platform.Web.Controllers
 	        var operationResult = _userDomainService.CheckUserExitence(login);
 	        return operationResult.Success ? (IActionResult) Ok(operationResult) : Conflict(operationResult);
         }
-        
-		/// <summary>
-		/// Used to log in and receive new JWT.
-		/// </summary>
-		/// <returns>Json with 1 property: "token" : *token*</returns>
-		[HttpGet]
+
+        /// <summary>
+        /// Used to check, whether application has user, registered under given email
+        /// </summary>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult CheckEmail(string email)
+        {
+            var operationResult = _userDomainService.CheckEmail(email);
+            return operationResult.Success ? (IActionResult)Ok(operationResult) : Conflict(operationResult);
+        }
+
+        /// <summary>
+        /// Used to log in and receive new JWT.
+        /// </summary>
+        /// <returns>Json with 1 property: "token" : *token*</returns>
+        [HttpGet]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		public IActionResult LogIn(string login, string password)

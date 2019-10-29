@@ -24,7 +24,14 @@ namespace Platform.Domain.DomainServices
         {
             var user = _repository.FindByPredicate(x => x.Login == login);
 
-            return new OperationResult(user != null);
+            return new OperationResult(user == null);
+        }
+
+        public OperationResult CheckEmail(string email)
+        {
+            var user = _repository.FindByPredicate(x => x.Email == email);
+
+            return new OperationResult(user == null);
         }
 
         public OperationResult LogIn(string login, string password)
@@ -41,7 +48,7 @@ namespace Platform.Domain.DomainServices
             return new OperationResult()
             {
                 Success = true,
-                Data = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateToken(login))
+                Data = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateToken(login, user.Email))
             };
         }
 
@@ -52,7 +59,7 @@ namespace Platform.Domain.DomainServices
             return new OperationResult()
             {
                 Success = true,
-                Data = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateToken(login))
+                Data = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateToken(login, email))
             };
         }
     }
