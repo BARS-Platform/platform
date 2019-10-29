@@ -30,22 +30,26 @@ namespace Platform.Web
 			services.RegisterSwagger();
 		}
 
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
 		{
 			app.UseHttpsRedirection();
 
 			if (env.IsDevelopment())
 			{
+				logger.LogInformation("Using developers exception handling");
 				app.UseDeveloperExceptionPage();
 			}
 			else
 			{
+				logger.LogInformation("Using production exception handling");
 				app.UseExceptionHandler("/System/Error");
 				app.UseHsts();
 			}
 			
+			logger.LogInformation("Handling undone DB migrations...");
 			ExecuteNewMigrations();
 
+			logger.LogInformation("Initializing Swagger...");
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {

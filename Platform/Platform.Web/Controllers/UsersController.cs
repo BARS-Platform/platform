@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Platform.Domain.Common;
 using Platform.Domain.DomainServices;
 
@@ -11,10 +12,12 @@ namespace Platform.Web.Controllers
 	public class UsersController : Controller
 	{
         private readonly UserDomainService _userDomainService;
+        private readonly ILogger<UsersController> _logger;
 
-        public UsersController(UserDomainService userDomainService)
-		{
-            _userDomainService = userDomainService;
+        public UsersController(UserDomainService userDomainService, ILogger<UsersController> logger)
+        {
+	        _userDomainService = userDomainService;
+	        _logger = logger;
         }
 
         /// <summary>
