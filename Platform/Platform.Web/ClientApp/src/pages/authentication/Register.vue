@@ -60,8 +60,9 @@
           />
         </q-form>
       </q-card-section>
-      <q-card-actions>
+      <q-card-actions class="justify-center">
         <q-btn color="primary" :disabled="$v.$invalid" class="full-width" label="Зарегистрироваться" type="submit" @click="register" />
+        <router-link :to="`/login`" style="cursor: pointer" class="q-mt-lg primary" tag="span">Войти</router-link>
       </q-card-actions>
     </q-card>
   </q-page>
@@ -200,6 +201,7 @@ export default class RegisterPage extends Vue {
             color: 'positive',
             timeout: 3000
           })
+          this.$router.push('/login')
         })
         .catch(() => {
           this.$q.notify({

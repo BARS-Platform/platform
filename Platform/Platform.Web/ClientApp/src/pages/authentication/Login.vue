@@ -10,10 +10,11 @@
         <q-input id="login" v-model.trim="form.login" type="text" label="Логин" bottom-slots required autofocus />
         <q-input id="password" v-model="form.password" type="password" label="Пароль" bottom-slots required />
       </q-card-section>
-      <q-card-actions>
+      <q-card-actions class="justify-center">
         <q-btn color="primary" class="full-width" @click="login">
           Авторизоваться
         </q-btn>
+        <router-link :to="`/register`" style="cursor: pointer" class="q-mt-lg primary" tag="span">Регистрация</router-link>
       </q-card-actions>
     </q-card>
   </q-page>
@@ -43,30 +44,27 @@ export default class RegisterPage extends Vue {
     }
   }
 
-  login() {
+  async login() {
     const user: User = { login: this.form.login, email: '', password: this.form.password }
     this.$q.loading.show()
-    this.loginStore
-      .authenticate(user)
-      .then(response => {
-        this.$q.notify({
-          message: 'Добро пожаловать',
-          color: 'positive',
-          timeout: 3000
-        })
-        this.$router.push('/')
+    let response = await this.loginStore.authenticate(user)
+
+    if (response.success) {
+      this.$q.notify({
+        message: 'Добро пожаловать',
+        color: 'positive',
+        timeout: 3000
       })
-      .catch(response => {
-        this.$q.notify({
-          message: 'Ошибка при авторизации пользователя',
-          color: 'negative',
-          timeout: 3000
-        })
+      this.$router.push('/')
+    } else {
+      this.$q.notify({
+        message: response.message,
+        color: 'negative',
+        timeout: 3000
       })
-      .finally(() => {
-        this.$q.loading.hide()
-        this.clearForm()
-      })
+    }
+    this.$q.loading.hide()
+    this.clearForm()
   }
 }
 </script>

@@ -27,13 +27,17 @@ export default class LoginModule extends VuexModule {
 
   @Action
   async authenticate(user: User) {
+    let answer = { success: false, message: '' }
     await axios({ method: 'get', url: `/api/Users/LogIn?login=${user.login}&password=${user.password}` })
       .then(response => {
         this.setUser(response.data.data)
+        answer.success = true
       })
       .catch(error => {
-        throw error
+        answer.success = false
+        answer.message = error.response.data
       })
+    return answer
   }
 
   @MutationAction

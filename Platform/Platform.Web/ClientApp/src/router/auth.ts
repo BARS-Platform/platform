@@ -6,10 +6,8 @@ export default (to: any, from: any, next: any) => {
   if (loginStore.isAuthenticated) {
     next()
   } else {
-    console.log('test')
     loginStore.authenticateWithToken().then(() => {
       let user = loginStore.User
-      console.log(user)
       if (user) {
         next()
       } else {

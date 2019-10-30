@@ -72,6 +72,8 @@ module.exports = function(ctx) {
         'QForm'
       ],
 
+      cssAddon: true,
+
       directives: ['Ripple'],
 
       plugins: ['Notify', 'Cookies', 'Loading'],
