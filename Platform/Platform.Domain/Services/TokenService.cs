@@ -29,11 +29,11 @@ namespace Platform.Domain.Services
 
 		private ClaimsIdentity GetIdentity(User user)
 		{
-            var userWithRole = new { user.Login, user.Email, Role = new {Name = "admin"}}; //add role to User model?
+			var userWithRole = new {user.Login, user.Email, Role = new {Name = "admin"}}; //add role to User model?
 			var claims = new List<Claim>
 			{
 				new Claim(ClaimTypes.Name, user.Login),
-                new Claim(ClaimTypes.Email, user.Email)
+				new Claim(ClaimTypes.Email, user.Email)
 			};
 			if (userWithRole.Role != null)
 				claims.Add(new Claim(ClaimTypes.Role, userWithRole.Role.Name));
