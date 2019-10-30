@@ -25,7 +25,7 @@ namespace Platform.Web.Controllers
 		{
 			return Ok(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
 		}
-		
+
 		[HttpGet]
 		[Obsolete("Будет удалено после создания более корректного тестового материала")]
 		public User Test()
