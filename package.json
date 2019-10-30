@@ -1,8 +1,8 @@
 {
-  "name": "bars.platform",
-  "version": "0.0.1",
-  "description": "Bars.platform project",
-  "productName": "Bars.platform",
+  "name": "platform",
+  "version": "0.0.2",
+  "description": "platform project",
+  "productName": "platform",
   "author": "ITIS.Bars",
   "private": true,
   "scripts": {
