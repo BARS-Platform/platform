@@ -27,7 +27,7 @@
             id="email"
             v-model.trim="email"
             type="email"
-            label="Email"
+            label="Почта"
             debounce="1000"
             :error="$v.email.$error"
             @blur="$v.email.$touch"
@@ -61,7 +61,7 @@
         </q-form>
       </q-card-section>
       <q-card-actions class="justify-center">
-        <q-btn color="primary" :disabled="$v.$invalid" class="full-width" label="Зарегистрироваться" type="submit" @click="register" />
+        <q-btn color="primary" :disabled="$v.$invalid" class="full-width" label="Зарегистрироваться" @click="register" />
         <router-link :to="`/login`" style="cursor: pointer" class="q-mt-lg primary" tag="span">Войти</router-link>
       </q-card-actions>
     </q-card>
@@ -157,10 +157,10 @@ export default class RegisterPage extends Vue {
       return `Это поле обязательное для заполнения`
     }
     if (val.hasOwnProperty('email') && !val.email) {
-      return `Введите корректный Email`
+      return `Введите корректую почту`
     }
     if (val.hasOwnProperty('emailExistRule') && !val.emailExistRule) {
-      return `Данный Email уже используется`
+      return `Данная почта уже используется`
     }
   }
   //TODO: Refactor

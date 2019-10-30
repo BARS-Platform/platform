@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using Platform.Domain.Common;
+using Platform.Models;
 
 namespace Platform.Domain.Services
 {
@@ -12,30 +13,30 @@ namespace Platform.Domain.Services
 	/// </summary>
 	public class TokenService
 	{
-		internal JwtSecurityToken GenerateToken(string login, string email)
+		internal JwtSecurityToken GenerateToken(User user)
 		{
 			var key = JwtOptions.GetSymmetricSecurityKey();
 			var now = DateTime.Now;
 			var jwt = new JwtSecurityToken(
 				JwtOptions.Issuer,
 				JwtOptions.Audience,
-				GetIdentity(login, email).Claims,
+				GetIdentity(user).Claims,
 				now,
 				now.AddMinutes(JwtOptions.Lifetime),
 				new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
 			return jwt;
 		}
 
-		private ClaimsIdentity GetIdentity(string login, string email)
+		private ClaimsIdentity GetIdentity(User user)
 		{
-			var user = new {Login = login, Email = email, Role = new {Name = "admin"}}; // get user by login from db
+            var userWithRole = new { user.Login, user.Email, Role = new {Name = "admin"}}; //add role to User model?
 			var claims = new List<Claim>
 			{
 				new Claim(ClaimTypes.Name, user.Login),
                 new Claim(ClaimTypes.Email, user.Email)
 			};
-			if (user.Role != null)
-				claims.Add(new Claim(ClaimTypes.Role, user.Role.Name));
+			if (userWithRole.Role != null)
+				claims.Add(new Claim(ClaimTypes.Role, userWithRole.Role.Name));
 
 			var claimsIdentity =
 				new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,

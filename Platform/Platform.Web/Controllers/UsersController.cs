@@ -18,24 +18,24 @@ namespace Platform.Web.Controllers
         }
 
         /// <summary>
-        /// Used to check, whether application has user, registered under given login
+        /// Used to check, whether this login is used
         /// </summary>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult CheckUserExistence(string login)
+        public IActionResult CheckLoginUsed(string login)
         {
-	        var operationResult = _userDomainService.CheckUserExitence(login);
+	        var operationResult = _userDomainService.CheckLoginUsed(login);
 	        return operationResult.Success ? (IActionResult) Ok(operationResult) : Conflict(operationResult);
         }
 
         /// <summary>
-        /// Used to check, whether application has user, registered under given email
+        /// Used to check, whether this email is used
         /// </summary>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult CheckEmail(string email)
+        public IActionResult CheckEmailUsed(string email)
         {
-            var operationResult = _userDomainService.CheckEmail(email);
+            var operationResult = _userDomainService.CheckEmailUsed(email);
             return operationResult.Success ? (IActionResult)Ok(operationResult) : Conflict(operationResult);
         }
 

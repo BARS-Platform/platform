@@ -83,13 +83,13 @@ export default class LoginModule extends VuexModule {
 
   @Action
   async checkLogin(login: string) {
-    const response = await axios({ method: 'get', url: `/api/Users/CheckUserExistence?login=${login}` })
+    const response = await axios({ method: 'get', url: `/api/Users/CheckLoginUsed?login=${login}` })
     return response.data
   }
 
   @Action
   async checkEmail(email: string) {
-    const response = await axios({ method: 'get', url: `/api/Users/CheckEmail?email=${email}` })
+    const response = await axios({ method: 'get', url: `/api/Users/CheckEmailUsed?email=${email}` })
     return response.data
   }
 }
