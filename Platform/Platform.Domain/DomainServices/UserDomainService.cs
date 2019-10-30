@@ -1,7 +1,8 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using Platform.Database;
+using System.Threading.Tasks;
 using Platform.Domain.Common;
 using Platform.Domain.Services;
+using Platform.Fatabase;
 using Platform.Models;
 
 namespace Platform.Domain.DomainServices
@@ -20,16 +21,16 @@ namespace Platform.Domain.DomainServices
             _tokenService = tokenService;
         }
         
-        public OperationResult CheckUserExitence(string login)
+        public async Task<OperationResult> CheckUserExitence(string login)
         {
-            var user = _repository.FindByPredicate(x => x.Login == login);
+            var user = await _repository.FindByPredicate(x => x.Login == login);
 
             return new OperationResult(user != null);
         }
 
-        public OperationResult LogIn(string login, string password)
+        public async Task<OperationResult> LogIn(string login, string password)
         {
-            var user = _repository.FindByPredicate(x => x.Login == login)
+            var user = await _repository.FindByPredicate(x => x.Login == login)
                        ?? throw new AuthorizationException("Invalid login. Please check your credentials.");
 
             if (!_checkerService.Check(user.Password, password))
@@ -45,9 +46,9 @@ namespace Platform.Domain.DomainServices
             };
         }
 
-        public OperationResult Register(string login, string password, string email)
+        public async Task<OperationResult> Register(string login, string password, string email)
         {
-            _repository.Create(new User(login, _checkerService.HashPassword(password), email));
+            await _repository.Create(new User(login, _checkerService.HashPassword(password), email));
             
             return new OperationResult()
             {

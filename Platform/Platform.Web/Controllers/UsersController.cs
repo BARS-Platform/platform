@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -25,9 +26,9 @@ namespace Platform.Web.Controllers
         /// </summary>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult CheckUserExistence(string login)
+        public async Task<IActionResult> CheckUserExistence(string login)
         {
-	        var operationResult = _userDomainService.CheckUserExitence(login);
+	        var operationResult = await _userDomainService.CheckUserExitence(login);
 	        return operationResult.Success ? (IActionResult) Ok(operationResult) : Conflict(operationResult);
         }
         
@@ -38,12 +39,12 @@ namespace Platform.Web.Controllers
 		[HttpGet]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-		public IActionResult LogIn(string login, string password)
+		public async Task<IActionResult> LogIn(string login, string password)
 		{
 			OperationResult result;
 			try
 			{
-				result = _userDomainService.LogIn(login, password);
+				result = await _userDomainService.LogIn(login, password);
 			}
 			catch (AuthorizationException exception)
 			{
@@ -61,9 +62,9 @@ namespace Platform.Web.Controllers
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(StatusCodes.Status409Conflict)]
-		public IActionResult Register(string login, string password, string email)
+		public async Task<IActionResult> Register(string login, string password, string email)
 		{
-            var result = _userDomainService.Register(login, password, email);
+            var result = await _userDomainService.Register(login, password, email);
 
             if (result.Success)
             {

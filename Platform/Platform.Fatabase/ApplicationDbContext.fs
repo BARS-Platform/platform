@@ -1,7 +1,6 @@
-namespace Platform.Fatabase
+﻿namespace Platform.Fatabase
 
 open Microsoft.EntityFrameworkCore
-open Platform.Models
 
 type ApplicationDbContext(options : DbContextOptions<ApplicationDbContext>) =
     inherit DbContext(options)

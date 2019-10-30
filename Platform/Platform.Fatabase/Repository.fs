@@ -1,47 +1,43 @@
-namespace Platform.Fatabase
+﻿namespace Platform.Fatabase
 
-open System.Threading.Tasks
+open Platform.Models.Interfaces
+open Platform.Fatabase
+open System.Linq
 
-type IQuestionRepository =
-    interface
-        abstract member GetQuestion : int -> Question Task 
-        abstract member GetQuestionQuery : int -> Question
-        abstract member GetQuestions : unit -> Question list Task
-        abstract member CreateQuestion : Question -> Task<Question>
-    end
-
-
-type QuestionRepository(context: ApplicationDbContext) =
-    interface IQuestionRepository with
-        member this.GetQuestion id =
-            let query = context.Questions 
-                        |> Seq.tryFind (fun q -> q.Id = id)
-
-            let question = match query with
-            | Some i -> i
-            | None -> null
-
-            let asyncQuery = async {
-                return question
-            }
-            Async.StartAsTask(asyncQuery)
-        member this.GetQuestionQuery id =
-            query {
-                for question in context.Questions do
-                    where (question.Id = id)
-                    select question
-                    exactlyOneOrDefault
-            }
-        member this.GetQuestions () =
+type BaseRepository<'T when 'T :> IPlatformModel and 'T: not struct>(context: ApplicationDbContext) =
+    interface IRepository<'T> with
+    
+        member this.Create(entity: 'T) =
             let query = async {
-                return context.Questions
-                    |> Seq.toList
-            }
-            Async.StartAsTask(query)
-        member this.CreateQuestion entity =
-            let query = async {
-                context.Questions.Add(entity) |> ignore
+                context.Add(entity) |> ignore
                 context.SaveChanges true |> ignore
                 return entity            
+            }
+            Async.StartAsTask<'T>(query)
+
+        member this.Delete(entity: 'T) =
+            let query = async {
+                context.Remove entity |> ignore
+                return context.SaveChanges() > 0 
+            }
+            Async.StartAsTask query
+
+        member this.Get id =
+            let query = async {
+                return context.Find(id)
+            }
+            Async.StartAsTask(query)
+
+        member this.FindByPredicate expression  =
+            let query = async {
+                return context.Set<'T>().SingleOrDefault()
+            }
+            Async.StartAsTask(query)
+
+        member this.Update (entity: 'T) =
+            let query = async {
+                context.Update(entity) |> ignore
+                context.SaveChanges true |> ignore
+                return entity
             }
             Async.StartAsTask(query)
