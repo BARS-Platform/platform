@@ -31,7 +31,6 @@ namespace Platform.Web.Controllers
 		public User Test()
 		{
 			throw new Exception("Super test!11!!!");
-			return new User("123", "321");
 		}
 	}
 }

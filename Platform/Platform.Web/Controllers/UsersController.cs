@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Platform.Domain.Common;
 using Platform.Domain.DomainServices;
 
@@ -12,21 +12,19 @@ namespace Platform.Web.Controllers
 	[Route("api/[controller]/[action]")]
 	public class UsersController : Controller
 	{
-        private readonly UserDomainService _userDomainService;
-        private readonly ILogger<UsersController> _logger;
+		private readonly UserDomainService _userDomainService;
 
-        public UsersController(UserDomainService userDomainService, ILogger<UsersController> logger)
-        {
-	        _userDomainService = userDomainService;
-	        _logger = logger;
-        }
+		public UsersController(UserDomainService userDomainService)
+		{
+			_userDomainService = userDomainService;
+		}
 
         /// <summary>
-        /// Used to check, whether this email is used
+        /// Used to check, whether this login is used
         /// </summary>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> CheckUserExistence(string login)
+        public async Task<IActionResult> CheckLoginUsed([Required] string login)
         {
 	        var operationResult = await _userDomainService.CheckLoginUsed(login);
 	        return operationResult.Success ? (IActionResult) Ok(operationResult) : Conflict(operationResult);
@@ -37,7 +35,7 @@ namespace Platform.Web.Controllers
         /// </summary>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult CheckEmailUsed(string email)
+        public IActionResult CheckEmailUsed([Required] string email)
         {
 	        var operationResult = _userDomainService.CheckEmailUsed(email);
 	        return operationResult.Success ? (IActionResult) Ok(operationResult) : Conflict(operationResult);
@@ -50,7 +48,7 @@ namespace Platform.Web.Controllers
 		[HttpGet]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-		public async Task<IActionResult> LogIn(string login, string password)
+		public async Task<IActionResult> LogIn([Required] string login, [Required] string password)
 		{
 			OperationResult result;
 			try
@@ -73,18 +71,18 @@ namespace Platform.Web.Controllers
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(StatusCodes.Status409Conflict)]
-		public async Task<IActionResult> Register(string login, string password, string email)
+		public async Task<IActionResult> Register([Required]string login, [Required] string password, [Required] string email)
 		{
             var result = await _userDomainService.Register(login, password, email);
 
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return Conflict(result);
-            }
-        }
+			if (result.Success)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return Conflict(result);
+			}
+		}
 	}
 }
