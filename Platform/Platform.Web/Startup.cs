@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 using VueCliMiddleware;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Platform.Database;
+using Platform.Fatabase;
 using Platform.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
 

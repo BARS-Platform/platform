@@ -8,11 +8,10 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Platform.Database;
 using Platform.Domain.Common;
 using Platform.Domain.DomainServices;
 using Platform.Domain.Services;
-using Platform.Models;
+using Platform.Fatabase;
 using Platform.Web.Services.SwaggerServices;
 
 namespace Platform.Web
