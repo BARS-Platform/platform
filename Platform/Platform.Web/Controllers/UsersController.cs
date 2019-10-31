@@ -19,28 +19,28 @@ namespace Platform.Web.Controllers
 			_userDomainService = userDomainService;
 		}
 
-        /// <summary>
-        /// Used to check, whether this login is used
-        /// </summary>
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> CheckLoginUsed([Required] string login)
-        {
-	        var operationResult = await _userDomainService.CheckLoginUsed(login);
-	        return operationResult.Success ? (IActionResult) Ok(operationResult) : Conflict(operationResult);
-        }
-        
-        /// <summary>
-        /// Used to check, whether this email is used
-        /// </summary>
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult CheckEmailUsed([Required] string email)
-        {
-	        var operationResult = _userDomainService.CheckEmailUsed(email);
-	        return operationResult.Success ? (IActionResult) Ok(operationResult) : Conflict(operationResult);
-        }
-        
+		/// <summary>
+		/// Used to check, whether this login is used
+		/// </summary>
+		[HttpGet]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		public async Task<IActionResult> CheckLoginUsed([Required] string login)
+		{
+			var operationResult = await _userDomainService.CheckLoginUsed(login);
+			return operationResult.Success ? (IActionResult) Ok(operationResult) : Conflict(operationResult);
+		}
+
+		/// <summary>
+		/// Used to check, whether this email is used
+		/// </summary>
+		[HttpGet]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		public async Task<IActionResult> CheckEmailUsed([Required] string email)
+		{
+			var operationResult = await _userDomainService.CheckEmailUsed(email);
+			return operationResult.Success ? (IActionResult) Ok(operationResult) : Conflict(operationResult);
+		}
+
 		/// <summary>
 		/// Used to log in and receive new JWT.
 		/// </summary>
@@ -71,9 +71,10 @@ namespace Platform.Web.Controllers
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(StatusCodes.Status409Conflict)]
-		public async Task<IActionResult> Register([Required]string login, [Required] string password, [Required] string email)
+		public async Task<IActionResult> Register([Required] string login, [Required] string password,
+			[Required] string email)
 		{
-            var result = await _userDomainService.Register(login, password, email);
+			var result = await _userDomainService.Register(login, password, email);
 
 			if (result.Success)
 			{

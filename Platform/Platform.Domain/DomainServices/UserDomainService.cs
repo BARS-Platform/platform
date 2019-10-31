@@ -28,9 +28,9 @@ namespace Platform.Domain.DomainServices
             return new OperationResult(user == null);
         }
 
-        public OperationResult CheckEmailUsed(string email)
+        public async Task<OperationResult> CheckEmailUsed(string email)
         {
-            var user = _repository.FindByPredicate(x => x.Email == email);
+            var user = await _repository.FindByPredicate(x => x.Email == email);
 
             return new OperationResult(user == null);
         }
