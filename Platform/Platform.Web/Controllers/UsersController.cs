@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Platform.Domain.Common;
 using Platform.Domain.DomainServices;
 
@@ -23,7 +23,7 @@ namespace Platform.Web.Controllers
 		/// </summary>
 		[HttpGet]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public IActionResult CheckLoginUsed(string login)
+		public IActionResult CheckLoginUsed([Required] string login)
 		{
 			var operationResult = _userDomainService.CheckLoginUsed(login);
 			return operationResult.Success ? (IActionResult) Ok(operationResult) : Conflict(operationResult);
@@ -34,7 +34,7 @@ namespace Platform.Web.Controllers
 		/// </summary>
 		[HttpGet]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public IActionResult CheckEmailUsed(string email)
+		public IActionResult CheckEmailUsed([Required] string email)
 		{
 			var operationResult = _userDomainService.CheckEmailUsed(email);
 			return operationResult.Success ? (IActionResult) Ok(operationResult) : Conflict(operationResult);
@@ -47,7 +47,7 @@ namespace Platform.Web.Controllers
 		[HttpGet]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-		public IActionResult LogIn(string login, string password)
+		public IActionResult LogIn([Required] string login, [Required] string password)
 		{
 			OperationResult result;
 			try
@@ -70,7 +70,7 @@ namespace Platform.Web.Controllers
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(StatusCodes.Status409Conflict)]
-		public IActionResult Register(string login, string password, string email)
+		public IActionResult Register([Required] string login, [Required] string password, [Required] string email)
 		{
 			var result = _userDomainService.Register(login, password, email);
 

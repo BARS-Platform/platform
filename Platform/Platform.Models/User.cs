@@ -5,12 +5,11 @@ namespace Platform.Models
 {
 	public class User : IPlatformModel
 	{
-		public User(string login, string password, string email = null)
+		public User(string login, string password, string email)
 		{
 			UpdateLogin(login);
 			UpdatePassword(password);
-			if (!string.IsNullOrEmpty(email))
-				UpdateEmail(email);
+			UpdateEmail(email);
 		}
 
 		// EF Core support
