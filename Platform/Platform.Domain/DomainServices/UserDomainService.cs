@@ -21,11 +21,18 @@ namespace Platform.Domain.DomainServices
             _tokenService = tokenService;
         }
         
-        public async Task<OperationResult> CheckUserExitence(string login)
+        public async Task<OperationResult> CheckLoginUsed(string login)
         {
             var user = await _repository.FindByPredicate(x => x.Login == login);
 
-            return new OperationResult(user != null);
+            return new OperationResult(user == null);
+        }
+
+        public OperationResult CheckEmailUsed(string email)
+        {
+            var user = _repository.FindByPredicate(x => x.Email == email);
+
+            return new OperationResult(user == null);
         }
 
         public async Task<OperationResult> LogIn(string login, string password)
@@ -42,18 +49,20 @@ namespace Platform.Domain.DomainServices
             return new OperationResult()
             {
                 Success = true,
-                Data = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateToken(login))
+                Data = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateToken(user))
             };
         }
 
         public async Task<OperationResult> Register(string login, string password, string email)
         {
-            await _repository.Create(new User(login, _checkerService.HashPassword(password), email));
+            var user = new User(login, _checkerService.HashPassword(password), email);
+
+            await _repository.Create(user);
             
             return new OperationResult()
             {
                 Success = true,
-                Data = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateToken(login))
+                Data = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateToken(user))
             };
         }
     }

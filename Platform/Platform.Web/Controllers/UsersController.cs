@@ -22,13 +22,24 @@ namespace Platform.Web.Controllers
         }
 
         /// <summary>
-        /// Used to check, whether application has user, registered under given login
+        /// Used to check, whether this email is used
         /// </summary>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> CheckUserExistence(string login)
         {
-	        var operationResult = await _userDomainService.CheckUserExitence(login);
+	        var operationResult = await _userDomainService.CheckLoginUsed(login);
+	        return operationResult.Success ? (IActionResult) Ok(operationResult) : Conflict(operationResult);
+        }
+        
+        /// <summary>
+        /// Used to check, whether this email is used
+        /// </summary>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult CheckEmailUsed(string email)
+        {
+	        var operationResult = _userDomainService.CheckEmailUsed(email);
 	        return operationResult.Success ? (IActionResult) Ok(operationResult) : Conflict(operationResult);
         }
         
