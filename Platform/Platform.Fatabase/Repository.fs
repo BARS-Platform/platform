@@ -30,7 +30,7 @@ type BaseRepository<'T when 'T :> IPlatformModel and 'T: not struct>(context: Ap
 
         member this.FindByPredicate expression  =
             let query = async {
-                return context.Set<'T>().SingleOrDefault()
+                return context.Set<'T>().SingleOrDefault(expression)
             }
             Async.StartAsTask(query)
 
