@@ -1,9 +1,11 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.IO;
+using System.Reflection;
+using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Platform.Database;
@@ -11,7 +13,6 @@ using Platform.Domain.Common;
 using Platform.Domain.DomainServices;
 using Platform.Domain.Services;
 using Platform.Models;
-using Platform.Web.Services;
 using Platform.Web.Services.SwaggerServices;
 
 namespace Platform.Web
@@ -28,8 +29,7 @@ namespace Platform.Web
 				{
 					ValidateIssuer = true,
 					ValidIssuer = JwtOptions.Issuer,
-					ValidateAudience = true,
-					ValidAudience = JwtOptions.Audience,
+					ValidateAudience = false,
 					ValidateLifetime = true,
 					IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(JwtOptions.Key)),
 					ValidateIssuerSigningKey = true
@@ -53,7 +53,7 @@ namespace Platform.Web
 		public static void RegisterServices(this IServiceCollection services)
 		{
 			services.AddTransient<ApplicationDbContext>();
-			services.AddSingleton<IRepository<User>, BaseRepository<User>>();
+			services.AddSingleton(typeof(IRepository<>), typeof(BaseRepository<>));
 
 			services.AddSingleton<PasswordCheckerService>();
 			services.AddSingleton<TokenService>();
@@ -83,6 +83,10 @@ namespace Platform.Web
 						new string[] { }
 					}
 				});
+				
+				var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+				var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+				c.IncludeXmlComments(xmlPath);
 			});
 		}
 	}
