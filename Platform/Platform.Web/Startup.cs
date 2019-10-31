@@ -1,63 +1,84 @@
-using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using VueCliMiddleware;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Platform.Database;
 using Platform.Models;
-
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Platform.Web
 {
-    public class Startup
+	public class Startup
 	{
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddSpaStaticFiles(opt => opt.RootPath = "ClientApp/dist");
+		public static readonly string SwaggerConfigurationName = "v1";
 
-            services.AddControllers();
+		public void ConfigureServices(IServiceCollection services)
+		{
+			services.AddControllers();
 
-            services.AddSwaggerGen(c =>
+			services.AddJwtAuthentication();
+			services.AddPoliciesAuthorization();
+
+			services.RegisterServices();
+
+			services.AddSpaStaticFiles(opt => opt.RootPath = "ClientApp/dist");
+
+			services.RegisterSwagger();
+		}
+
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
+		{
+			app.UseHttpsRedirection();
+
+			if (env.IsDevelopment())
 			{
-				c.SwaggerDoc("v1", new OpenApiInfo()
-				{
-					Title = "Platform Swagger API",
-					Version = "v1"
-				});
+				logger.LogInformation("Using developers exception handling");
+				app.UseDeveloperExceptionPage();
+			}
+			else
+			{
+				logger.LogInformation("Using production exception handling");
+				app.UseExceptionHandler("/System/Error");
+				app.UseHsts();
+			}
+			
+			logger.LogInformation("Handling undone DB migrations...");
+			ExecuteNewMigrations();
+
+			logger.LogInformation("Initializing Swagger...");
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint($"/swagger/{SwaggerConfigurationName}/swagger.json", "Platform API");
+                options.DocExpansion(DocExpansion.None);
+            });
+
+            app.UseRouting();
+
+			app.UseAuthentication();
+            app.UseAuthorization();
+
+			app.UseSpaStaticFiles();
+
+			app.UseEndpoints(endpoints =>
+			{
+				endpoints.MapControllers();
+
+				endpoints.MapToVueCliProxy(
+					"{*path}",
+					new SpaOptions {SourcePath = "ClientApp"}
+				);
 			});
 		}
 
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		private void ExecuteNewMigrations()
 		{
-			if (env.IsDevelopment())
-			{
-				app.UseDeveloperExceptionPage();
-			}
-			
-			ApplicationConfiguration.Initialize();
-
-            app.UseSwagger();
-			app.UseSwaggerUI(options =>
-			{
-				options.SwaggerEndpoint("/swagger/v1/swagger.json", "Platform API");
-			});
-
-            app.UseSpaStaticFiles();
-
-            app.UseRouting();
-			
-			app.UseEndpoints(endpoints =>
-			{
-				endpoints.MapControllers();                
-
-                endpoints.MapToVueCliProxy(
-                    "{*path}",
-                    new SpaOptions { SourcePath = "ClientApp" },
-                    npmScript: (System.Diagnostics.Debugger.IsAttached) ? "serve" : null
-                    );
-            });
+			using var context = new ApplicationDbContext();
+			context.Database.Migrate();
 		}
 	}
 }
