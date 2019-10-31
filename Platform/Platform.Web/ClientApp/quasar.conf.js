@@ -24,7 +24,7 @@ function extendWebpackPug(cfg) {
 
 module.exports = function(ctx) {
   return {
-    boot: [],
+    boot: ['vuelidate'],
 
     css: ['app.styl'],
 
@@ -63,12 +63,24 @@ module.exports = function(ctx) {
         'QTable',
         'QTh',
         'QTr',
-        'QTd'
+        'QTd',
+        'QCard',
+        'QCardSection',
+        'QCardActions',
+        'QInput',
+        'QSpace',
+        'QForm'
       ],
+
+      cssAddon: true,
 
       directives: ['Ripple'],
 
-      plugins: ['Notify']
+      plugins: ['Notify', 'Cookies', 'Loading'],
+
+      config: {
+        loading: {}
+      }
     },
 
     supportIE: false,
@@ -85,7 +97,8 @@ module.exports = function(ctx) {
         extendWebpackAliases(cfg)
         extendWebpackTypescript(cfg)
         extendWebpackPug(cfg)
-      }
+      },
+      forceDevPublicPath: true
     },
 
     devServer: {
