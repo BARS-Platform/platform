@@ -8,12 +8,16 @@ type BaseRepository<'T when 'T :> IPlatformModel and 'T: not struct>(context: Ap
     interface IRepository<'T> with
     
         member this.Create(entity: 'T) =
+            let q = async {
+                context.AddAsync(entity) |> ignore
+                return entity
+            }
             let query = async {
                 context.Add(entity) |> ignore
                 context.SaveChanges true |> ignore
                 return entity            
             }
-            Async.StartAsTask<'T>(query)
+            Async.StartAsTask<'T>(q)
 
         member this.Delete(entity: 'T) =
             let query = async {
