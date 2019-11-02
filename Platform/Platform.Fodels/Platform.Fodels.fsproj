@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="Interfaces\IPlatformModel.fs" />
+        <Compile Include="Models\User.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Platform.Configuration\Platform.Configuration.csproj" />
+    </ItemGroup>
+
+</Project>
