@@ -1,7 +1,7 @@
-﻿using Platform.Models.Enums;
-using System;
+﻿using System;
+using Platform.Configuration.Enums;
 
-namespace Platform.Models.Attributes
+namespace Platform.Configuration.Attributes
 {
     public class PlatformAttribute : Attribute
     {

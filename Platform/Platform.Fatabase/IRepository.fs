@@ -3,7 +3,7 @@
 open System
 open System.Linq.Expressions
 open System.Threading.Tasks
-open Platform.Models.Interfaces
+open Platform.Fodels
 
 type IRepository<'T when 'T :> IPlatformModel> =
     interface

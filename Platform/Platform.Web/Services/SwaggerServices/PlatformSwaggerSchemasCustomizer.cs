@@ -1,11 +1,11 @@
 ﻿using Microsoft.OpenApi.Models;
-using Platform.Models.Attributes;
-using Platform.Models.Enums;
-using Platform.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Platform.Configuration.Attributes;
+using Platform.Configuration.Enums;
+using Platform.Fodels;
 
 namespace Platform.Web.Services.SwaggerServices
 {

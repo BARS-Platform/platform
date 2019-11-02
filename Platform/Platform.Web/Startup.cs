@@ -7,7 +7,6 @@ using VueCliMiddleware;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Platform.Fatabase;
-using Platform.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Platform.Web

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Platform.Models;
+using Platform.Fodels;
 
 namespace Platform.Web.Controllers
 {

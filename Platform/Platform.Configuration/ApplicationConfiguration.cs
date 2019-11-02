@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
 
-namespace Platform.Models
+namespace Platform.Configuration
 {
-	public static class ApplicationConfiguration
+	public class ApplicationConfiguration
 	{
 		static ApplicationConfiguration()
 		{

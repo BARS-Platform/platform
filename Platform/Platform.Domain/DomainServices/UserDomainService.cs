@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Platform.Domain.Common;
 using Platform.Domain.Services;
 using Platform.Fatabase;
-using Platform.Models;
+using Platform.Fodels;
 
 namespace Platform.Domain.DomainServices
 {

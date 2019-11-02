@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Platform.Models.Enums
+namespace Platform.Configuration.Enums
 {
     [Flags]
     public enum AttributesEnum
