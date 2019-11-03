@@ -1,6 +1,6 @@
 ﻿namespace Platform.Fatabase
 
-open Platform.Fodels
+open Platform.Fodels.Interfaces
 open Platform.Fatabase
 open System.Linq
 

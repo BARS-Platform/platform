@@ -5,8 +5,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Compile Include="Enums\AttributesEnum.fs" />
+        <Compile Include="Attributes\PlatformAttribute.fs" />
         <Compile Include="Interfaces\IPlatformModel.fs" />
+        <Compile Include="Models\CurrencyReferenceBook.fs" />
         <Compile Include="Models\User.fs" />
+        <Compile Include="Models\WeatherForecast.fs" />
     </ItemGroup>
 
     <ItemGroup>

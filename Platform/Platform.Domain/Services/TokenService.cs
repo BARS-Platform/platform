@@ -5,6 +5,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using Platform.Domain.Common;
 using Platform.Fodels;
+using Platform.Fodels.Models;
 
 namespace Platform.Domain.Services
 {

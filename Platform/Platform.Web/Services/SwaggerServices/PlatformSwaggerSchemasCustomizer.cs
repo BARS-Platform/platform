@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Platform.Configuration.Attributes;
 using Platform.Configuration.Enums;
-using Platform.Fodels;
+using Platform.Fodels.Interfaces;
 
 namespace Platform.Web.Services.SwaggerServices
 {

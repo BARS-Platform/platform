@@ -4,6 +4,7 @@ using Platform.Domain.Common;
 using Platform.Domain.Services;
 using Platform.Fatabase;
 using Platform.Fodels;
+using Platform.Fodels.Models;
 
 namespace Platform.Domain.DomainServices
 {

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Platform.Fodels;
+using Platform.Fodels.Models;
 
 namespace Platform.Web.Controllers
 {

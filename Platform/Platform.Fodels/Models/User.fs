@@ -1,4 +1,5 @@
-namespace Platform.Fodels
+
+namespace Platform.Fodels.Models
 
 open System
 open Platform.Fodels.Interfaces

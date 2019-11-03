@@ -3,7 +3,7 @@
 open Microsoft.EntityFrameworkCore
 open Platform.Configuration
 open System
-open Platform.Fodels
+open Platform.Fodels.Models
 
 type ApplicationDbContext() =
     inherit DbContext()
@@ -15,7 +15,7 @@ type ApplicationDbContext() =
             ))
 
     [<DefaultValue>]
-    val mutable users: DbSet<Platform.Fodels.User>
+    val mutable users: DbSet<User>
     member x.Users
         with get () = x.users
         and set v = x.users <- v
