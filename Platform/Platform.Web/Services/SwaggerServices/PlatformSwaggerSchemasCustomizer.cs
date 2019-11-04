@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Platform.Configuration.Attributes;
-using Platform.Configuration.Enums;
+using Platform.Fodels.Attributes;
 using Platform.Fodels.Interfaces;
+using Platform.Configuration.Enums;
 
 namespace Platform.Web.Services.SwaggerServices
 {
@@ -35,7 +35,7 @@ namespace Platform.Web.Services.SwaggerServices
         /// Если нет ни одного атрибута в словарь не добавляется.
         /// </summary>
         private Dictionary<string, string> GetModelPropertiesAttributesDict(string modelName)
-        {
+        {            
             var modelType = _listModels
                 .FirstOrDefault(x => x.Name == modelName) ?? throw new Exception("Не найдена соответствующая модель");
 

@@ -1,8 +1,6 @@
-
 namespace Platform.Fodels.Interfaces
-
-open System
 
 type [<AllowNullLiteral>] IPlatformModel =
     interface
+        abstract member Id : int with get,set
     end

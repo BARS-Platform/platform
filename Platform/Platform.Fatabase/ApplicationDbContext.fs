@@ -1,7 +1,7 @@
 ﻿namespace Platform.Fatabase
 
 open Microsoft.EntityFrameworkCore
-open Platform.Configuration
+open Platform.Fodels
 open System
 open Platform.Fodels.Models
 
@@ -21,7 +21,7 @@ type ApplicationDbContext() =
         and set v = x.users <- v
 
     override __.OnConfiguring optionsBuilder =
-        optionsBuilder.UseNpgsql(ApplicationConfiguration.ConnectionString) |> ignore
+        optionsBuilder.UseNpgsql((new ApplicationConfiguration()).ConnectionString) |> ignore
 
     override __.OnModelCreating modelBuilder =
         modelBuilder.Entity<User>().ToTable("users") |> ignore

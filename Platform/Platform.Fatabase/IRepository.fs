@@ -9,7 +9,7 @@ type IRepository<'T when 'T :> IPlatformModel> =
     interface
         abstract Create: 'T -> 'T Task
          abstract Delete: 'T -> Task<bool>
-        abstract Get: obj [] -> 'T Task
+        abstract Get: (int) -> 'T ValueTask
         abstract FindByPredicate: Expression<Func<'T, bool>> -> 'T Task
         abstract Update: 'T -> Task<'T>
     end

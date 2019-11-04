@@ -1,12 +1,14 @@
-
 namespace Platform.Fodels.Models
 
 open System
 open Platform.Fodels.Interfaces
 
 type [<AllowNullLiteral>] User() =
-    interface IPlatformModel
-    
+    interface IPlatformModel with
+        member this.Id
+            with get () = this.id
+            and set (value) = this.id <- value
+
     public new(login: string, password: string, email: string) as newUser =
         User()
         then
@@ -41,24 +43,24 @@ type [<AllowNullLiteral>] User() =
 
     member this.UpdateLogin(login: string) =
         if System.String.IsNullOrEmpty login then
-            raise (new ArgumentException("Parameter must be set.", "login")) // todo f# nameof - не работает, нужна аналогия 
+            raise (new ArgumentException("Parameter must be set.", "login")) // todo f# nameof - не работает, нужна аналогия
         else
             this.login = login |> ignore
 
     member this.UpdatePassword(password: string) =
         if System.String.IsNullOrEmpty password then
-            raise (new ArgumentException("Parameter must be set.", "password")) // todo f# nameof - не работает, нужна аналогия 
-            
+            raise (new ArgumentException("Parameter must be set.", "password")) // todo f# nameof - не работает, нужна аналогия
+
         if password.IndexOf('.') = -1 then
             raise (new ArgumentException("Invalid password format. Ensure that you have hashed this password"))
-            
+
         this.pass = password |> ignore
-        
-    member this.UpdateEmail(email:string) =
+
+    member this.UpdateEmail(email: string) =
         if System.String.IsNullOrEmpty email then
-            raise (new ArgumentException("Parameter must be set.", "email" )) // todo f# nameof - не работает, нужна аналогия
-        
+            raise (new ArgumentException("Parameter must be set.", "email")) // todo f# nameof - не работает, нужна аналогия
+
         if email.IndexOf('@') = -1 || email.IndexOf('.') = -1 then
-            raise (new ArgumentException(System.String.Format("Parameter {0} must be of valid format: ***@***.**", "email"))) // todo f# nameof - не работает, нужна аналогия 
-        
+            raise (new ArgumentException(System.String.Format ("Parameter {0} must be of valid format: ***@***.**", "email"))) // todo f# nameof - не работает, нужна аналогия
+
         this.email = email |> ignore

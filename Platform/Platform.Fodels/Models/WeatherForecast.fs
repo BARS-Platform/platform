@@ -1,14 +1,17 @@
 ﻿namespace Platform.Fodels.Models
 
 open System;
-open Platform.Configuration.Attributes;
-open Platform.Configuration.Enums;
 open Platform.Fodels.Interfaces
+open Platform.Configuration.Enums
+open Platform.Fodels.Attributes
 
-type [<AllowNullLiteral>] WeatherForecast =
-    interface IPlatformModel
+type [<AllowNullLiteral>] WeatherForecast() =
+    interface IPlatformModel with
+        member this.Id
+            with get () = this.id
+            and set (value) = this.id <- value
 
-     [<DefaultValue>]
+    [<DefaultValue>]
     val mutable private id: int
     member this.Id
         with get () = this.id
@@ -43,7 +46,7 @@ type [<AllowNullLiteral>] WeatherForecast =
 
     [<DefaultValue>]
     val mutable private sum: string
-    member this.Summary
+    member public this.Summary
         with get () = this.sum
         and set value = this.sum <- value
 

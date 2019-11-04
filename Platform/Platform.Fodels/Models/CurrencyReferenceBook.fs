@@ -1,11 +1,14 @@
 ﻿namespace Platform.Fodels.Models
 
-open Platform.Configuration.Attributes
+open Platform.Fodels.Attributes
 open Platform.Configuration.Enums
 open Platform.Fodels.Interfaces
 
 type [<AllowNullLiteral>] [<Platform(AttributesEnum.Grid ||| AttributesEnum.Form)>] CurrencyReferenceBook() =
-    interface IPlatformModel
+    interface IPlatformModel with
+        member this.Id
+            with get () = this.id
+            and set (value) = this.id <- value
 
     [<DefaultValue>]
     val mutable private id: int

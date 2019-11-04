@@ -46,7 +46,8 @@ namespace Platform.Web
 			}
 			
 			logger.LogInformation("Handling undone DB migrations...");
-			ExecuteNewMigrations();
+//			Спасибо, F# !!!!!!!!!!1!1!!!
+//			ExecuteNewMigrations();
 
 			logger.LogInformation("Initializing Swagger...");
             app.UseSwagger();
