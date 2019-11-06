@@ -56,7 +56,11 @@ namespace Platform.Web.Controllers
 			}
 			catch (AuthorizationException exception)
 			{
-				return NotFound(exception.Message);
+				return NotFound(new
+				{
+					Message = exception.Message,
+					ParameterName = exception.ParameterName
+				});
 			}
 
 			return result.Success ? (IActionResult) Ok(result) : Conflict(result);

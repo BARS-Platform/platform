@@ -37,14 +37,13 @@ namespace Platform.Domain.DomainServices
         public OperationResult LogIn(string login, string password)
         {
             var user = _repository.FindByPredicate(x => x.Login == login)
-                       ?? throw new AuthorizationException("Invalid login. Please check your credentials.");
+                       ?? throw new AuthorizationException("User with such login does not exist. Please review your credentials.", nameof(login));
 
             if (!_checkerService.Check(user.Password, password))
             {
-                throw new AuthorizationException("Invalid password.Please check your credentials.");
+                throw new AuthorizationException("Invalid password. Please review your credentials.", nameof(password));
             }
-
-
+            
             return new OperationResult()
             {
                 Success = true,
