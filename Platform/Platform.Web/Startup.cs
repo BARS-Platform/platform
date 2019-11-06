@@ -27,6 +27,10 @@ namespace Platform.Web
 			services.AddSpaStaticFiles(opt => opt.RootPath = "ClientApp/dist");
 
 			services.RegisterSwagger();
+			
+			services.AddDbContext<ApplicationDbContext>(
+              options => options.UseNpgsql("Server=(localdb)\\mssqllocaldb;Database=FSharpData;Trusted_Connection=True;MultipleActiveResultSets=true",
+              b => b.MigrationsAssembly("Platform.Migrations")));
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
