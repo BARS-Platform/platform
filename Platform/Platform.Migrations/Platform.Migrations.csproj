@@ -11,6 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Platform.Fatabase\Platform.Fatabase.fsproj" />
       <ProjectReference Include="..\Platform.Fodels\Platform.Fodels.fsproj" />
     </ItemGroup>
 

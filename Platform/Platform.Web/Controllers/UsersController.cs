@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -24,9 +23,9 @@ namespace Platform.Web.Controllers
 		/// </summary>
 		[HttpGet]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public async Task<IActionResult> CheckLoginUsed([Required] string login)
+		public IActionResult CheckLoginUsed([Required] string login)
 		{
-			var operationResult = await _userDomainService.CheckLoginUsed(login);
+			var operationResult = _userDomainService.CheckLoginUsed(login);
 			return operationResult.Success ? (IActionResult) Ok(operationResult) : Conflict(operationResult);
 		}
 
@@ -35,9 +34,9 @@ namespace Platform.Web.Controllers
 		/// </summary>
 		[HttpGet]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public async Task<IActionResult> CheckEmailUsed([Required] string email)
+		public IActionResult CheckEmailUsed([Required] string email)
 		{
-			var operationResult = await _userDomainService.CheckEmailUsed(email);
+			var operationResult = _userDomainService.CheckEmailUsed(email);
 			return operationResult.Success ? (IActionResult) Ok(operationResult) : Conflict(operationResult);
 		}
 
@@ -48,12 +47,12 @@ namespace Platform.Web.Controllers
 		[HttpGet]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-		public async Task<IActionResult> LogIn([Required] string login, [Required] string password)
+		public IActionResult LogIn([Required] string login, [Required] string password)
 		{
 			OperationResult result;
 			try
 			{
-				result = await _userDomainService.LogIn(login, password);
+				result = _userDomainService.LogIn(login, password);
 			}
 			catch (AuthorizationException exception)
 			{
@@ -71,10 +70,10 @@ namespace Platform.Web.Controllers
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(StatusCodes.Status409Conflict)]
-		public async Task<IActionResult> Register([Required] string login, [Required] string password,
+		public IActionResult Register([Required] string login, [Required] string password,
 			[Required] string email)
 		{
-			var result = await _userDomainService.Register(login, password, email);
+			var result = _userDomainService.Register(login, password, email);
 
 			if (result.Success)
 			{

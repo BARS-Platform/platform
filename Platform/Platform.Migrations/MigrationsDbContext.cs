@@ -4,7 +4,7 @@ using Platform.Fodels.Models;
 
 namespace Platform.Migrations
 {
-	public class ApplicationDbContext : DbContext
+	public class MigrationsDbContext : DbContext
 	{
 		public DbSet<User> Users { get; set; }
 

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 using VueCliMiddleware;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Platform.Fatabase;
+using Platform.Migrations;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Platform.Web
@@ -27,10 +27,6 @@ namespace Platform.Web
 			services.AddSpaStaticFiles(opt => opt.RootPath = "ClientApp/dist");
 
 			services.RegisterSwagger();
-			
-			services.AddDbContext<ApplicationDbContext>(
-              options => options.UseNpgsql("Server=(localdb)\\mssqllocaldb;Database=FSharpData;Trusted_Connection=True;MultipleActiveResultSets=true",
-              b => b.MigrationsAssembly("Platform.Migrations")));
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
@@ -50,8 +46,9 @@ namespace Platform.Web
 			}
 			
 			logger.LogInformation("Handling undone DB migrations...");
+			
 //			Спасибо, F# !!!!!!!!!!1!1!!!
-//			ExecuteNewMigrations();
+			ExecuteNewMigrations();
 
 			logger.LogInformation("Initializing Swagger...");
             app.UseSwagger();
@@ -81,7 +78,7 @@ namespace Platform.Web
 
 		private void ExecuteNewMigrations()
 		{
-			using var context = new ApplicationDbContext();
+			using var context = new MigrationsDbContext();
 			context.Database.Migrate();
 		}
 	}

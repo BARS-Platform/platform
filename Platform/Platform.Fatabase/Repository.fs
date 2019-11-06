@@ -2,36 +2,27 @@
 
 open Platform.Fodels.Interfaces
 open Platform.Fatabase
-open Microsoft.EntityFrameworkCore
+open System.Linq
 
 type BaseRepository<'T when 'T :> IPlatformModel and 'T: not struct>(context: ApplicationDbContext) =
     interface IRepository<'T> with
     
         member this.Create(entity: 'T) =
-            let q = async {
-                context.Add entity |> ignore
-                context.SaveChangesAsync |> ignore
-                return entity
-            }
-            Async.StartAsTask<'T>(q)
+            context.Add(entity)
+            context.SaveChanges()
+            entity
 
         member this.Delete(entity: 'T) =
-            let query = async {
-                context.Remove entity |> ignore
-                return context.SaveChanges() > 0
-            }
-            Async.StartAsTask query
+            context.Remove entity
+            context.SaveChanges() > 0
 
         member this.Get id =
-            context.FindAsync id
+            context.Find id
 
         member this.FindByPredicate expression  =
-            context.Set<'T>().SingleOrDefaultAsync expression
+            context.Set<'T>().SingleOrDefault expression
 
         member this.Update (entity: 'T) =
-            let query = async {
-                context.Update entity |> ignore
-                context.SaveChanges |> ignore
-                return entity
-            }
-            Async.StartAsTask(query)
+            context.Update entity
+            context.SaveChanges
+            entity

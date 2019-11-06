@@ -15,8 +15,8 @@ type [<AllowNullLiteral>] User() =
             newUser.UpdateLogin login
             newUser.UpdatePassword password
             newUser.UpdateEmail email
-            newUser.id = 0 |> ignore
-
+            newUser.id = 0
+            
     [<DefaultValue>]
     val mutable private id: int
     member this.Id
@@ -45,7 +45,7 @@ type [<AllowNullLiteral>] User() =
         if System.String.IsNullOrEmpty login then
             raise (new ArgumentException("Parameter must be set.", "login")) // todo f# nameof - не работает, нужна аналогия
         else
-            this.login = login |> ignore
+            this.login <- login
 
     member this.UpdatePassword(password: string) =
         if System.String.IsNullOrEmpty password then
@@ -54,7 +54,7 @@ type [<AllowNullLiteral>] User() =
         if password.IndexOf('.') = -1 then
             raise (new ArgumentException("Invalid password format. Ensure that you have hashed this password"))
 
-        this.pass = password |> ignore
+        this.pass <- password
 
     member this.UpdateEmail(email: string) =
         if System.String.IsNullOrEmpty email then
@@ -63,4 +63,4 @@ type [<AllowNullLiteral>] User() =
         if email.IndexOf('@') = -1 || email.IndexOf('.') = -1 then
             raise (new ArgumentException(System.String.Format ("Parameter {0} must be of valid format: ***@***.**", "email"))) // todo f# nameof - не работает, нужна аналогия
 
-        this.email = email |> ignore
+        this.email <- email
