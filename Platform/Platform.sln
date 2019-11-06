@@ -13,7 +13,7 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Platform.Fodels", "Platform
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Platform.Configuration", "Platform.Configuration\Platform.Configuration.csproj", "{7A765C86-95AB-4CB1-91D2-AA650A5C548D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Platform.Migrations", "Platform.Migrations\Platform.Migrations.csproj", "{422CFEB7-088C-4343-BF97-B4450C38C90C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Platform.Migrations", "Platform.Migrations\Platform.Migrations.csproj", "{F1020936-0FD6-4780-B4C8-31FD3AA2865C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,10 @@ Global
 		{7A765C86-95AB-4CB1-91D2-AA650A5C548D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A765C86-95AB-4CB1-91D2-AA650A5C548D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A765C86-95AB-4CB1-91D2-AA650A5C548D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{422CFEB7-088C-4343-BF97-B4450C38C90C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{422CFEB7-088C-4343-BF97-B4450C38C90C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{422CFEB7-088C-4343-BF97-B4450C38C90C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{422CFEB7-088C-4343-BF97-B4450C38C90C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1020936-0FD6-4780-B4C8-31FD3AA2865C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1020936-0FD6-4780-B4C8-31FD3AA2865C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1020936-0FD6-4780-B4C8-31FD3AA2865C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1020936-0FD6-4780-B4C8-31FD3AA2865C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -15,7 +15,6 @@ type [<AllowNullLiteral>] User() =
             newUser.UpdateLogin login
             newUser.UpdatePassword password
             newUser.UpdateEmail email
-            newUser.id = 0
             
     [<DefaultValue>]
     val mutable private id: int
