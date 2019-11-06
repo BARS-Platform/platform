@@ -56,7 +56,11 @@ namespace Platform.Web.Controllers
 			}
 			catch (AuthorizationException exception)
 			{
-				return NotFound(exception.Message);
+				return NotFound(new
+				{
+					Message = exception.Message,
+					ParameterName = exception.ParameterName
+				});
 			}
 
 			return result.Success ? (IActionResult) Ok(result) : Conflict(result);
@@ -72,16 +76,16 @@ namespace Platform.Web.Controllers
 		[ProducesResponseType(StatusCodes.Status409Conflict)]
 		public IActionResult Register([Required] string login, [Required] string password, [Required] string email)
 		{
+			if (string.IsNullOrEmpty(password))
+				return BadRequest("Given password was not valid. Please, consider changing your password.");
+
 			var result = _userDomainService.Register(login, password, email);
 
 			if (result.Success)
 			{
 				return Ok(result);
 			}
-			else
-			{
-				return Conflict(result);
-			}
+			return Conflict(result);
 		}
 	}
 }
