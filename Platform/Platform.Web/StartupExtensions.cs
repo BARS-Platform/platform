@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Platform.Database;
 using Platform.Domain.Common;
 using Platform.Domain.DomainServices;
 using Platform.Domain.Services;
-using Platform.Models;
+using Platform.Fatabase;
+using Platform.Fodels;
 using Platform.Web.Services.SwaggerServices;
 
 namespace Platform.Web
@@ -52,6 +52,8 @@ namespace Platform.Web
 		
 		public static void RegisterServices(this IServiceCollection services)
 		{
+			services.AddSingleton<ApplicationConfiguration>();
+			
 			services.AddTransient<ApplicationDbContext>();
 			services.AddSingleton(typeof(IRepository<>), typeof(BaseRepository<>));
 

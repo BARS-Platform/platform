@@ -1,67 +1,68 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using Platform.Database;
 using Platform.Domain.Common;
 using Platform.Domain.Services;
-using Platform.Models;
+using Platform.Fatabase;
+using Platform.Fodels.Models;
 
 namespace Platform.Domain.DomainServices
 {
-    public class UserDomainService
-    {
-        private readonly IRepository<User> _repository;
-        private readonly PasswordCheckerService _checkerService;
-        private readonly TokenService _tokenService;
+	public class UserDomainService
+	{
+		private readonly IRepository<User> _repository;
+		private readonly PasswordCheckerService _checkerService;
+		private readonly TokenService _tokenService;
 
-        public UserDomainService(IRepository<User> repository,
-            PasswordCheckerService checkerService, TokenService tokenService)
-        {
-            _repository = repository;
-            _checkerService = checkerService;
-            _tokenService = tokenService;
-        }
-        
-        public OperationResult CheckLoginUsed(string login)
-        {
-            var user = _repository.FindByPredicate(x => x.Login == login);
+		public UserDomainService(IRepository<User> repository,
+			PasswordCheckerService checkerService, TokenService tokenService)
+		{
+			_repository = repository;
+			_checkerService = checkerService;
+			_tokenService = tokenService;
+		}
 
-            return new OperationResult(user == null);
-        }
+		public OperationResult CheckLoginUsed(string login)
+		{
+			var user = _repository.FindByPredicate(x => x.Login == login);
 
-        public OperationResult CheckEmailUsed(string email)
-        {
-            var user = _repository.FindByPredicate(x => x.Email == email);
+			return new OperationResult(user == null);
+		}
 
-            return new OperationResult(user == null);
-        }
+		public OperationResult CheckEmailUsed(string email)
+		{
+			var user = _repository.FindByPredicate(x => x.Email == email);
 
-        public OperationResult LogIn(string login, string password)
-        {
-            var user = _repository.FindByPredicate(x => x.Login == login)
-                       ?? throw new AuthorizationException("User with such login does not exist. Please review your credentials.", nameof(login));
+			return new OperationResult(user == null);
+		}
 
-            if (!_checkerService.Check(user.Password, password))
-            {
-                throw new AuthorizationException("Invalid password. Please review your credentials.", nameof(password));
-            }
-            
-            return new OperationResult()
-            {
-                Success = true,
-                Data = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateToken(user))
-            };
-        }
+		public OperationResult LogIn(string login, string password)
+		{
+			var user = _repository.FindByPredicate(x => x.Login == login)
+			           ?? throw new AuthorizationException(
+				           "User with such login does not exist. Please review your credentials.", nameof(login));
 
-        public OperationResult Register(string login, string password, string email)
-        {
-            var user = new User(login, _checkerService.HashPassword(password), email);
+			if (!_checkerService.Check(user.Password, password))
+			{
+				throw new AuthorizationException("Invalid password. Please review your credentials.", nameof(password));
+			}
 
-            _repository.Create(user);
-            
-            return new OperationResult()
-            {
-                Success = true,
-                Data = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateToken(user))
-            };
-        }
-    }
+			return new OperationResult()
+			{
+				Success = true,
+				Data = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateToken(user))
+			};
+		}
+
+		public OperationResult Register(string login, string password, string email)
+		{
+			var user = new User(login, _checkerService.HashPassword(password), email);
+
+			_repository.Create(user);
+
+			return new OperationResult()
+			{
+				Success = true,
+				Data = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateToken(user))
+			};
+		}
+	}
 }

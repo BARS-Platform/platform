@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Properties\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
@@ -62,9 +63,8 @@
   </ItemGroup>  
 
   <ItemGroup>
-    <ProjectReference Include="..\Platform.Database\Platform.Database.csproj" />
     <ProjectReference Include="..\Platform.Domain\Platform.Domain.csproj" />
-    <ProjectReference Include="..\Platform.Models\Platform.Models.csproj" />
+    <ProjectReference Include="..\Platform.Migrations\Platform.Migrations.csproj" />
   </ItemGroup>
 
 </Project>

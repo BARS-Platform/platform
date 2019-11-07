@@ -1,15 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Platform.Models;
+using Platform.Fodels;
+using Platform.Fodels.Models;
 
-namespace Platform.Database
+namespace Platform.Migrations
 {
-	public class ApplicationDbContext : DbContext
+	public class MigrationsDbContext : DbContext
 	{
 		public DbSet<User> Users { get; set; }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseNpgsql(ApplicationConfiguration.ConnectionString);
+			optionsBuilder.UseNpgsql(new ApplicationConfiguration().ConnectionString);
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)

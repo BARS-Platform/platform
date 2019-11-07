@@ -4,7 +4,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using Platform.Domain.Common;
-using Platform.Models;
+using Platform.Fodels;
+using Platform.Fodels.Models;
 
 namespace Platform.Domain.Services
 {

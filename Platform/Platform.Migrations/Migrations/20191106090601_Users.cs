@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Platform.Database.Migrations
+namespace Platform.Migrations.Migrations
 {
     public partial class Users : Migration
     {
@@ -11,7 +11,7 @@ namespace Platform.Database.Migrations
                 name: "users",
                 columns: table => new
                 {
-                    id = table.Column<long>(nullable: false)
+                    id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     login = table.Column<string>(nullable: true),
                     email = table.Column<string>(nullable: true),
