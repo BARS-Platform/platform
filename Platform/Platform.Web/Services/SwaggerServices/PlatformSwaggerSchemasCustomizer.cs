@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Platform.Fodels.Attributes;
 using Platform.Fodels.Interfaces;
-using Platform.Configuration.Enums;
+using Platform.Fodels.Enums;
 
 namespace Platform.Web.Services.SwaggerServices
 {
@@ -43,24 +43,20 @@ namespace Platform.Web.Services.SwaggerServices
 
             var propAttributesDictionary = new Dictionary<string, string>();
 
-            var modelPlatformAttribute = modelType.GetCustomAttribute(typeof(PlatformAttribute)) as PlatformAttribute;
-
-            if (modelPlatformAttribute != null)
+            if (modelType.GetCustomAttribute(typeof(PlatformAttribute)) is PlatformAttribute modelPlatformAttribute)
             {
-                switch (modelPlatformAttribute.Value)
+                if (modelPlatformAttribute.Value == (AttributesEnum.Grid | AttributesEnum.Form))
                 {
-                    case (AttributesEnum.Grid | AttributesEnum.Form):
-                        propAttributesDictionary = modelProperties
-                            .ToDictionary(x => x.Name.ToLower(), x => "Both");
-                        break;
-                    case AttributesEnum.Grid:
-                        propAttributesDictionary = modelProperties
-                            .ToDictionary(x => x.Name.ToLower(), x => "Grid");
-                        break;
-                    case AttributesEnum.Form:
-                        propAttributesDictionary = modelProperties
-                            .ToDictionary(x => x.Name.ToLower(), x => "Form");
-                        break;
+                    propAttributesDictionary = modelProperties.ToDictionary(x => x.Name.ToLower(), x => "Both");
+                }
+                else
+                {
+                    propAttributesDictionary = modelPlatformAttribute.Value switch
+                    {
+                        AttributesEnum.Grid => modelProperties.ToDictionary(x => x.Name.ToLower(), x => "Grid"),
+                        AttributesEnum.Form => modelProperties.ToDictionary(x => x.Name.ToLower(), x => "Form"),
+                        _ => propAttributesDictionary
+                    };
                 }
 
                 return propAttributesDictionary;
@@ -68,24 +64,21 @@ namespace Platform.Web.Services.SwaggerServices
 
             foreach (var property in modelProperties)
             {
-                var propPlatformAttribute = property.GetCustomAttribute(typeof(PlatformAttribute)) as PlatformAttribute;
-
-                if (propPlatformAttribute == null)
-                {
+                if (!(property.GetCustomAttribute(typeof(PlatformAttribute)) is PlatformAttribute propPlatformAttribute))
                     continue;
-                }
-
-                switch (propPlatformAttribute.Value)
+                
+                if (propPlatformAttribute.Value == (AttributesEnum.Grid | AttributesEnum.Form))
                 {
-                    case (AttributesEnum.Grid | AttributesEnum.Form):
-                        propAttributesDictionary[property.Name.ToLower()] = "Both";
-                        break;
-                    case AttributesEnum.Grid:
-                        propAttributesDictionary[property.Name.ToLower()] = "Grid";
-                        break;
-                    case AttributesEnum.Form:
-                        propAttributesDictionary[property.Name.ToLower()] = "Form";
-                        break;
+                    propAttributesDictionary[property.Name.ToLower()] = "Both";
+                }
+                else
+                {
+                    propAttributesDictionary[property.Name.ToLower()] = propPlatformAttribute.Value switch
+                    {
+                        AttributesEnum.Grid => "Grid",
+                        AttributesEnum.Form => "Form",
+                        _ => propAttributesDictionary[property.Name.ToLower()]
+                    };
                 }
             }
 

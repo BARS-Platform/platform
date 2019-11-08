@@ -2,7 +2,7 @@
 
 open System;
 open Platform.Fodels.Interfaces
-open Platform.Configuration.Enums
+open Platform.Fodels.Enums
 open Platform.Fodels.Attributes
 
 type [<AllowNullLiteral>] WeatherForecast() =
@@ -18,15 +18,17 @@ type [<AllowNullLiteral>] WeatherForecast() =
         and set (value) = this.id <- value
 
     [<DefaultValue>]
-    [<Platform(AttributesEnum.Form ||| AttributesEnum.Grid)>]
     val mutable private date: DateTime
+    
+    [<Platform(AttributesEnum.Form ||| AttributesEnum.Grid)>]
     member this.Date
         with get () = this.date
         and set (value) = this.date <- value
 
     [<DefaultValue>]
-    [<Platform(AttributesEnum.Grid)>]
     val mutable private tempC: int
+    
+    [<Platform(AttributesEnum.Grid)>]
     member this.TemperatureC
         with get () = this.tempC
         and set (value) = this.tempC <- value
@@ -38,8 +40,9 @@ type [<AllowNullLiteral>] WeatherForecast() =
         and set (value) = this.tempF <- value
 
     [<DefaultValue>]
-    [<Platform(AttributesEnum.Form)>]
     val mutable private myProp: int
+    
+    [<Platform(AttributesEnum.Form)>]
     member this.MyProperty
         with get () = this.myProp
         and set (value) = this.myProp <- value
