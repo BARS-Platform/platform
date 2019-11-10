@@ -42,13 +42,13 @@ type [<AllowNullLiteral>] User() =
 
     member this.UpdateLogin(login: string) =
         if System.String.IsNullOrEmpty login then
-            raise (new ArgumentException("Parameter must be set.", "login")) // todo f# nameof - не работает, нужна аналогия
+            raise (new ArgumentException("Parameter must be set.", nameof login))
         else
             this.login <- login
 
     member this.UpdatePassword(password: string) =
         if System.String.IsNullOrEmpty password then
-            raise (new ArgumentException("Parameter must be set.", "password")) // todo f# nameof - не работает, нужна аналогия
+            raise (new ArgumentException("Parameter must be set.", nameof password))
 
         if password.IndexOf('.') = -1 then
             raise (new ArgumentException("Invalid password format. Ensure that you have hashed this password"))
@@ -57,9 +57,9 @@ type [<AllowNullLiteral>] User() =
 
     member this.UpdateEmail(email: string) =
         if System.String.IsNullOrEmpty email then
-            raise (new ArgumentException("Parameter must be set.", "email")) // todo f# nameof - не работает, нужна аналогия
+            raise (new ArgumentException("Parameter must be set.", nameof email))
 
         if email.IndexOf('@') = -1 || email.IndexOf('.') = -1 then
-            raise (new ArgumentException(System.String.Format ("Parameter {0} must be of valid format: ***@***.**", "email"))) // todo f# nameof - не работает, нужна аналогия
+            raise (new ArgumentException(System.String.Format ("Parameter {0} must be of valid format: ***@***.**",  nameof email))) 
 
         this.email <- email
