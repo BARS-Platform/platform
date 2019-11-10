@@ -16,9 +16,9 @@ namespace Platform.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> FormModelFromSchema(string modelName)
         {
-            var url = $@"http://{HttpContext.Request.Host}/swagger/{Startup.SwaggerConfigurationName}/swagger.json";
             var httpClient = new HttpClient();
-            var schema = await httpClient.GetStringAsync(url);
+            var schema = await httpClient
+                .GetStringAsync($@"http://{HttpContext.Request.Host}/swagger/{Startup.SwaggerConfigurationName}/swagger.json");
 
             var jModel = JObject.Parse(schema)?["components"]?["schemas"]?[modelName];
 
