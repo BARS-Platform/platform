@@ -20,14 +20,14 @@ namespace Platform.Web.Controllers
             var httpClient = new HttpClient();
             var schema = await httpClient.GetStringAsync(url);
 
-            var jObjectSchema = JObject.Parse(schema);
-            
-            if (jObjectSchema["components"]["schemas"][modelName] == null)
+            var jModel = JObject.Parse(schema)?["components"]?["schemas"]?[modelName];
+
+            if (jModel == null)
             {
                 return Conflict("Не найдена соответствующая модель в схеме");
             }
 
-            return Ok(jObjectSchema["components"]["schemas"][modelName].ToString());
+            return Ok(jModel.ToString());
         }
     }
 }
