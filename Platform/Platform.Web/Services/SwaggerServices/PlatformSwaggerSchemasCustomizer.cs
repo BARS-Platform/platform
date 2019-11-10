@@ -29,6 +29,25 @@ namespace Platform.Web.Services.SwaggerServices
         }
 
         /// <summary>
+        /// Метод для изменения стандартных схем Swagger на основе атрибутов
+        /// </summary>
+        public void CustomizeDefaultSwaggerSchemas(Dictionary<string, OpenApiSchema> defaultSchemas)
+        {
+            foreach(var model in defaultSchemas)
+            {
+                var modelPropertiesDict = GetModelPropertiesAttributesDict(model.Key);
+
+                foreach(var property in model.Value.Properties)
+                {
+                    if (modelPropertiesDict.ContainsKey(property.Key.ToLower()))
+                    {
+                        property.Value.Extensions.Add("dispalyIn", modelPropertiesDict[property.Key.ToLower()]);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Метод для формирования словаря, где
         /// ключ - наименование свойства модели,
         /// значение - объект со bool признаками
@@ -47,33 +66,15 @@ namespace Platform.Web.Services.SwaggerServices
             {
                 if (modelPlatformAttribute.Value == (AttributesEnum.Grid | AttributesEnum.Form))
                 {
-                    propAttributesDictionary = modelProperties.ToDictionary(
-                        x => x.Name.ToLower(),
-                        x => new OpenApiObject
-                        {
-                            ["grid"] = new OpenApiBoolean(true),
-                            ["form"] = new OpenApiBoolean(true)
-                        });
+                    propAttributesDictionary = ConvertToDictionaryWithBoolFields(modelProperties, true, true);
                 }
                 else
                 {
                     propAttributesDictionary = modelPlatformAttribute.Value switch
                     {
-                        AttributesEnum.Grid => modelProperties.ToDictionary(
-                            x => x.Name.ToLower(),
-                            x => new OpenApiObject
-                            {
-                                ["grid"] = new OpenApiBoolean(true),
-                                ["form"] = new OpenApiBoolean(false)
-                            }),
-                    AttributesEnum.Form => modelProperties.ToDictionary(
-                        x => x.Name.ToLower(),
-                        x => new OpenApiObject
-                        {
-                            ["grid"] = new OpenApiBoolean(false),
-                            ["form"] = new OpenApiBoolean(true)
-                        }),
-                        _ => propAttributesDictionary
+                        AttributesEnum.Grid => ConvertToDictionaryWithBoolFields(modelProperties, true, false),
+                        AttributesEnum.Form => ConvertToDictionaryWithBoolFields(modelProperties, false, true),
+                        _ => propAttributesDictionary 
                     };
                 }
 
@@ -84,36 +85,20 @@ namespace Platform.Web.Services.SwaggerServices
             {
                 if (!(property.GetCustomAttribute(typeof(PlatformAttribute)) is PlatformAttribute propPlatformAttribute))
                 {
-                    propAttributesDictionary[property.Name.ToLower()] = new OpenApiObject
-                    {
-                        ["grid"] = new OpenApiBoolean(false),
-                        ["form"] = new OpenApiBoolean(false)
-                    };
+                    propAttributesDictionary[property.Name.ToLower()] = CreateOpenApiObject(false, false);
                     continue;
                 }
                     
                 if (propPlatformAttribute.Value == (AttributesEnum.Grid | AttributesEnum.Form))
                 {
-                    propAttributesDictionary[property.Name.ToLower()] = new OpenApiObject
-                    {
-                        ["grid"] = new OpenApiBoolean(true),
-                        ["form"] = new OpenApiBoolean(true)
-                    };
+                    propAttributesDictionary[property.Name.ToLower()] = CreateOpenApiObject(true, true);
                 }
                 else
                 {
                     propAttributesDictionary[property.Name.ToLower()] = propPlatformAttribute.Value switch
                     {
-                        AttributesEnum.Grid => new OpenApiObject
-                        {
-                            ["grid"] = new OpenApiBoolean(true),
-                            ["form"] = new OpenApiBoolean(false)
-                        },
-                        AttributesEnum.Form => new OpenApiObject
-                        {
-                            ["grid"] = new OpenApiBoolean(false),
-                            ["form"] = new OpenApiBoolean(true)
-                        },
+                        AttributesEnum.Grid => CreateOpenApiObject(true, false),
+                        AttributesEnum.Form => CreateOpenApiObject(false, true),
                         _ => propAttributesDictionary[property.Name.ToLower()]
                     };
                 }
@@ -122,23 +107,24 @@ namespace Platform.Web.Services.SwaggerServices
             return propAttributesDictionary;
         }
 
-        /// <summary>
-        /// Метод для изменения стандартных схем Swagger на основе атрибутов
-        /// </summary>
-        public void CustomizeDefaultSwaggerSchemas(Dictionary<string, OpenApiSchema> defaultSchemas)
+        private OpenApiObject CreateOpenApiObject(bool gridValue, bool formValue)
         {
-            foreach(var model in defaultSchemas)
+            return new OpenApiObject
             {
-                var modelPropertiesDict = GetModelPropertiesAttributesDict(model.Key);
+                ["grid"] = new OpenApiBoolean(gridValue),
+                ["form"] = new OpenApiBoolean(formValue)
+            };
+        }
 
-                foreach(var property in model.Value.Properties)
+        private Dictionary<string, OpenApiObject> ConvertToDictionaryWithBoolFields(PropertyInfo[] array, bool gridValue, bool formValue)
+        {
+            return array.ToDictionary(
+                x => x.Name.ToLower(),
+                x => new OpenApiObject
                 {
-                    if (modelPropertiesDict.ContainsKey(property.Key.ToLower()))
-                    {
-                        property.Value.Extensions.Add("dispalyIn", modelPropertiesDict[property.Key.ToLower()]);
-                    }
-                }
-            }
+                    ["grid"] = new OpenApiBoolean(gridValue),
+                    ["form"] = new OpenApiBoolean(formValue)
+                });
         }
     }
 }
