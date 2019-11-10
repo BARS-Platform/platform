@@ -1,7 +1,7 @@
 ﻿namespace Platform.Fodels.Models
 
 open Platform.Fodels.Attributes
-open Platform.Configuration.Enums
+open Platform.Fodels.Enums
 open Platform.Fodels.Interfaces
 
 type [<AllowNullLiteral>] [<Platform(AttributesEnum.Grid ||| AttributesEnum.Form)>] CurrencyReferenceBook() =

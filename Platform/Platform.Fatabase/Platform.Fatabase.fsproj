@@ -19,7 +19,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Platform.Configuration\Platform.Configuration.csproj" />
       <ProjectReference Include="..\Platform.Fodels\Platform.Fodels.fsproj" />
     </ItemGroup>
 
