@@ -3,15 +3,15 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Platform.Web.Services.SwaggerServices
 {
-    public class PlatformSwaggerOperationFilter : IOperationFilter
+    public class PlatformSwaggerDocumentFilter : IDocumentFilter
     {
         private readonly PlatformSwaggerSchemasCustomizer _platformSwaggerSchemaCustomizer;
 
-        public PlatformSwaggerOperationFilter()
+        public PlatformSwaggerDocumentFilter(PlatformSwaggerSchemasCustomizer platformSwaggerSchemaCustomizer)
         {
-            _platformSwaggerSchemaCustomizer = new PlatformSwaggerSchemasCustomizer();
+            _platformSwaggerSchemaCustomizer = platformSwaggerSchemaCustomizer;
         }
-        public void Apply(OpenApiOperation operation, OperationFilterContext context)
+        public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
             _platformSwaggerSchemaCustomizer.CustomizeDefaultSwaggerSchemas(context.SchemaRepository.Schemas);
         }

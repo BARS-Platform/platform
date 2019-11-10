@@ -60,6 +60,8 @@ namespace Platform.Web
 			services.AddSingleton<PasswordCheckerService>();
 			services.AddSingleton<TokenService>();
             services.AddSingleton<UserDomainService>();
+
+            services.AddSingleton<PlatformSwaggerSchemasCustomizer>();
         }
 
 		public static void RegisterSwagger(this IServiceCollection services)
@@ -71,7 +73,7 @@ namespace Platform.Web
 					Title = "Platform Swagger API",
 					Version = Startup.SwaggerConfigurationName
 				});
-				c.OperationFilter<PlatformSwaggerOperationFilter>();
+				c.DocumentFilter<PlatformSwaggerDocumentFilter>();
 				c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
 				{
 					In = ParameterLocation.Header, Description = "Please insert JWT in next format: Bearer *token*",
