@@ -12,6 +12,9 @@
         <Compile Include="Models\CurrencyReferenceBook.fs" />
         <Compile Include="Models\User.fs" />
         <Compile Include="Models\WeatherForecast.fs" />
+        <Compile Include="Models\Permission.fs" />
+        <Compile Include="Models\Role.fs" />
+        <Compile Include="Models\UserRole.fs" />
         <Compile Include="ApplicationConfiguration.fs" />
     </ItemGroup>
 

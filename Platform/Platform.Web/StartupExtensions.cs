@@ -13,6 +13,7 @@ using Platform.Domain.DomainServices;
 using Platform.Domain.Services;
 using Platform.Fatabase;
 using Platform.Fodels;
+using Platform.Services.Requirements;
 using Platform.Web.Services.SwaggerServices;
 
 namespace Platform.Web
@@ -46,6 +47,18 @@ namespace Platform.Web
 					{
 						builder.Requirements.Add(new AssertionRequirement(context =>
 							context.User.HasClaim(claim => claim.Type == ClaimTypes.Name)));
+					});
+				
+				options.AddPolicy("Grid.Edit",
+					builder =>
+					{
+						builder.Requirements.Add(new PermissionRequirement("Grid.Edit"));
+					});
+				
+				options.AddPolicy("Grid",
+					builder =>
+					{
+						builder.Requirements.Add(new RoleRequirement("Grid"));
 					});
 			});
 		}
