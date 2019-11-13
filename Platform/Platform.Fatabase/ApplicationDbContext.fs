@@ -3,8 +3,6 @@
 open Microsoft.EntityFrameworkCore
 open Platform.Fodels
 open Platform.Fodels.Interfaces
-open System
-open System.Collections.Generic
 open Platform.Fodels.Models
 
 type ApplicationDbContext() =
@@ -39,26 +37,14 @@ type ApplicationDbContext() =
         ()
 
     override __.OnModelCreating modelBuilder =
-        modelBuilder.Entity<User>().ToTable("users")
-        modelBuilder.Entity<Role>().ToTable("roles")
-        modelBuilder.Entity<UserRole>().ToTable("user_roles")
-        modelBuilder.Entity<Permission>().ToTable("permissions")
+        modelBuilder.Entity<User>().ToTable("Users")
+        modelBuilder.Entity<Role>().ToTable("Roles")
+        modelBuilder.Entity<UserRole>().ToTable("UserRoles")
+        modelBuilder.Entity<Permission>().ToTable("Permissions")
 
-        __.MapEntityToNormalNames<User>(modelBuilder);
-        __.MapEntityToNormalNames<Role>(modelBuilder);
-        __.MapEntityToNormalNames<UserRole>(modelBuilder);
-        __.MapEntityToNormalNames<Permission>(modelBuilder);
-
-        modelBuilder.Entity<User>().HasKey(fun (u: User) -> (u.Id) :> obj)
-            .HasName("pk_id")
-        modelBuilder.Entity<Permission>().HasKey(fun (permission: Permission) -> (permission.Id) :> obj)
-            .HasName("pk_permission_id")
-        modelBuilder.Entity<Role>().HasKey(fun (role: Role) -> (role.Id) :> obj)
-            .HasName("pk_role_id")
-        modelBuilder.Entity<Role>().HasMany(fun (role: Role) -> (role.Permissions) :> IEnumerable<'obj>)
-            .WithOne()
-        modelBuilder.Entity<UserRole>().HasKey(fun (userRole: UserRole) -> (userRole.Id) :> obj)
-            .HasName("pk_user_role_id")
         modelBuilder.Entity<User>().HasKey(fun (u: User) -> ((u :> IPlatformModel).Id) :> obj)
+        modelBuilder.Entity<Role>().HasKey(fun (u: Role) -> ((u :> IPlatformModel).Id) :> obj)
+        modelBuilder.Entity<UserRole>().HasKey(fun (u: UserRole) -> ((u :> IPlatformModel).Id) :> obj)
+        modelBuilder.Entity<Permission>().HasKey(fun (u: Permission) -> ((u :> IPlatformModel).Id) :> obj)
 
         base.OnModelCreating(modelBuilder)

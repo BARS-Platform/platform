@@ -23,36 +23,19 @@ namespace Platform.Migrations
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<User>()
-				.ToTable("users");
+				.ToTable("Users");
 			modelBuilder.Entity<Role>()
-				.ToTable("roles");
+				.ToTable("Roles");
 			modelBuilder.Entity<UserRole>()
-				.ToTable("user_roles");
+				.ToTable("UserRoles");
 			modelBuilder.Entity<Permission>()
-				.ToTable("permissions");
-
-			MapEntityToNormalNames<User>(modelBuilder);
-			MapEntityToNormalNames<Role>(modelBuilder);
-			MapEntityToNormalNames<UserRole>(modelBuilder);
-			MapEntityToNormalNames<Permission>(modelBuilder);
-			
-			modelBuilder.Entity<User>()
-				.HasKey(b => b.Id)
-				.HasName("pk_id");
-			modelBuilder.Entity<Permission>()
-				.HasKey(b => b.Id)
-				.HasName("pk_permission_id");
-			modelBuilder.Entity<Role>()
-				.HasKey(b => b.Id)
-				.HasName("pk_role_id");
-			modelBuilder.Entity<Role>()
-				.HasMany(r => r.Permissions)
-				.WithOne();
-			modelBuilder.Entity<UserRole>()
-				.HasKey(b => b.Id)
-				.HasName("pk_user_role_id");
+				.ToTable("Permissions");
 
 			modelBuilder.Entity<User>().HasKey(u => ((IPlatformModel)u).Id);
+			modelBuilder.Entity<Permission>().HasKey(u => ((IPlatformModel)u).Id);
+			modelBuilder.Entity<Role>().HasKey(u => ((IPlatformModel)u).Id);
+			modelBuilder.Entity<UserRole>().HasKey(u => ((IPlatformModel)u).Id);
+
 			base.OnModelCreating(modelBuilder);
 		}
 	}

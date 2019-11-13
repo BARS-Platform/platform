@@ -6,6 +6,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using Platform.Domain.Common;
 using Platform.Fatabase;
+using Platform.Fodels.Interfaces;
 using Platform.Fodels.Models;
 
 namespace Platform.Domain.Services
@@ -49,7 +50,7 @@ namespace Platform.Domain.Services
             var userEntity = _userRepository.FindByPredicate(x => x.Login == user.Login);
 
             var claimsWithRoles = _userRoleRepository
-                .FindAllByPredicate(x => x.User.Id == userEntity.Id)
+                .FindAllByPredicate(x => ((IPlatformModel)x.User).Id == ((IPlatformModel)userEntity).Id)
                 .Select(userRole => new Claim(ClaimTypes.Role, userRole.Role.RoleName))
                 .ToList();
 
