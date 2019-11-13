@@ -6,8 +6,7 @@ using Microsoft.Extensions.Hosting;
 using VueCliMiddleware;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Platform.Database;
-using Platform.Models;
+using Platform.Migrations;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Platform.Web
@@ -47,6 +46,8 @@ namespace Platform.Web
 			}
 			
 			logger.LogInformation("Handling undone DB migrations...");
+			
+//			Спасибо, F# !!!!!!!!!!1!1!!!
 			ExecuteNewMigrations();
 
 			logger.LogInformation("Initializing Swagger...");
@@ -77,7 +78,7 @@ namespace Platform.Web
 
 		private void ExecuteNewMigrations()
 		{
-			using var context = new ApplicationDbContext();
+			using var context = new MigrationsDbContext();
 			context.Database.Migrate();
 		}
 	}
