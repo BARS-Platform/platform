@@ -15,12 +15,9 @@ type [<AllowNullLiteral>] User() =
             newUser.UpdateLogin login
             newUser.UpdatePassword password
             newUser.UpdateEmail email
-            
+
     [<DefaultValue>]
     val mutable private id: int
-    member this.Id
-        with get () = this.id
-        and set (value) = this.id <- value
 
     [<DefaultValue>]
     val mutable private login: string
@@ -60,6 +57,6 @@ type [<AllowNullLiteral>] User() =
             raise (new ArgumentException("Parameter must be set.", nameof email))
 
         if email.IndexOf('@') = -1 || email.IndexOf('.') = -1 then
-            raise (new ArgumentException(System.String.Format ("Parameter {0} must be of valid format: ***@***.**",  nameof email))) 
+            raise (new ArgumentException(System.String.Format ("Parameter {0} must be of valid format: ***@***.**", nameof email)))
 
         this.email <- email

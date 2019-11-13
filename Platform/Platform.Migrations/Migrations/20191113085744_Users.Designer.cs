@@ -9,7 +9,7 @@ using Platform.Migrations;
 namespace Platform.Migrations.Migrations
 {
     [DbContext(typeof(MigrationsDbContext))]
-    [Migration("20191106090601_Users")]
+    [Migration("20191113085744_Users")]
     partial class Users
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,26 +24,21 @@ namespace Platform.Migrations.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Email")
-                        .HasColumnName("email")
                         .HasColumnType("text");
 
                     b.Property<string>("Login")
-                        .HasColumnName("login")
                         .HasColumnType("text");
 
                     b.Property<string>("Password")
-                        .HasColumnName("password")
                         .HasColumnType("text");
 
-                    b.HasKey("Id")
-                        .HasName("pk_id");
+                    b.HasKey("Id");
 
-                    b.ToTable("users");
+                    b.ToTable("Users");
                 });
 #pragma warning restore 612, 618
         }
