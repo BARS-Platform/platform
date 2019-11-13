@@ -8,7 +8,7 @@ using Platform.Migrations;
 namespace Platform.Migrations.Migrations
 {
     [DbContext(typeof(MigrationsDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    partial class MigrationsDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -22,26 +22,21 @@ namespace Platform.Migrations.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Email")
-                        .HasColumnName("email")
                         .HasColumnType("text");
 
                     b.Property<string>("Login")
-                        .HasColumnName("login")
                         .HasColumnType("text");
 
                     b.Property<string>("Password")
-                        .HasColumnName("password")
                         .HasColumnType("text");
 
-                    b.HasKey("Id")
-                        .HasName("pk_id");
+                    b.HasKey("Id");
 
-                    b.ToTable("users");
+                    b.ToTable("Users");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,19 +2,13 @@
 
 open Microsoft.EntityFrameworkCore
 open Platform.Fodels
+open Platform.Fodels.Interfaces
 open System
 open System.Collections.Generic
 open Platform.Fodels.Models
 
 type ApplicationDbContext() =
     inherit DbContext()
-
-    member this.MapEntityToNormalNames<'T when 'T: not struct>(modelBuilder: ModelBuilder) =
-        Array.ForEach (typedefof<'T>.GetProperties(), fun property ->
-            (
-                modelBuilder.Entity<'T>().Property(property.Name).HasColumnName(property.Name.ToLower())
-                ()
-            ))
 
     [<DefaultValue>]
     val mutable users: DbSet<User>
@@ -65,5 +59,6 @@ type ApplicationDbContext() =
             .WithOne()
         modelBuilder.Entity<UserRole>().HasKey(fun (userRole: UserRole) -> (userRole.Id) :> obj)
             .HasName("pk_user_role_id")
+        modelBuilder.Entity<User>().HasKey(fun (u: User) -> ((u :> IPlatformModel).Id) :> obj)
 
         base.OnModelCreating(modelBuilder)
