@@ -51,17 +51,8 @@ namespace Platform.Web
 							context.User.HasClaim(claim => claim.Type == ClaimTypes.Name)));
 					});
 				
-				options.AddPolicy("Grid.Edit",
-					builder =>
-					{
-						builder.Requirements.Add(new PermissionRequirement("Grid.Edit"));
-					});
-				
-				options.AddPolicy("Grid",
-					builder =>
-					{
-						builder.Requirements.Add(new RoleRequirement("Grid"));
-					});
+				options.RegisterRole("Grid");
+				options.RegisterPermission("Grid.Edit");
 			});
 		}
 		
@@ -110,6 +101,24 @@ namespace Platform.Web
 				var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
 				c.IncludeXmlComments(xmlPath);
 			});
+		}
+
+		private static void RegisterRole(this AuthorizationOptions options, string roleName)
+		{
+			options.AddPolicy(roleName,
+				builder =>
+				{
+					builder.Requirements.Add(new RoleRequirement(roleName));
+				});
+		}
+
+		private static void RegisterPermission(this AuthorizationOptions options, string permissionName)
+		{
+			options.AddPolicy(permissionName,
+				builder =>
+				{
+					builder.Requirements.Add(new PermissionRequirement(permissionName));
+				});
 		}
 	}
 }
