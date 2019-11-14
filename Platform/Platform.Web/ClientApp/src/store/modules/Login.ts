@@ -27,15 +27,17 @@ export default class LoginModule extends VuexModule {
 
   @Action
   async authenticate(user: User) {
-    let answer = { success: false, message: '' }
+    let answer = { success: false, message: '', parameterName: '' }
     await axios({ method: 'get', url: `/api/Users/LogIn?login=${user.login}&password=${user.password}` })
       .then(response => {
         this.setUser(response.data.data)
         answer.success = true
       })
       .catch(error => {
+        let data = error.response.data
         answer.success = false
-        answer.message = error.response.data
+        answer.message = data.message
+        answer.parameterName = data.parameterName
       })
     return answer
   }

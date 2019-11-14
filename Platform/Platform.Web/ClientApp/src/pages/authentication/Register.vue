@@ -14,7 +14,7 @@
             type="text"
             label="Логин"
             counter
-            debounce="1000"
+            debounce="500"
             bottom-slots
             :error="$v.login.$error"
             @blur="$v.login.$touch"
@@ -28,33 +28,36 @@
             v-model.trim="email"
             type="email"
             label="Почта"
-            debounce="1000"
+            debounce="500"
+            bottom-slots
             :error="$v.email.$error"
             @blur="$v.email.$touch"
             @input="$v.email.$touch"
             lazy-rules
-            bottom-slots
             :error-message="`${checkEmailError($v.email)}`"
           />
           <q-input
             id="password"
-            v-model="password"
+            v-model.trim="password"
             @blur="$v.password.$touch"
             @input="$v.password.$touch"
             :error="$v.password.$error"
             type="password"
             label="Пароль"
+            counter
             bottom-slots
             :error-message="`${checkPasswordError($v.password)}`"
           />
           <q-input
             id="repeatPassword"
-            v-model="repeatPassword"
+            v-model.trim="repeatPassword"
             :error="$v.repeatPassword.$error"
             type="password"
             @blur="$v.repeatPassword.$touch"
             @input="$v.repeatPassword.$touch"
+            @keyup.enter="register"
             label="Повторите пароль"
+            counter
             bottom-slots
             :error-message="`${checkRepeatPasswordError($v.repeatPassword)}`"
           />
@@ -199,7 +202,7 @@ export default class RegisterPage extends Vue {
           this.$q.notify({
             message: 'Пользователь успешно зарегистрирован',
             color: 'positive',
-            timeout: 3000
+            timeout: 2000
           })
           this.$router.push('/login')
         })
@@ -207,13 +210,19 @@ export default class RegisterPage extends Vue {
           this.$q.notify({
             message: 'Ошибка при регистрации пользователя',
             color: 'negative',
-            timeout: 3000
+            timeout: 2000
           })
         })
         .finally(() => {
           this.$q.loading.hide()
           this.clearForm()
         })
+    } else {
+      this.$q.notify({
+        message: 'Введите корректные данные',
+        color: 'negative',
+        timeout: 2000
+      })
     }
   }
 }

@@ -20,10 +20,11 @@
         />
         <q-input
           id="password"
-          v-model="password"
+          v-model.trim="password"
           type="password"
           @blur="$v.password.$touch"
           @input="$v.password.$touch"
+          @keyup.enter="signIn"
           label="Пароль"
           bottom-slots
           required
@@ -58,33 +59,44 @@ export default class RegisterPage extends Vue {
   @Validate({ required })
   password = ''
 
-  clearForm() {
+  clearForm(parameterName: string) {
     this.$v.$reset()
-    this.login = ''
     this.password = ''
+    if (parameterName != 'password') {
+      this.login = ''
+    }
   }
 
   async signIn() {
     const user: User = { login: this.login, email: '', password: this.password }
-    this.$q.loading.show()
-    let response = await this.loginStore.authenticate(user)
+    this.$v.$touch()
+    if (!this.$v.$invalid) {
+      this.$q.loading.show()
+      let response = await this.loginStore.authenticate(user)
 
-    if (response.success) {
-      this.$q.notify({
-        message: 'Добро пожаловать',
-        color: 'positive',
-        timeout: 3000
-      })
-      this.$router.push('/')
+      if (response.success) {
+        this.$q.notify({
+          message: 'Добро пожаловать',
+          color: 'positive',
+          timeout: 2000
+        })
+        this.$router.push('/')
+      } else {
+        this.$q.notify({
+          message: response.message,
+          color: 'negative',
+          timeout: 2000
+        })
+      }
+      this.$q.loading.hide()
+      this.clearForm(response.parameterName)
     } else {
       this.$q.notify({
-        message: response.message,
+        message: 'Введите корректные данные',
         color: 'negative',
-        timeout: 3000
+        timeout: 2000
       })
     }
-    this.$q.loading.hide()
-    this.clearForm()
   }
 }
 </script>

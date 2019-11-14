@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Platform.Database\Platform.Database.csproj" />
+    <ProjectReference Include="..\Platform.Fatabase\Platform.Fatabase.fsproj" />
   </ItemGroup>
 
 </Project>

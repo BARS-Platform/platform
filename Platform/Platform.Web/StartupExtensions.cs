@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Platform.Database;
 using Platform.Domain.Common;
 using Platform.Domain.DomainServices;
 using Platform.Domain.Services;
-using Platform.Models;
+using Platform.Fatabase;
+using Platform.Fodels;
 using Platform.Web.Services.SwaggerServices;
 
 namespace Platform.Web
@@ -52,12 +52,16 @@ namespace Platform.Web
 		
 		public static void RegisterServices(this IServiceCollection services)
 		{
+			services.AddSingleton<ApplicationConfiguration>();
+			
 			services.AddTransient<ApplicationDbContext>();
 			services.AddSingleton(typeof(IRepository<>), typeof(BaseRepository<>));
 
 			services.AddSingleton<PasswordCheckerService>();
 			services.AddSingleton<TokenService>();
             services.AddSingleton<UserDomainService>();
+
+            services.AddSingleton<PlatformSwaggerSchemasCustomizer>();
         }
 
 		public static void RegisterSwagger(this IServiceCollection services)
@@ -69,7 +73,7 @@ namespace Platform.Web
 					Title = "Platform Swagger API",
 					Version = Startup.SwaggerConfigurationName
 				});
-				c.OperationFilter<PlatformSwaggerOperationFilter>();
+				c.DocumentFilter<PlatformSwaggerDocumentFilter>();
 				c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
 				{
 					In = ParameterLocation.Header, Description = "Please insert JWT in next format: Bearer *token*",
