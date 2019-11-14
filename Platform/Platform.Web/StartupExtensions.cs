@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -13,6 +14,7 @@ using Platform.Domain.DomainServices;
 using Platform.Domain.Services;
 using Platform.Fatabase;
 using Platform.Fodels;
+using Platform.Services.Handlers;
 using Platform.Services.Requirements;
 using Platform.Web.Services.SwaggerServices;
 
@@ -75,7 +77,10 @@ namespace Platform.Web
             services.AddSingleton<UserDomainService>();
 
             services.AddSingleton<PlatformSwaggerSchemasCustomizer>();
-        }
+
+            services.AddSingleton<IAuthorizationHandler, RoleHandler>();
+            services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+		}
 
 		public static void RegisterSwagger(this IServiceCollection services)
 		{
