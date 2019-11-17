@@ -4,7 +4,7 @@ open System
 open System.Linq.Expressions
 open Platform.Fodels.Interfaces
 
-type IRepository<'T when 'T :> IPlatformModel> =
+type IRepository<'T when 'T :> IEntityBase> =
     interface
         abstract Create: 'T -> 'T
         abstract Delete: 'T -> bool
