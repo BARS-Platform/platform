@@ -10,8 +10,8 @@ using Platform.Migrations;
 namespace Platform.Migrations.Migrations
 {
     [DbContext(typeof(MigrationsDbContext))]
-    [Migration("20191113212623_RolesAndPermissions")]
-    partial class RolesAndPermissions
+    [Migration("20191117093315_RolesAndPermissionsCollection")]
+    partial class RolesAndPermissionsCollection
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

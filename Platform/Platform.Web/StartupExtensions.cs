@@ -124,10 +124,10 @@ namespace Platform.Web
             
             var roleRepository = serviceProvider.GetService<IRepository<Role>>();
             var existingRole = roleRepository.FindByPredicate(x => x.RoleName == adminRoleName);
-            if (existingRole?.Permissions?.All(y => adminPermissions.Contains(y)) == true) return;
-            if (existingRole != null) roleRepository.Delete(existingRole);
-
-            roleRepository.Create(new Role(adminRoleName, "Администратор", adminPermissions));
+            if (existingRole == null)
+            {
+                roleRepository.Create(new Role(adminRoleName, "Администратор", adminPermissions));
+            }
         }
 
         private static void RegisterRole(this AuthorizationOptions options, string roleName)
