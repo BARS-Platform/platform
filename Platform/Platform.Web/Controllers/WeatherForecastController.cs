@@ -35,7 +35,7 @@ namespace Platform.Web.Controllers
 					TemperatureC = rng.Next(-20, 55),
 					Summary = Summaries[rng.Next(Summaries.Length)]
 				};
-				((IPlatformModel) temp).Id = index;
+				((IEntityBase) temp).Id = index;
 				return temp;
 			});
 		}

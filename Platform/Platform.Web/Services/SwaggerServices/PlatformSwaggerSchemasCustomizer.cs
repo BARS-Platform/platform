@@ -24,7 +24,7 @@ namespace Platform.Web.Services.SwaggerServices
                 .Where(x => !x.IsDynamic)
                 .SelectMany(x => x.GetExportedTypes()
                                     .Where(y => y.IsClass)
-                                    .Where(y => typeof(IPlatformModel).IsAssignableFrom(y)))
+                                    .Where(y => typeof(IEntityBase).IsAssignableFrom(y)))
                 .ToList();
         }
 

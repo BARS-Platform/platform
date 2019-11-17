@@ -8,10 +8,16 @@
     <ItemGroup>
         <Compile Include="Enums\AttributesEnum.fs" />
         <Compile Include="Attributes\PlatformAttribute.fs" />
-        <Compile Include="Interfaces\IPlatformModel.fs" />
+        <Compile Include="Interfaces\IEntityBase.fs" />
         <Compile Include="Models\CurrencyReferenceBook.fs" />
         <Compile Include="Models\User.fs" />
         <Compile Include="Models\WeatherForecast.fs" />
+        <Compile Include="Models\Address\Country.fs" />
+        <Compile Include="Models\Address\State.fs" />
+        <Compile Include="Models\Address\City.fs" />
+        <Compile Include="Models\Address\Street.fs" />
+        <Compile Include="Models\Address\House.fs" />
+        <Compile Include="Models\Address\Apartment.fs" />
         <Compile Include="ApplicationConfiguration.fs" />
     </ItemGroup>
 

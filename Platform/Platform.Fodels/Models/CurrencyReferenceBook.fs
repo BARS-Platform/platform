@@ -5,7 +5,7 @@ open Platform.Fodels.Enums
 open Platform.Fodels.Interfaces
 
 type [<AllowNullLiteral>] [<Platform(AttributesEnum.Grid ||| AttributesEnum.Form)>] CurrencyReferenceBook() =
-    interface IPlatformModel with
+    interface IEntityBase with
         member this.Id
             with get () = this.id
             and set (value) = this.id <- value

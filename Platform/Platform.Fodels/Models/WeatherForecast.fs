@@ -6,7 +6,7 @@ open Platform.Fodels.Enums
 open Platform.Fodels.Attributes
 
 type [<AllowNullLiteral>] WeatherForecast() =
-    interface IPlatformModel with
+    interface IEntityBase with
         member this.Id
             with get () = this.id
             and set (value) = this.id <- value

@@ -4,9 +4,9 @@ open Platform.Fodels.Interfaces
 open Platform.Fatabase
 open System.Linq
 
-type BaseRepository<'T when 'T :> IPlatformModel and 'T: not struct>(context: ApplicationDbContext) =
+type BaseRepository<'T when 'T :> IEntityBase and 'T: not struct>(context: ApplicationDbContext) =
     interface IRepository<'T> with
-    
+
         member this.Create(entity: 'T) =
             context.Add(entity)
             context.SaveChanges()
@@ -19,10 +19,10 @@ type BaseRepository<'T when 'T :> IPlatformModel and 'T: not struct>(context: Ap
         member this.Get id =
             context.Find id
 
-        member this.FindByPredicate expression  =
+        member this.FindByPredicate expression =
             context.Set<'T>().SingleOrDefault expression
 
-        member this.Update (entity: 'T) =
+        member this.Update(entity: 'T) =
             context.Update entity
             context.SaveChanges
             entity
