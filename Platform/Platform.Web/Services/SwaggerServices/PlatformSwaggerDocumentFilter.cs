@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using System.Linq;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Platform.Web.Services.SwaggerServices
@@ -13,7 +14,10 @@ namespace Platform.Web.Services.SwaggerServices
         }
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
-            _platformSwaggerSchemaCustomizer.CustomizeDefaultSwaggerSchemas(context.SchemaRepository.Schemas);
+            var pairs = context.SchemaRepository.Schemas
+                .Where(x=>!x.Value.Enum.Any())
+                .ToDictionary(x => x.Key, x => x.Value);
+            _platformSwaggerSchemaCustomizer.CustomizeDefaultSwaggerSchemas(pairs);
         }
     }
 }

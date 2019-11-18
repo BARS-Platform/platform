@@ -8,11 +8,11 @@ namespace Platform.Domain.DomainServices
 {
 	public class UserDomainService
 	{
-		private readonly IRepository<User> _repository;
+		private readonly IRepository _repository;
 		private readonly PasswordCheckerService _checkerService;
 		private readonly TokenService _tokenService;
 
-		public UserDomainService(IRepository<User> repository,
+		public UserDomainService(IRepository repository,
 			PasswordCheckerService checkerService, TokenService tokenService)
 		{
 			_repository = repository;
@@ -22,21 +22,21 @@ namespace Platform.Domain.DomainServices
 
 		public OperationResult CheckLoginUsed(string login)
 		{
-			var user = _repository.FindByPredicate(x => x.Login == login);
+			var user = _repository.FindByPredicate<User>(x => x.Login == login);
 
 			return new OperationResult(user == null);
 		}
 
 		public OperationResult CheckEmailUsed(string email)
 		{
-			var user = _repository.FindByPredicate(x => x.Email == email);
+			var user = _repository.FindByPredicate<User>(x => x.Email == email);
 
 			return new OperationResult(user == null);
 		}
 
 		public OperationResult LogIn(string login, string password)
 		{
-			var user = _repository.FindByPredicate(x => x.Login == login)
+			var user = _repository.FindByPredicate<User>(x => x.Login == login)
 			           ?? throw new AuthorizationException(
 				           "User with such login does not exist. Please review your credentials.", nameof(login));
 

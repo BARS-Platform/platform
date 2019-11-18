@@ -55,11 +55,13 @@ namespace Platform.Web
 			services.AddSingleton<ApplicationConfiguration>();
 			
 			services.AddTransient<ApplicationDbContext>();
-			services.AddSingleton(typeof(IRepository<>), typeof(BaseRepository<>));
+			services.AddSingleton(typeof(IRepository), typeof(BaseRepository));
 
 			services.AddSingleton<PasswordCheckerService>();
 			services.AddSingleton<TokenService>();
+			
             services.AddSingleton<UserDomainService>();
+            services.AddSingleton<AddressDomainService>();
 
             services.AddSingleton<PlatformSwaggerSchemasCustomizer>();
         }

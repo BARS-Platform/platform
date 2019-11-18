@@ -9,18 +9,20 @@ type [<AllowNullLiteral>] State() =
             with get () = this.id
             and set (value) = this.id <- value
 
+    interface IAddressElement with
+        member this.Name
+            with get () = this.name
+            and set (name) =
+                if not (isNull name) then
+                    this.name <- name
+                else
+                    raise (new ArgumentNullException(nameof (name)))
+
     [<DefaultValue>]
     val mutable private id: int
 
     [<DefaultValue>]
     val mutable private name: string
-    member this.Name
-        with get () = this.name
-        and set (name) =
-            if not (isNull name) then
-                this.name <- name
-            else
-                raise (new ArgumentNullException(nameof (name)))
 
     [<DefaultValue>]
     val mutable private country: Country
