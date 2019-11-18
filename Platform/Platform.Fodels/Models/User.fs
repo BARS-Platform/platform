@@ -23,19 +23,19 @@ type [<AllowNullLiteral>] User() =
     val mutable private login: string
     member this.Login
         with get () = this.login
-        and set (value) = this.login <- value
+        and private set (value) = this.login <- value
 
     [<DefaultValue>]
     val mutable private email: string
     member this.Email
         with get () = this.email
-        and set (value) = this.email <- value
+        and private set (value) = this.email <- value
 
     [<DefaultValue>]
     val mutable private pass: string
     member this.Password
         with get () = this.pass
-        and set value = this.pass <- value
+        and private set (value) = this.pass <- value
 
     member this.UpdateLogin(login: string) =
         if System.String.IsNullOrEmpty login then
