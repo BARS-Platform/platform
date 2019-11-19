@@ -32,7 +32,7 @@ namespace Platform.Web
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger, IServiceProvider provider)
 		{
-			provider.CheckBaseRolesForExisting();
+			provider.CheckRegisteredRolesAndPermissionsForExisting();
 			app.UseHttpsRedirection();
 
 			if (env.IsDevelopment())

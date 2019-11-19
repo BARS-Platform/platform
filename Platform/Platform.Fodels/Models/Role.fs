@@ -46,3 +46,10 @@ type [<AllowNullLiteral>] Role() =
     member this.Permissions
         with get () = this.permissions
         and set (value) = this.permissions <- value
+    
+    override this.Equals(thatObj) =
+            match thatObj with
+            | :? Role as that -> 
+                this.RoleName = that.RoleName
+                && this.Description = that.Description
+            | _ -> false

@@ -14,5 +14,6 @@ type IRepository<'T when 'T :> IPlatformModel> =
         abstract FindByPredicate: Expression<Func<'T, bool>> -> 'T
         abstract FindByPredicate: Expression<Func<'T, bool>> * Func<IQueryable<'T>, IIncludableQueryable<'T, Object>> -> 'T
         abstract FindAllByPredicate: Expression<Func<'T, bool>> -> IQueryable<'T>
+        abstract FindAllByPredicate: Expression<Func<'T, bool>> * Func<IQueryable<'T>, IIncludableQueryable<'T, Object>> -> IQueryable<'T>
         abstract Update: 'T -> 'T
     end

@@ -28,6 +28,9 @@ namespace Platform.Web
 {
     public static class StartupExtensions
     {
+        private static readonly List<Role> RegisteredRoles = new List<Role>();
+        private static readonly List<Permission> RegisteredPermissions = new List<Permission>();
+        
         public static void AddJwtAuthentication(this IServiceCollection services)
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
@@ -57,11 +60,13 @@ namespace Platform.Web
                             context.User.HasClaim(claim => claim.Type == ClaimTypes.Name)));
                     });
 
-                options.RegisterRole("Admin");
-                options.RegisterPermission("RoleView");
-                options.RegisterPermission("RoleEdit");
-                options.RegisterPermission("PermissionView");
-                options.RegisterPermission("PermissionEdit");
+                options.RegisterRole(new Role("Admin", "Администратор", new List<Permission>
+                {
+                    new Permission("RoleView", "Просмотр Ролей"),
+                    new Permission("RoleEdit", "Изменение Ролей"),
+                    new Permission("PermissionView", "Просмотр Разрешений"),
+                    new Permission("PermissionEdit", "Изменение Разрешений")
+                }));
             });
         }
 
@@ -112,55 +117,47 @@ namespace Platform.Web
             });
         }
 
-        public static void CheckBaseRolesForExisting(this IServiceProvider serviceProvider)
+        public static void CheckRegisteredRolesAndPermissionsForExisting(this IServiceProvider serviceProvider)
         {
-            const string adminRoleName = "Admin";
-            const string adminRoleDescription = "Администратор";
-            var adminPermissions = new[]
-            {
-                new Permission("RoleView", "Просмотр Ролей"),
-                new Permission("RoleEdit", "Изменение Ролей"),
-                new Permission("PermissionView", "Просмотр Разрешений"),
-                new Permission("PermissionEdit", "Изменение Разрешений")
-            };
-            
             var roleRepository = serviceProvider.GetService<IRepository<Role>>();
-            var existingRole = roleRepository
-                .FindByPredicate(x => x.RoleName == adminRoleName,
-                    x => x.Include(role => role.Permissions));
-            
-            if (existingRole == null)
+            var notExistingRoles = roleRepository
+                .FindAllByPredicate(role => !RegisteredRoles.Contains(role) ||
+                                            role.Permissions.Any(permission => 
+                                                !RegisteredPermissions.Contains(permission)),
+                    query => query.Include(role => role.Permissions));
+
+            foreach (var role in notExistingRoles)
             {
-                roleRepository.Create(new Role(adminRoleName, adminRoleDescription, adminPermissions));
+                roleRepository.Create(role);
             }
-            else if (existingRole.Permissions == null)
-            {
-                roleRepository.Delete(existingRole);
-                roleRepository.Create(new Role(adminRoleName, adminRoleDescription, adminPermissions));
-            }
-            else if (existingRole.Permissions.Any(x => !adminPermissions.Contains(x)))
-            {
-                var permissionRepository = serviceProvider.GetService<IRepository<Permission>>();
-                foreach (var permission in existingRole.Permissions)
+        }
+
+        private static void RegisterRole(this AuthorizationOptions options, Role role)
+        {
+            RegisteredRoles.Add(role);
+            options.AddPolicy(role.RoleName,
+                builder =>
                 {
-                    permissionRepository.Delete(permission);
+                    builder.Requirements.Add(new RoleRequirement(role.RoleName));
+                });
+
+            if (role.Permissions != null)
+            {
+                foreach (var permission in role.Permissions)
+                {
+                    RegisterPermission(options, permission);
                 }
-                
-                roleRepository.Delete(existingRole);
-                roleRepository.Create(new Role(adminRoleName, adminRoleDescription, adminPermissions));
             }
         }
 
-        private static void RegisterRole(this AuthorizationOptions options, string roleName)
+        private static void RegisterPermission(AuthorizationOptions options, Permission permission)
         {
-            options.AddPolicy(roleName,
-                builder => { builder.Requirements.Add(new RoleRequirement(roleName)); });
-        }
-
-        private static void RegisterPermission(this AuthorizationOptions options, string permissionName)
-        {
-            options.AddPolicy(permissionName,
-                builder => { builder.Requirements.Add(new PermissionRequirement(permissionName)); });
+            RegisteredPermissions.Add(permission);
+            options.AddPolicy(permission.PermissionId,
+                builder =>
+                {
+                    builder.Requirements.Add(new PermissionRequirement(permission.PermissionId));
+                });
         }
     }
 }
