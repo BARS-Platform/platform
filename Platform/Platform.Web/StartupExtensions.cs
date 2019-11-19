@@ -126,9 +126,8 @@ namespace Platform.Web
             
             var roleRepository = serviceProvider.GetService<IRepository<Role>>();
             var existingRole = roleRepository
-                .FindAllByPredicate(x => x.RoleName == adminRoleName)
-                .Include(x => x.Permissions)
-                .FirstOrDefault();
+                .FindByPredicate(x => x.RoleName == adminRoleName,
+                    x => x.Include(role => role.Permissions));
             
             if (existingRole == null)
             {
