@@ -32,3 +32,10 @@ type [<AllowNullLiteral>] Permission private () =
     member this.Description
         with get () = this.description
         and set (value) = this.description <- value
+        
+    override this.Equals(thatObj) =
+            match thatObj with
+            | :? Permission as that -> 
+                this.PermissionId = that.PermissionId
+                && this.Description = that.Description    
+            | _ -> false

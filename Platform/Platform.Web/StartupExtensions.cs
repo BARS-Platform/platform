@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FSharp.Collections;
 using Microsoft.IdentityModel.Tokens;
@@ -113,7 +114,8 @@ namespace Platform.Web
 
         public static void CheckBaseRolesForExisting(this IServiceProvider serviceProvider)
         {
-            var adminRoleName = "Admin";
+            const string adminRoleName = "Admin";
+            const string adminRoleDescription = "Администратор";
             var adminPermissions = new[]
             {
                 new Permission("RoleView", "Просмотр Ролей"),
@@ -123,10 +125,30 @@ namespace Platform.Web
             };
             
             var roleRepository = serviceProvider.GetService<IRepository<Role>>();
-            var existingRole = roleRepository.FindByPredicate(x => x.RoleName == adminRoleName);
+            var existingRole = roleRepository
+                .FindAllByPredicate(x => x.RoleName == adminRoleName)
+                .Include(x => x.Permissions)
+                .FirstOrDefault();
+            
             if (existingRole == null)
             {
-                roleRepository.Create(new Role(adminRoleName, "Администратор", adminPermissions));
+                roleRepository.Create(new Role(adminRoleName, adminRoleDescription, adminPermissions));
+            }
+            else if (existingRole.Permissions == null)
+            {
+                roleRepository.Delete(existingRole);
+                roleRepository.Create(new Role(adminRoleName, adminRoleDescription, adminPermissions));
+            }
+            else if (existingRole.Permissions.Any(x => !adminPermissions.Contains(x)))
+            {
+                var permissionRepository = serviceProvider.GetService<IRepository<Permission>>();
+                foreach (var permission in existingRole.Permissions)
+                {
+                    permissionRepository.Delete(permission);
+                }
+                
+                roleRepository.Delete(existingRole);
+                roleRepository.Create(new Role(adminRoleName, adminRoleDescription, adminPermissions));
             }
         }
 
