@@ -89,6 +89,7 @@ namespace Platform.Web
 						new string[] { }
 					}
 				});
+				c.DescribeAllEnumsAsStrings();
 				
 				var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
 				var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);

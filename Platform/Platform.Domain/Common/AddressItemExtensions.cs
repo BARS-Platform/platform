@@ -9,10 +9,10 @@ namespace Platform.Domain.Common
 			return elType switch
 			{
 				AddressItem.State => AddressItem.Country.ToString(),
-				AddressItem.City => AddressItem.Country.ToString(),
-				AddressItem.Street => AddressItem.Country.ToString(),
-				AddressItem.House => AddressItem.Country.ToString(),
-				AddressItem.Apartment => AddressItem.Country.ToString(),
+				AddressItem.City => AddressItem.State.ToString(),
+				AddressItem.Street => AddressItem.City.ToString(),
+				AddressItem.House => AddressItem.Street.ToString(),
+				AddressItem.Apartment => AddressItem.House.ToString(),
 				_ => null
 			};
 		}

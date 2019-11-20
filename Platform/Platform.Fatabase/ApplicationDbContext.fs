@@ -2,7 +2,6 @@
 
 open Microsoft.EntityFrameworkCore
 open Platform.Fodels
-open Platform.Fodels.Interfaces
 open Platform.Fodels.Models
 open Platform.Fodels.Models.Address
 
@@ -12,17 +11,6 @@ type ApplicationDbContext() =
     override __.OnConfiguring optionsBuilder =
         optionsBuilder.UseNpgsql((new ApplicationConfiguration()).ConnectionString)
         ()
-
-    override __.OnModelCreating modelBuilder =
-        modelBuilder.Entity<User>().HasKey(fun (u: User) -> ((u :> IEntityBase).Id) :> obj) |> ignore
-        modelBuilder.Entity<Apartment>().HasKey(fun (u: Apartment) -> ((u :> IEntityBase).Id) :> obj) |> ignore
-        modelBuilder.Entity<House>().HasKey(fun (u: House) -> ((u :> IEntityBase).Id) :> obj) |> ignore
-        modelBuilder.Entity<Street>().HasKey(fun (u: Street) -> ((u :> IEntityBase).Id) :> obj) |> ignore
-        modelBuilder.Entity<City>().HasKey(fun (u: City) -> ((u :> IEntityBase).Id) :> obj) |> ignore
-        modelBuilder.Entity<State>().HasKey(fun (u: State) -> ((u :> IEntityBase).Id) :> obj) |> ignore
-        modelBuilder.Entity<Country>().HasKey(fun (u: Country) -> ((u :> IEntityBase).Id) :> obj) |> ignore
-
-        base.OnModelCreating(modelBuilder)
 
     [<DefaultValue>]
     val mutable users: DbSet<User>

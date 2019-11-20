@@ -23,12 +23,16 @@ namespace Platform.Domain.Common
 
 		internal static IAddressElement UpdateName(this IAddressElement el, string name)
 		{
-			el.Name = name;
+			if (!string.IsNullOrEmpty(name))
+				el.Name = name;
 			return el;
 		}
 
-		internal static IAddressElement UpdateParent(this IAddressElement el, string parentPropertyName, int parentId)
+		internal static IAddressElement UpdateParent(this IAddressElement el, string parentPropertyName,
+			object parentId)
 		{
+			if (parentPropertyName == null)
+				return el;
 			el.GetType().GetProperty(parentPropertyName)?.SetValue(el, parentId);
 			return el;
 		}

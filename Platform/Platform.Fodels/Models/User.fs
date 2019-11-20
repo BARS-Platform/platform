@@ -4,10 +4,14 @@ open System
 open Platform.Fodels.Interfaces
 
 type [<AllowNullLiteral>] User() =
+    member this.Id
+        with get () = this.id
+        and set (value) = this.id <- value
+
     interface IEntityBase with
         member this.Id
-            with get () = this.id
-            and set (value) = this.id <- value
+            with get () = this.Id
+            and set(value) = this.Id <- value
 
     public new(login: string, password: string, email: string) as newUser =
         User()

@@ -27,11 +27,7 @@ namespace Platform.Web.Controllers
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		public IActionResult AddItem(AddressDto dto)
 		{
-			OperationResult Add()
-			{
-				return _service.CreateItem(dto);
-			}
-
+			OperationResult Add() => _service.CreateItem(dto);
 			return HandleRequest(Add);
 		}
 
@@ -40,13 +36,9 @@ namespace Platform.Web.Controllers
 		/// </summary>
 		[HttpPost]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public IActionResult DeleteItem(IAddressElement element)
+		public IActionResult DeleteItem([Required] AddressItem elType, [Required] int elementId)
 		{
-			OperationResult Delete()
-			{
-				return _service.RemoveItem(element);
-			}
-
+			OperationResult Delete() => _service.RemoveItem(elType, elementId);
 			return HandleRequest(Delete);
 		}
 
@@ -55,13 +47,9 @@ namespace Platform.Web.Controllers
 		/// </summary>
 		[HttpGet]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public IActionResult GetItem([Required] AddressItem elType, [Required] int id)
+		public IActionResult GetItem([Required] AddressItem elType, [Required] int elementId)
 		{
-			OperationResult Get()
-			{
-				return _service.GetItem(elType, id);
-			}
-
+			OperationResult Get() => _service.GetItem(elType, elementId);
 			return HandleRequest(Get);
 		}
 
@@ -70,13 +58,13 @@ namespace Platform.Web.Controllers
 		/// </summary>
 		[HttpPost]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public IActionResult UpdateItem(IAddressElement element)
+		public IActionResult UpdateItem([Required] AddressItem elType, [Required] int elementId, string newName,
+			int parentId)
 		{
-			OperationResult Update()
-			{
-				return _service.UpdateItem(element);
-			}
+			if (string.IsNullOrEmpty(newName) && parentId == 0)
+				return Ok("No changed data.");
 
+			OperationResult Update() => _service.UpdateItem(elType, elementId, newName, parentId);
 			return HandleRequest(Update);
 		}
 
