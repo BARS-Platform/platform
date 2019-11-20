@@ -42,16 +42,7 @@ namespace Platform.Domain.DomainServices
 
 		public OperationResult GetItem(AddressItem elType, int elementId)
 		{
-			var res = elType switch
-			{
-				AddressItem.Country => (IAddressElement) _repository.Get<Country>(elementId),
-				AddressItem.State => _repository.Get<State>(elementId),
-				AddressItem.City => _repository.Get<City>(elementId),
-				AddressItem.Street => _repository.Get<Street>(elementId),
-				AddressItem.House => _repository.Get<House>(elementId),
-				AddressItem.Apartment => _repository.Get<Apartment>(elementId),
-				_ => null
-			};
+			var res = GetAddressElement(elType, elementId);
 
 			return res == null
 				? new OperationResult(false, "Element was not found.")
@@ -60,16 +51,7 @@ namespace Platform.Domain.DomainServices
 
 		public OperationResult RemoveItem(AddressItem elType, int elementId)
 		{
-			var el = elType switch
-			{
-				AddressItem.Country => (IAddressElement) _repository.Get<Country>(elementId),
-				AddressItem.State => _repository.Get<State>(elementId),
-				AddressItem.City => _repository.Get<City>(elementId),
-				AddressItem.Street => _repository.Get<Street>(elementId),
-				AddressItem.House => _repository.Get<House>(elementId),
-				AddressItem.Apartment => _repository.Get<Apartment>(elementId),
-				_ => null
-			};
+			var el = GetAddressElement(elType, elementId);
 
 			if (el == null)
 				return new OperationResult(false, "Element was not found.");
@@ -101,6 +83,20 @@ namespace Platform.Domain.DomainServices
 			var elType = _addressTypes.FirstOrDefault(x => x.Name == typeName);
 			return (IAddressElement) typeof(IRepository).GetMethod("Get")?.MakeGenericMethod(elType)
 				.Invoke(_repository, new[] {(object) elementId});
+		}
+
+		private IAddressElement GetAddressElement(AddressItem elType, int elementId)
+		{
+			return elType switch
+			{
+				AddressItem.Country => (IAddressElement) _repository.Get<Country>(elementId),
+				AddressItem.State => _repository.Get<State>(elementId),
+				AddressItem.City => _repository.Get<City>(elementId),
+				AddressItem.Street => _repository.Get<Street>(elementId),
+				AddressItem.House => _repository.Get<House>(elementId),
+				AddressItem.Apartment => _repository.Get<Apartment>(elementId),
+				_ => null
+			};
 		}
 	}
 }
