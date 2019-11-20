@@ -33,7 +33,8 @@ namespace Platform.Web.Services.SwaggerServices
         /// </summary>
         public void CustomizeDefaultSwaggerSchemas(Dictionary<string, OpenApiSchema> defaultSchemas)
         {
-            foreach(var model in defaultSchemas)
+            foreach(var model in defaultSchemas
+                .Where(x => _listModels.Select(x => x.Name).Contains(x.Key)))
             {
                 var modelPropertiesDict = GetModelPropertiesAttributesDict(model.Key);
 
@@ -56,7 +57,7 @@ namespace Platform.Web.Services.SwaggerServices
         private Dictionary<string, OpenApiObject> GetModelPropertiesAttributesDict(string modelName)
         {            
             var modelType = _listModels
-                .FirstOrDefault(x => x.Name == modelName) ?? throw new Exception("Не найдена соответствующая модель");
+                .Single(x => x.Name == modelName);
 
             var modelProperties = modelType.GetProperties();
 
