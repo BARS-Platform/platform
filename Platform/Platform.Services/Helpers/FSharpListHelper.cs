@@ -7,10 +7,9 @@ namespace Platform.Services.Helpers
     {
         public static FSharpList<T> ToFSharpList<T>(this IEnumerable<T> enumerable)
         {
-            var enumerator = enumerable.GetEnumerator();
+            using var enumerator = enumerable.GetEnumerator();
             enumerator.MoveNext();
             var fSharpList = GenerateSubList(enumerator);
-            enumerator.Dispose();
             return fSharpList;
         }
 

@@ -6,7 +6,6 @@ using Platform.Services.Requirements;
 
 namespace Platform.Services.Handlers
 {
-    // ReSharper disable once UnusedMember.Global
     public class RoleHandler : AuthorizationHandler<RoleRequirement>
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, RoleRequirement requirement)

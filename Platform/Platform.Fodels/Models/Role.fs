@@ -4,7 +4,7 @@ open System
 open System.Collections.Generic
 open Platform.Fodels.Interfaces
 
-type [<AllowNullLiteral>] Role() =
+type [<AllowNullLiteral>] Role private () =
     interface IPlatformModel with
         member this.Id
             with get () = this.id
@@ -25,9 +25,6 @@ type [<AllowNullLiteral>] Role() =
 
     [<DefaultValue>]
     val mutable private id: int
-    member this.Id
-            with get () = this.id
-            and set (value) = this.id <- value
 
     [<DefaultValue>]
     val mutable private roleName: string

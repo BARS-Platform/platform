@@ -8,7 +8,6 @@ using Platform.Services.Requirements;
 
 namespace Platform.Services.Handlers
 {
-    // ReSharper disable once UnusedMember.Global
     public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
     {
         private readonly IRepository<Role> _roleRepository;
