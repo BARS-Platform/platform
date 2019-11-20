@@ -14,10 +14,7 @@ namespace Platform.Web.Services.SwaggerServices
         }
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
-            var pairs = context.SchemaRepository.Schemas
-                .Where(x=>!x.Value.Enum.Any())
-                .ToDictionary(x => x.Key, x => x.Value);
-            _platformSwaggerSchemaCustomizer.CustomizeDefaultSwaggerSchemas(pairs);
+            _platformSwaggerSchemaCustomizer.CustomizeDefaultSwaggerSchemas(context.SchemaRepository.Schemas);
         }
     }
 }
