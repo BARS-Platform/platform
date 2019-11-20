@@ -32,12 +32,7 @@ namespace Platform.Migrations.Migrations
                     b.Property<string>("PermissionId")
                         .HasColumnType("text");
 
-                    b.Property<int?>("RoleId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
 
                     b.ToTable("Permissions");
                 });
@@ -58,6 +53,28 @@ namespace Platform.Migrations.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("Platform.Fodels.Models.RolePermission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int?>("PermissionId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("RoleId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PermissionId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RolePermissions");
                 });
 
             modelBuilder.Entity("Platform.Fodels.Models.User", b =>
@@ -103,10 +120,14 @@ namespace Platform.Migrations.Migrations
                     b.ToTable("UserRoles");
                 });
 
-            modelBuilder.Entity("Platform.Fodels.Models.Permission", b =>
+            modelBuilder.Entity("Platform.Fodels.Models.RolePermission", b =>
                 {
-                    b.HasOne("Platform.Fodels.Models.Role", null)
-                        .WithMany("Permissions")
+                    b.HasOne("Platform.Fodels.Models.Permission", "Permission")
+                        .WithMany()
+                        .HasForeignKey("PermissionId");
+
+                    b.HasOne("Platform.Fodels.Models.Role", "Role")
+                        .WithMany()
                         .HasForeignKey("RoleId");
                 });
 

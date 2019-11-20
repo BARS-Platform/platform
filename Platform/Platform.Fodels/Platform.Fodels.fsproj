@@ -15,6 +15,7 @@
         <Compile Include="Models\Permission.fs" />
         <Compile Include="Models\Role.fs" />
         <Compile Include="Models\UserRole.fs" />
+        <Compile Include="Models\RolePermission.fs" />
         <Compile Include="ApplicationConfiguration.fs" />
     </ItemGroup>
 

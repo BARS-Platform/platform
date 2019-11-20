@@ -1,19 +1,18 @@
 namespace Platform.Fodels.Models
 
-open System
 open Platform.Fodels.Interfaces
 
-type [<AllowNullLiteral>] UserRole private () =
+type [<AllowNullLiteral>] RolePermission private () =
     interface IPlatformModel with
         member this.Id
             with get () = this.id
             and set (value) = this.id <- value
 
-    public new(user: User, role: Role) as newUserRole =
-        UserRole()
+    public new(role: Role, permission: Permission) as newUserRole =
+        RolePermission()
         then
-            newUserRole.User <- user
-            newUserRole.Role <- role            
+            newUserRole.Role <- role
+            newUserRole.Permission <- permission
             
     [<DefaultValue>]
     val mutable private id: int
@@ -22,13 +21,13 @@ type [<AllowNullLiteral>] UserRole private () =
             and set (value) = this.id <- value
     
     [<DefaultValue>]
-    val mutable private user: User
-    member this.User
-        with get () = this.user
-        and set (value) = this.user <- value
-
-    [<DefaultValue>]
     val mutable private role: Role
     member this.Role
         with get () = this.role
-        and set value = this.role <- value
+        and set (value) = this.role <- value
+
+    [<DefaultValue>]
+    val mutable private permission: Permission
+    member this.Permission
+        with get () = this.permission
+        and set value = this.permission <- value

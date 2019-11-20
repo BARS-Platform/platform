@@ -1,7 +1,5 @@
 namespace Platform.Fodels.Models
 
-open System
-open System.Collections.Generic
 open Platform.Fodels.Interfaces
 
 type [<AllowNullLiteral>] Role private () =
@@ -15,16 +13,12 @@ type [<AllowNullLiteral>] Role private () =
         then
             newRole.RoleName <- roleName
             newRole.Description <- description
-            
-    public new(roleName: string, description: string, permissions: ICollection<Permission>) as newRole =
-        Role()
-        then
-            newRole.RoleName <- roleName
-            newRole.Description <- description
-            newRole.Permissions <- permissions
 
     [<DefaultValue>]
     val mutable private id: int
+    member this.Id
+            with get () = this.id
+            and set (value) = this.id <- value
 
     [<DefaultValue>]
     val mutable private roleName: string
@@ -37,12 +31,6 @@ type [<AllowNullLiteral>] Role private () =
     member this.Description
         with get () = this.description
         and set (value) = this.description <- value
-
-    [<DefaultValue>]
-    val mutable private permissions: ICollection<Permission>
-    member this.Permissions
-        with get () = this.permissions
-        and set (value) = this.permissions <- value
     
     override this.Equals(thatObj) =
             match thatObj with

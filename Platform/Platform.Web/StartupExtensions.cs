@@ -28,8 +28,8 @@ namespace Platform.Web
 {
     public static class StartupExtensions
     {
-        private static readonly List<Role> RegisteredRoles = new List<Role>();
-        private static readonly List<Permission> RegisteredPermissions = new List<Permission>();
+        private static List<Role> RegisteredRoles;
+        private static List<Permission> RegisteredPermissions;
         
         public static void AddJwtAuthentication(this IServiceCollection services)
         {
@@ -51,22 +51,30 @@ namespace Platform.Web
 
         public static void AddPoliciesAuthorization(this IServiceCollection services)
         {
+            RegisteredRoles = new List<Role>
+            {
+                new Role("Admin", "Администратор")
+            };
+
+            RegisteredPermissions = new List<Permission>
+            {
+                new Permission("RoleView", "Просмотр Ролей"),
+                new Permission("RoleEdit", "Изменение Ролей"),
+                new Permission("PermissionView", "Просмотр Разрешений"),
+                new Permission("PermissionEdit", "Изменение Разрешений")
+            };
+            
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("PlatformUser",
-                    builder =>
-                    {
-                        builder.Requirements.Add(new AssertionRequirement(context =>
-                            context.User.HasClaim(claim => claim.Type == ClaimTypes.Name)));
-                    });
-
-                options.RegisterRole(new Role("Admin", "Администратор", new List<Permission>
+                foreach (var role in RegisteredRoles)
                 {
-                    new Permission("RoleView", "Просмотр Ролей"),
-                    new Permission("RoleEdit", "Изменение Ролей"),
-                    new Permission("PermissionView", "Просмотр Разрешений"),
-                    new Permission("PermissionEdit", "Изменение Разрешений")
-                }));
+                    options.RegisterRole(role);
+                }
+                
+                foreach (var permission in RegisteredPermissions)
+                {
+                    options.RegisterPermission(permission);
+                }
             });
         }
 
@@ -120,39 +128,45 @@ namespace Platform.Web
         public static void CheckRegisteredRolesAndPermissionsForExisting(this IServiceProvider serviceProvider)
         {
             var roleRepository = serviceProvider.GetService<IRepository<Role>>();
-            var notExistingRoles = roleRepository
-                .FindAllByPredicate(role => !RegisteredRoles.Contains(role) ||
-                                            role.Permissions.Any(permission => 
-                                                !RegisteredPermissions.Contains(permission)),
-                    query => query.Include(role => role.Permissions));
-
+            var roleNames = RegisteredRoles.Select(x => x.RoleName);
+            var existingRoles = roleRepository
+                .FindAllByPredicate(role => roleNames.Contains(role.RoleName))
+                .ToList();
+            var notExistingRoles = RegisteredRoles
+                .Where(x => !existingRoles.Contains(x))
+                .ToList();
+            
             foreach (var role in notExistingRoles)
             {
                 roleRepository.Create(role);
+            }
+
+            var permissionRepository = serviceProvider.GetService<IRepository<Permission>>();
+            var permissionIds = RegisteredPermissions.Select(x => x.PermissionId);
+            var existingPermissions = permissionRepository
+                .FindAllByPredicate(perm => permissionIds.Contains(perm.PermissionId))
+                .ToList();
+            var notExistingPermissions = RegisteredPermissions
+                .Where(x => !existingPermissions.Contains(x))
+                .ToList();
+
+            foreach (var permission in notExistingPermissions)
+            {
+                permissionRepository.Create(permission);
             }
         }
 
         private static void RegisterRole(this AuthorizationOptions options, Role role)
         {
-            RegisteredRoles.Add(role);
             options.AddPolicy(role.RoleName,
                 builder =>
                 {
                     builder.Requirements.Add(new RoleRequirement(role.RoleName));
                 });
-
-            if (role.Permissions != null)
-            {
-                foreach (var permission in role.Permissions)
-                {
-                    RegisterPermission(options, permission);
-                }
-            }
         }
 
-        private static void RegisterPermission(AuthorizationOptions options, Permission permission)
+        private static void RegisterPermission(this AuthorizationOptions options, Permission permission)
         {
-            RegisteredPermissions.Add(permission);
             options.AddPolicy(permission.PermissionId,
                 builder =>
                 {

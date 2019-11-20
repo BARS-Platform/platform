@@ -1,6 +1,5 @@
 namespace Platform.Fodels.Models
 
-open System
 open Platform.Fodels.Interfaces
 
 type [<AllowNullLiteral>] Permission private () =
@@ -17,6 +16,9 @@ type [<AllowNullLiteral>] Permission private () =
             
     [<DefaultValue>]
     val mutable private id: int
+    member this.Id
+            with get () = this.id
+            and set (value) = this.id <- value
     
     [<DefaultValue>]
     val mutable private permissionId: string

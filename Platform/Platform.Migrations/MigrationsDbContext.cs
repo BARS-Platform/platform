@@ -14,6 +14,8 @@ namespace Platform.Migrations
 		public DbSet<UserRole> UserRoles { get; set; }
 		
 		public DbSet<Permission> Permissions { get; set; }
+		
+		public DbSet<RolePermission> RolePermissions { get; set; }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
@@ -30,11 +32,8 @@ namespace Platform.Migrations
 				.ToTable("UserRoles");
 			modelBuilder.Entity<Permission>()
 				.ToTable("Permissions");
-
-			modelBuilder.Entity<User>().HasKey(u => ((IPlatformModel)u).Id);
-			modelBuilder.Entity<Permission>().HasKey(u => ((IPlatformModel)u).Id);
-			modelBuilder.Entity<Role>().HasKey(u => ((IPlatformModel)u).Id);
-			modelBuilder.Entity<UserRole>().HasKey(u => ((IPlatformModel)u).Id);
+			modelBuilder.Entity<RolePermission>()
+				.ToTable("RolePermissions");
 
 			base.OnModelCreating(modelBuilder);
 		}

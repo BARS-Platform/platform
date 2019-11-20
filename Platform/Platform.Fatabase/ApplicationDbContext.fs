@@ -2,7 +2,6 @@
 
 open Microsoft.EntityFrameworkCore
 open Platform.Fodels
-open Platform.Fodels.Interfaces
 open Platform.Fodels.Models
 
 type ApplicationDbContext() =
@@ -31,6 +30,12 @@ type ApplicationDbContext() =
     member x.Permissions
         with get () = x.permissions
         and set v = x.permissions <- v
+        
+    [<DefaultValue>]
+    val mutable rolePermissions: DbSet<RolePermission>
+    member x.RolePermissions
+        with get () = x.rolePermissions
+        and set v = x.rolePermissions <- v
 
     override __.OnConfiguring optionsBuilder =
         optionsBuilder.UseNpgsql((new ApplicationConfiguration()).ConnectionString)
@@ -41,10 +46,6 @@ type ApplicationDbContext() =
         modelBuilder.Entity<Role>().ToTable("Roles")
         modelBuilder.Entity<UserRole>().ToTable("UserRoles")
         modelBuilder.Entity<Permission>().ToTable("Permissions")
-
-        modelBuilder.Entity<User>().HasKey(fun (u: User) -> ((u :> IPlatformModel).Id) :> obj)
-        modelBuilder.Entity<Role>().HasKey(fun (u: Role) -> ((u :> IPlatformModel).Id) :> obj)
-        modelBuilder.Entity<UserRole>().HasKey(fun (u: UserRole) -> ((u :> IPlatformModel).Id) :> obj)
-        modelBuilder.Entity<Permission>().HasKey(fun (u: Permission) -> ((u :> IPlatformModel).Id) :> obj)
+        modelBuilder.Entity<RolePermission>().ToTable("RolePermissions")
 
         base.OnModelCreating(modelBuilder)
