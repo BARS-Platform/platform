@@ -3,7 +3,7 @@ namespace Platform.Fodels.Models
 open Platform.Fodels.Attributes
 open Platform.Fodels.Interfaces
 
-type [<AllowNullLiteral>] [<MenuAttribute("test", "test", "test")>] Role private () =
+type [<AllowNullLiteral>] [<MenuAttribute("Role", "RoleView", "Администрирование", "role", "home")>] Role private () =
     interface IEntityBase with
         member this.Id
             with get () = this.id

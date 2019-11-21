@@ -1,8 +1,9 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Platform.Domain.Common;
-using Platform.Domain.Services;
 using Platform.Fatabase;
 using Platform.Fodels.Models;
+using Platform.Services.Common;
+using Platform.Services.Services;
 
 namespace Platform.Domain.DomainServices
 {

@@ -1,8 +1,9 @@
 namespace Platform.Fodels.Models
 
+open Platform.Fodels.Attributes
 open Platform.Fodels.Interfaces
 
-type [<AllowNullLiteral>] Permission private () =
+type [<AllowNullLiteral>] [<MenuAttribute("Permission", "PermissionView", "Администрирование", "permission", "home")>] Permission private () =
     interface IEntityBase with
         member this.Id
             with get () = this.id

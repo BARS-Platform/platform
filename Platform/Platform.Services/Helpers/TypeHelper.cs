@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Platform.Services
+namespace Platform.Services.Helpers
 {
-	public class TypeHelper
+	public static class TypeHelper
 	{
 		public static Type[] GetTypes(Type parameterType)
 		{
@@ -21,7 +21,7 @@ namespace Platform.Services
 				.ToArray();
 		}
 
-		public List<T> GetAttributes<T>() where T : Attribute
+		public static List<T> GetAttributes<T>() where T : Attribute
 		{
 			return AppDomain.CurrentDomain
 				.GetAssemblies()

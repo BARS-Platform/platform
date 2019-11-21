@@ -7,6 +7,7 @@
 
     <ItemGroup>
         <Compile Include="Entities\MenuInfoEntity.fs" />
+        <Compile Include="Entities\MenuEntity.fs" />
         <Compile Include="Enums\AttributesEnum.fs" />
         <Compile Include="Enums\AddressItem.fs" />
         <Compile Include="Attributes\PlatformAttribute.fs" />

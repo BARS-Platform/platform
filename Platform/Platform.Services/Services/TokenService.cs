@@ -4,12 +4,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
-using Platform.Domain.Common;
 using Platform.Fatabase;
-using Platform.Fodels.Interfaces;
 using Platform.Fodels.Models;
+using Platform.Services.Common;
 
-namespace Platform.Domain.Services
+namespace Platform.Services.Services
 {
 	/// <summary>
 	/// Service that generate JWT tokens.
@@ -23,7 +22,7 @@ namespace Platform.Domain.Services
 			_repository = repository;
 		}
 
-		internal JwtSecurityToken GenerateToken(User user)
+		public JwtSecurityToken GenerateToken(User user)
 		{
 			var key = JwtOptions.GetSymmetricSecurityKey();
 			var now = DateTime.Now;

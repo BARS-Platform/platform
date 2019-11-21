@@ -15,21 +15,22 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Platform.Domain.Common;
 using Platform.Domain.DomainServices;
-using Platform.Domain.Services;
 using Platform.Fatabase;
 using Platform.Fodels;
 using Platform.Fodels.Models;
+using Platform.Services.Common;
 using Platform.Services.Handlers;
 using Platform.Services.Helpers;
 using Platform.Services.Requirements;
+using Platform.Services.Services;
 using Platform.Web.Services.SwaggerServices;
 
 namespace Platform.Web
 {
     public static class StartupExtensions
     {
-        private static List<Role> RegisteredRoles;
-        private static List<Permission> RegisteredPermissions;
+        private static List<Role> _registeredRoles;
+        private static List<Permission> _registeredPermissions;
         
         public static void AddJwtAuthentication(this IServiceCollection services)
         {
@@ -51,13 +52,15 @@ namespace Platform.Web
 
         public static void AddPoliciesAuthorization(this IServiceCollection services)
         {
-            RegisteredRoles = new List<Role>
+            _registeredRoles = new List<Role>
             {
-                new Role("Admin", "Администратор")
+                new Role("Admin", "Администратор"),
+                new Role("User", "Пользователь")
             };
 
-            RegisteredPermissions = new List<Permission>
+            _registeredPermissions = new List<Permission>
             {
+                new Permission("ViewModels", "Просмотр моделей"),
                 new Permission("RoleView", "Просмотр Ролей"),
                 new Permission("RoleEdit", "Изменение Ролей"),
                 new Permission("PermissionView", "Просмотр Разрешений"),
@@ -66,12 +69,12 @@ namespace Platform.Web
             
             services.AddAuthorization(options =>
             {
-                foreach (var role in RegisteredRoles)
+                foreach (var role in _registeredRoles)
                 {
                     options.RegisterRole(role);
                 }
                 
-                foreach (var permission in RegisteredPermissions)
+                foreach (var permission in _registeredPermissions)
                 {
                     options.RegisterPermission(permission);
                 }
@@ -94,6 +97,9 @@ namespace Platform.Web
 
             services.AddSingleton<IAuthorizationHandler, RoleHandler>();
             services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+
+            services.AddTransient<PermissionService>();
+            services.AddTransient<MenuService>();
         }
 
         public static void RegisterSwagger(this IServiceCollection services)
@@ -119,7 +125,10 @@ namespace Platform.Web
                         new string[] { }
                     }
                 });
+                
+#pragma warning disable 618
                 c.DescribeAllEnumsAsStrings();
+#pragma warning restore 618
                 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -130,11 +139,11 @@ namespace Platform.Web
         public static void CheckRegisteredRolesAndPermissionsForExisting(this IServiceProvider serviceProvider)
         {
             var roleRepository = serviceProvider.GetService<IRepository>();
-            var roleNames = RegisteredRoles.Select(x => x.RoleName);
+            var roleNames = _registeredRoles.Select(x => x.RoleName);
             var existingRoles = roleRepository
                 .FindAllByPredicate<Role>(role => roleNames.Contains(role.RoleName))
                 .ToList();
-            var notExistingRoles = RegisteredRoles
+            var notExistingRoles = _registeredRoles
                 .Where(x => !existingRoles.Contains(x))
                 .ToList();
             
@@ -144,11 +153,11 @@ namespace Platform.Web
             }
 
             var permissionRepository = serviceProvider.GetService<IRepository>();
-            var permissionIds = RegisteredPermissions.Select(x => x.PermissionId);
+            var permissionIds = _registeredPermissions.Select(x => x.PermissionId);
             var existingPermissions = permissionRepository
                 .FindAllByPredicate<Permission>(perm => permissionIds.Contains(perm.PermissionId))
                 .ToList();
-            var notExistingPermissions = RegisteredPermissions
+            var notExistingPermissions = _registeredPermissions
                 .Where(x => !existingPermissions.Contains(x))
                 .ToList();
 
