@@ -2,12 +2,12 @@ namespace Platform.Fodels.Entities
 
 type [<AllowNullLiteral>] MenuInfoEntity() =
     
-    public new(link: string, icon: string, description: string) as newMenuInfo =
+    public new(description: string, link: string, icon: string) as newMenuInfo =
         MenuInfoEntity()
         then
+            newMenuInfo.Description <- description
             newMenuInfo.Link <- link
             newMenuInfo.Icon <- icon
-            newMenuInfo.Description <- description
     
     [<DefaultValue>]
     val mutable private link: string
