@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Platform.Fodels;
+using Platform.Fodels.Interfaces;
 using Platform.Fodels.Models;
 using Platform.Fodels.Models.Address;
 
@@ -14,10 +15,19 @@ namespace Platform.Migrations
 		public DbSet<City> Cities { get; set; }
 		public DbSet<State> States { get; set; }
 		public DbSet<Country> Countries { get; set; }
+		
+		public DbSet<Role> Roles { get; set; }
+		
+		public DbSet<UserRole> UserRoles { get; set; }
+		
+		public DbSet<Permission> Permissions { get; set; }
+		
+		public DbSet<RolePermission> RolePermissions { get; set; }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
 			optionsBuilder.UseNpgsql(new ApplicationConfiguration().ConnectionString);
 		}
+		
 	}
 }

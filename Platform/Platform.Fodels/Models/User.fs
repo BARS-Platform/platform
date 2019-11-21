@@ -22,6 +22,9 @@ type [<AllowNullLiteral>] User() =
 
     [<DefaultValue>]
     val mutable private id: int
+    member this.Id
+            with get () = this.id
+            and set (value) = this.id <- value
 
     [<DefaultValue>]
     val mutable private login: string

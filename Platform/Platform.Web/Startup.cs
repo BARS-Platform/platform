@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices;
@@ -29,8 +30,9 @@ namespace Platform.Web
 			services.RegisterSwagger();
 		}
 
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger, IServiceProvider provider)
 		{
+			provider.CheckRegisteredRolesAndPermissionsForExisting();
 			app.UseHttpsRedirection();
 
 			if (env.IsDevelopment())

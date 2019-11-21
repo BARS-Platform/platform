@@ -65,6 +65,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Platform.Domain\Platform.Domain.csproj" />
     <ProjectReference Include="..\Platform.Migrations\Platform.Migrations.csproj" />
+    <ProjectReference Include="..\Platform.Services\Platform.Services.csproj" />
   </ItemGroup>
 
 </Project>
