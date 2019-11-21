@@ -81,6 +81,8 @@ namespace Platform.Domain.DomainServices
 		private IAddressElement DynamicGetFromRepository(string typeName, int elementId)
 		{
 			var elType = _addressTypes.FirstOrDefault(x => x.Name == typeName);
+			if (elType == null)
+				return null;
 			return (IAddressElement) typeof(IRepository).GetMethod("Get")?.MakeGenericMethod(elType)
 				.Invoke(_repository, new[] {(object) elementId});
 		}

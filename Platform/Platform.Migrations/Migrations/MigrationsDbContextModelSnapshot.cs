@@ -19,64 +19,6 @@ namespace Platform.Migrations.Migrations
                 .HasAnnotation("ProductVersion", "3.1.0-preview2.19525.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("Platform.Fodels.Models.Permission", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PermissionId")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Permissions");
-                });
-
-            modelBuilder.Entity("Platform.Fodels.Models.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("RoleName")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
-                });
-
-            modelBuilder.Entity("Platform.Fodels.Models.RolePermission", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<int?>("PermissionId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("RoleId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PermissionId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("RolePermissions");
-                });
-
             modelBuilder.Entity("Platform.Fodels.Models.Address.Apartment", b =>
                 {
                     b.Property<int>("Id")
@@ -192,6 +134,64 @@ namespace Platform.Migrations.Migrations
                     b.ToTable("Streets");
                 });
 
+            modelBuilder.Entity("Platform.Fodels.Models.Permission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PermissionId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Permissions");
+                });
+
+            modelBuilder.Entity("Platform.Fodels.Models.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RoleName")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("Platform.Fodels.Models.RolePermission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int?>("PermissionId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("RoleId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PermissionId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RolePermissions");
+                });
+
             modelBuilder.Entity("Platform.Fodels.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -235,28 +235,6 @@ namespace Platform.Migrations.Migrations
                     b.ToTable("UserRoles");
                 });
 
-            modelBuilder.Entity("Platform.Fodels.Models.RolePermission", b =>
-                {
-                    b.HasOne("Platform.Fodels.Models.Permission", "Permission")
-                        .WithMany()
-                        .HasForeignKey("PermissionId");
-
-                    b.HasOne("Platform.Fodels.Models.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId");
-                });
-
-            modelBuilder.Entity("Platform.Fodels.Models.UserRole", b =>
-                {
-                    b.HasOne("Platform.Fodels.Models.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId");
-
-                    b.HasOne("Platform.Fodels.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("Platform.Fodels.Models.Address.Apartment", b =>
                 {
                     b.HasOne("Platform.Fodels.Models.Address.House", "House")
@@ -290,6 +268,28 @@ namespace Platform.Migrations.Migrations
                     b.HasOne("Platform.Fodels.Models.Address.City", "City")
                         .WithMany()
                         .HasForeignKey("CityId");
+                });
+
+            modelBuilder.Entity("Platform.Fodels.Models.RolePermission", b =>
+                {
+                    b.HasOne("Platform.Fodels.Models.Permission", "Permission")
+                        .WithMany()
+                        .HasForeignKey("PermissionId");
+
+                    b.HasOne("Platform.Fodels.Models.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId");
+                });
+
+            modelBuilder.Entity("Platform.Fodels.Models.UserRole", b =>
+                {
+                    b.HasOne("Platform.Fodels.Models.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId");
+
+                    b.HasOne("Platform.Fodels.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

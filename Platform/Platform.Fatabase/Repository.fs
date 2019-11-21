@@ -22,13 +22,13 @@ type BaseRepository(context: ApplicationDbContext) =
         member this.FindByPredicate<'T when 'T :> IEntityBase and 'T: not struct> expression =
             context.Set<'T>().SingleOrDefault expression
          
-        member this.FindByPredicate (expression, includeFunc)  =
+        member this.FindByPredicate<'T when 'T :> IEntityBase and 'T: not struct> (expression, includeFunc)  =
             includeFunc.Invoke(context.Set<'T>()).SingleOrDefault expression
 
-        member this.FindAllByPredicate expression  =
+        member this.FindAllByPredicate<'T when 'T :> IEntityBase and 'T: not struct> expression  =
             context.Set<'T>().Where expression
             
-        member this.FindAllByPredicate (expression, includeFunc)  =
+        member this.FindAllByPredicate<'T when 'T :> IEntityBase and 'T: not struct> (expression, includeFunc)  =
             includeFunc.Invoke(context.Set<'T>()).Where expression
 
         member this.Update<'T when 'T :> IEntityBase and 'T: not struct>(entity: 'T) =

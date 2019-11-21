@@ -3,7 +3,7 @@ namespace Platform.Fodels.Models
 open Platform.Fodels.Interfaces
 
 type [<AllowNullLiteral>] Role private () =
-    interface IPlatformModel with
+    interface IEntityBase with
         member this.Id
             with get () = this.id
             and set (value) = this.id <- value

@@ -11,7 +11,7 @@ type [<AllowNullLiteral>] User() =
     interface IEntityBase with
         member this.Id
             with get () = this.Id
-            and set(value) = this.Id <- value
+            and set (value) = this.Id <- value
 
     public new(login: string, password: string, email: string) as newUser =
         User()
@@ -22,9 +22,6 @@ type [<AllowNullLiteral>] User() =
 
     [<DefaultValue>]
     val mutable private id: int
-    member this.Id
-            with get () = this.id
-            and set (value) = this.id <- value
 
     [<DefaultValue>]
     val mutable private login: string

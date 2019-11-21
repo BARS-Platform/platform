@@ -31,7 +31,7 @@ namespace Platform.Domain.Common
 		internal static IAddressElement UpdateParent(this IAddressElement el, string parentPropertyName,
 			object parentId)
 		{
-			if (parentPropertyName == null)
+			if (parentPropertyName == null || parentId == null)
 				return el;
 			el.GetType().GetProperty(parentPropertyName)?.SetValue(el, parentId);
 			return el;

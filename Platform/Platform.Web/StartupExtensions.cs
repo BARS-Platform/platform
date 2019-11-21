@@ -83,7 +83,7 @@ namespace Platform.Web
             services.AddSingleton<ApplicationConfiguration>();
 
             services.AddTransient<ApplicationDbContext>();
-            services.AddSingleton(typeof(IRepository<>), typeof(BaseRepository<>));
+            services.AddSingleton(typeof(IRepository), typeof(BaseRepository));
 
 			services.AddSingleton<PasswordCheckerService>();
 			services.AddSingleton<TokenService>();
@@ -129,10 +129,10 @@ namespace Platform.Web
 
         public static void CheckRegisteredRolesAndPermissionsForExisting(this IServiceProvider serviceProvider)
         {
-            var roleRepository = serviceProvider.GetService<IRepository<Role>>();
+            var roleRepository = serviceProvider.GetService<IRepository>();
             var roleNames = RegisteredRoles.Select(x => x.RoleName);
             var existingRoles = roleRepository
-                .FindAllByPredicate(role => roleNames.Contains(role.RoleName))
+                .FindAllByPredicate<Role>(role => roleNames.Contains(role.RoleName))
                 .ToList();
             var notExistingRoles = RegisteredRoles
                 .Where(x => !existingRoles.Contains(x))
@@ -143,10 +143,10 @@ namespace Platform.Web
                 roleRepository.Create(role);
             }
 
-            var permissionRepository = serviceProvider.GetService<IRepository<Permission>>();
+            var permissionRepository = serviceProvider.GetService<IRepository>();
             var permissionIds = RegisteredPermissions.Select(x => x.PermissionId);
             var existingPermissions = permissionRepository
-                .FindAllByPredicate(perm => permissionIds.Contains(perm.PermissionId))
+                .FindAllByPredicate<Permission>(perm => permissionIds.Contains(perm.PermissionId))
                 .ToList();
             var notExistingPermissions = RegisteredPermissions
                 .Where(x => !existingPermissions.Contains(x))
