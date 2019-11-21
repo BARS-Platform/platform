@@ -21,6 +21,15 @@ type BaseRepository<'T when 'T :> IPlatformModel and 'T: not struct>(context: Ap
 
         member this.FindByPredicate expression  =
             context.Set<'T>().SingleOrDefault expression
+         
+        member this.FindByPredicate (expression, includeFunc)  =
+            includeFunc.Invoke(context.Set<'T>()).SingleOrDefault expression
+
+        member this.FindAllByPredicate expression  =
+            context.Set<'T>().Where expression
+            
+        member this.FindAllByPredicate (expression, includeFunc)  =
+            includeFunc.Invoke(context.Set<'T>()).Where expression
 
         member this.Update (entity: 'T) =
             context.Update entity
