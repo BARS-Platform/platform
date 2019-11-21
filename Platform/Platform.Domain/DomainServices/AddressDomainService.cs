@@ -5,6 +5,7 @@ using Platform.Fatabase;
 using Platform.Fodels.Enums;
 using Platform.Fodels.Models;
 using Platform.Fodels.Models.Address;
+using Platform.Services;
 
 namespace Platform.Domain.DomainServices
 {
@@ -16,13 +17,7 @@ namespace Platform.Domain.DomainServices
 		public AddressDomainService(IRepository repository)
 		{
 			_repository = repository;
-			_addressTypes = AppDomain.CurrentDomain
-				.GetAssemblies()
-				.Where(x => !x.IsDynamic)
-				.SelectMany(x => x.GetExportedTypes()
-					.Where(y => y.IsClass)
-					.Where(y => typeof(IAddressElement).IsAssignableFrom(y)))
-				.ToArray();
+			_addressTypes = TypeHelper.GetTypes(typeof(IAddressElement));
 		}
 
 		public OperationResult CreateItem(AddressDto dto)

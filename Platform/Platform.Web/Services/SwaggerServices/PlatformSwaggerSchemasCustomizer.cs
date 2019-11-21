@@ -7,6 +7,7 @@ using Platform.Fodels.Attributes;
 using Platform.Fodels.Interfaces;
 using Platform.Fodels.Enums;
 using Microsoft.OpenApi.Any;
+using Platform.Services;
 
 namespace Platform.Web.Services.SwaggerServices
 {
@@ -15,17 +16,11 @@ namespace Platform.Web.Services.SwaggerServices
     /// </summary>
     public class PlatformSwaggerSchemasCustomizer
     {
-        private readonly List<Type> _listModels;
+        private readonly Type[] _listModels;
 
         public PlatformSwaggerSchemasCustomizer()
         {
-            _listModels = AppDomain.CurrentDomain
-                .GetAssemblies()
-                .Where(x => !x.IsDynamic)
-                .SelectMany(x => x.GetExportedTypes()
-                                    .Where(y => y.IsClass)
-                                    .Where(y => typeof(IEntityBase).IsAssignableFrom(y)))
-                .ToList();
+            _listModels = TypeHelper.GetTypes(typeof(IEntityBase));
         }
 
         /// <summary>
