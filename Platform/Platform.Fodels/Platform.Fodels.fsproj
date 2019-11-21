@@ -7,11 +7,20 @@
 
     <ItemGroup>
         <Compile Include="Enums\AttributesEnum.fs" />
+        <Compile Include="Enums\AddressItem.fs" />
         <Compile Include="Attributes\PlatformAttribute.fs" />
-        <Compile Include="Interfaces\IPlatformModel.fs" />
+        <Compile Include="Interfaces\IEntityBase.fs" />
+        <Compile Include="Interfaces\IAddressElement.fs" />
         <Compile Include="Models\CurrencyReferenceBook.fs" />
         <Compile Include="Models\User.fs" />
         <Compile Include="Models\WeatherForecast.fs" />
+        <Compile Include="Models\Address\Country.fs" />
+        <Compile Include="Models\Address\State.fs" />
+        <Compile Include="Models\Address\City.fs" />
+        <Compile Include="Models\Address\Street.fs" />
+        <Compile Include="Models\Address\House.fs" />
+        <Compile Include="Models\Address\Apartment.fs" />
+        <Compile Include="Models\AddressDto.fs" />
         <Compile Include="Models\Permission.fs" />
         <Compile Include="Models\Role.fs" />
         <Compile Include="Models\UserRole.fs" />

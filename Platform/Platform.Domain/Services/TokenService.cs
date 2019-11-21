@@ -15,15 +15,13 @@ namespace Platform.Domain.Services
 	/// Service that generate JWT tokens.
 	/// </summary>
 	public class TokenService
-    {
-        private readonly IRepository<User> _userRepository;
-        private readonly IRepository<UserRole> _userRoleRepository;
+	{
+		private readonly IRepository _repository;
 
-        public TokenService(IRepository<User> userRepository, IRepository<UserRole> userRoleRepository)
-        {
-            _userRepository = userRepository;
-            _userRoleRepository = userRoleRepository;
-        }
+		public TokenService(IRepository repository)
+		{
+			_repository = repository;
+		}
 
 		internal JwtSecurityToken GenerateToken(User user)
 		{
@@ -47,16 +45,16 @@ namespace Platform.Domain.Services
 				new Claim(ClaimTypes.Email, user.Email)
 			};
 
-            var userEntity = _userRepository.FindByPredicate(x => x.Login == user.Login);
+			var userEntity = _repository.FindByPredicate<User>(x => x.Login == user.Login);
 
-            var claimsWithRoles = _userRoleRepository
-                .FindAllByPredicate(x => ((IPlatformModel)x.User).Id == ((IPlatformModel)userEntity).Id)
-                .Select(userRole => new Claim(ClaimTypes.Role, userRole.Role.RoleName))
-                .ToList();
+			var claimsWithRoles = _repository
+				.FindAllByPredicate<UserRole>(x => x.User.Id == userEntity.Id)
+				.Select(userRole => new Claim(ClaimTypes.Role, userRole.Role.RoleName))
+				.ToList();
 
-            claims.AddRange(claimsWithRoles);
+			claims.AddRange(claimsWithRoles);
 
-            var claimsIdentity =
+			var claimsIdentity =
 				new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
 					ClaimsIdentity.DefaultRoleClaimType);
 			return claimsIdentity;

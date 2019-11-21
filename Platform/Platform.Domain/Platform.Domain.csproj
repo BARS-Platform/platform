@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Platform.Fatabase\Platform.Fatabase.fsproj" />
+    <ProjectReference Include="..\Platform.Services\Platform.Services.csproj" />
   </ItemGroup>
 
 </Project>

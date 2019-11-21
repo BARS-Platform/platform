@@ -4,10 +4,14 @@ open System
 open Platform.Fodels.Interfaces
 
 type [<AllowNullLiteral>] User() =
-    interface IPlatformModel with
+    member this.Id
+        with get () = this.id
+        and set (value) = this.id <- value
+
+    interface IEntityBase with
         member this.Id
-            with get () = this.id
-            and set (value) = this.id <- value
+            with get () = this.Id
+            and set (value) = this.Id <- value
 
     public new(login: string, password: string, email: string) as newUser =
         User()
@@ -18,27 +22,24 @@ type [<AllowNullLiteral>] User() =
 
     [<DefaultValue>]
     val mutable private id: int
-    member this.Id
-            with get () = this.id
-            and set (value) = this.id <- value
 
     [<DefaultValue>]
     val mutable private login: string
     member this.Login
         with get () = this.login
-        and set (value) = this.login <- value
+        and private set (value) = this.login <- value
 
     [<DefaultValue>]
     val mutable private email: string
     member this.Email
         with get () = this.email
-        and set (value) = this.email <- value
+        and private set (value) = this.email <- value
 
     [<DefaultValue>]
     val mutable private pass: string
     member this.Password
         with get () = this.pass
-        and set value = this.pass <- value
+        and private set (value) = this.pass <- value
 
     member this.UpdateLogin(login: string) =
         if System.String.IsNullOrEmpty login then
