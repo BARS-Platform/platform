@@ -7,6 +7,7 @@ using Platform.Fodels.Enums;
 using Platform.Fodels.Models;
 using Platform.Fodels.Models.Address;
 using Platform.Services;
+using Platform.Services.Helpers;
 
 namespace Platform.Domain.DomainServices
 {
@@ -88,12 +89,11 @@ namespace Platform.Domain.DomainServices
 			return elType switch
 			{
 				AddressItem.Country => (IAddressElement) _repository.Get<Country>(elementId),
-				AddressItem.State => _repository.GetWithRelated<State>(elementId, s => s.Include(x => x.Country)),
-				AddressItem.City => _repository.GetWithRelated<City>(elementId, s => s.Include(x=>x.State).ThenInclude(x=>x.Country)),
-				AddressItem.Street => _repository.GetWithRelated<Street>(elementId, s => s.Include(x => x.City).ThenInclude(x=>x.State).ThenInclude(x=>x.Country)),
-				AddressItem.House => _repository.GetWithRelated<House>(elementId, s => s.Include(x => x.Street).ThenInclude(x=>x.City).ThenInclude(x=>x.State).ThenInclude(x=>x.Country)),
-				AddressItem.Apartment => _repository.GetWithRelated<Apartment>(elementId, s => s.Include(x => x.House).ThenInclude(x=>x.Street).ThenInclude(x=>x.City).ThenInclude(x=>x.State).ThenInclude(x=>x.Country)
-				),
+				AddressItem.State => _repository.Get<State>(elementId), //s => s.Include(x => x.Country)),
+				AddressItem.City => _repository.Get<City>(elementId),// s => s.Include(x=>x.State).ThenInclude(x=>x.Country)),
+				AddressItem.Street => _repository.Get<Street>(elementId), // s => s.Include(x => x.City).ThenInclude(x=>x.State).ThenInclude(x=>x.Country)),
+				AddressItem.House => _repository.Get<House>(elementId),// s => s.Include(x => x.Street).ThenInclude(x=>x.City).ThenInclude(x=>x.State).ThenInclude(x=>x.Country)),
+				AddressItem.Apartment => _repository.GetWithRelated<Apartment>(elementId, queryable => queryable.IncludeAllAddressItems()), //s => s.Include(x => x.House).ThenInclude(x=>x.Street).ThenInclude(x=>x.City).ThenInclude(x=>x.State).ThenInclude(x=>x.Country)
 				_ => null
 			};
 		}
