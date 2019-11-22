@@ -46,10 +46,6 @@ namespace Platform.Web
 				app.UseExceptionHandler("/System/Error");
 				app.UseHsts();
 			}
-			
-			logger.LogInformation("Handling undone DB migrations...");
-			
-			ExecuteNewMigrations();
 
 			logger.LogInformation("Initializing Swagger...");
             app.UseSwagger();
@@ -75,12 +71,6 @@ namespace Platform.Web
 					new SpaOptions {SourcePath = "ClientApp"}
 				);
 			});
-		}
-
-		private void ExecuteNewMigrations()
-		{
-			using var context = new MigrationsDbContext();
-			context.Database.Migrate();
 		}
 	}
 }
