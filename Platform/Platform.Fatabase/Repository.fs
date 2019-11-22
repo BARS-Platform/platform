@@ -19,7 +19,7 @@ type BaseRepository(context: ApplicationDbContext) =
         member this.Get id =
             context.Find id
             
-        member this.Get<'T when 'T :> IEntityBase and 'T: not struct> (id, includeFunc)  =
+        member this.GetWithRelated<'T when 'T :> IEntityBase and 'T: not struct> (id, includeFunc)  =
             includeFunc.Invoke(context.Set<'T>()).SingleOrDefault(fun t -> t.Id = id)
 
         member this.FindByPredicate<'T when 'T :> IEntityBase and 'T: not struct> expression =
