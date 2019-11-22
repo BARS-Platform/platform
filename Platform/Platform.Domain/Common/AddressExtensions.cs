@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Platform.Fodels.Enums;
 using Platform.Fodels.Models.Address;
 
@@ -35,6 +37,20 @@ namespace Platform.Domain.Common
 				return el;
 			el.GetType().GetProperty(parentPropertyName)?.SetValue(el, parentId);
 			return el;
+		}
+
+		public static IQueryable<T> IncludeAllAddressItems<T>(this IQueryable<T> source) where T : class, IAddressElement
+		{
+			if (source.ElementType != typeof(Country))
+			{
+				var addressItem = Enum.Parse<AddressItem>(source.ElementType.Name);
+				var parentPropertyName = addressItem.GetParentPropertyName();
+				if (parentPropertyName == null)
+					return source;
+				return source.Include(parentPropertyName);
+			}
+
+			return source;
 		}
 	}
 }
