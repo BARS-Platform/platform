@@ -25,11 +25,11 @@
         <Compile Include="Models\Address\Street.fs" />
         <Compile Include="Models\Address\House.fs" />
         <Compile Include="Models\Address\Apartment.fs" />
-        <Compile Include="Models\AddressDto.fs" />
         <Compile Include="Models\Permission.fs" />
         <Compile Include="Models\Role.fs" />
         <Compile Include="Models\UserRole.fs" />
         <Compile Include="Models\RolePermission.fs" />
+        <Compile Include="Models\Dto\AddressDto.fs" />
         <Compile Include="ApplicationConfiguration.fs" />
     </ItemGroup>
 

@@ -2,11 +2,11 @@ using System;
 using Platform.Fodels.Enums;
 using Platform.Fodels.Models.Address;
 
-namespace Platform.Domain.Common
+namespace Platform.Services.Helpers
 {
-	internal static class AddressExtensions
+	public static class AddressExtensions
 	{
-		internal static IAddressElement CreateAddressElement(AddressItem elType)
+		public static IAddressElement CreateAddressElement(AddressItem elType)
 		{
 			return elType switch
 			{
@@ -21,14 +21,14 @@ namespace Platform.Domain.Common
 			};
 		}
 
-		internal static IAddressElement UpdateName(this IAddressElement el, string name)
+		public static IAddressElement UpdateName(this IAddressElement el, string name)
 		{
 			if (!string.IsNullOrEmpty(name))
 				el.Name = name;
 			return el;
 		}
 
-		internal static IAddressElement UpdateParent(this IAddressElement el, string parentPropertyName,
+		public static IAddressElement UpdateParent(this IAddressElement el, string parentPropertyName,
 			object parentId)
 		{
 			if (parentPropertyName == null || parentId == null)
