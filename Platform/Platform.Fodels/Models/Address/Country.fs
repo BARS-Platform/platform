@@ -6,7 +6,7 @@ open Platform.Fodels.Interfaces
 open Platform.Fodels.Attributes
 
 
-type [<AllowNullLiteral>] [<MenuAttribute("Country", "ViewModels", Sections.Models, "сountry", Icons.Star)>] Country() =
+type [<AllowNullLiteral>] [<MenuAttribute("Country", PermissionNamesForFodels.ViewModels, Sections.Models, "сountry", Icons.Star)>] Country() =
     member this.Id
         with get () = this.id
         and set (value) = this.id <- value

@@ -10,6 +10,7 @@
         <Compile Include="Enums\AddressItem.fs" />
         <Compile Include="Enums\Icons.fs" />
         <Compile Include="Enums\Sections.fs" />
+        <Compile Include="Enums\PermissionNamesForFodels.fs" />
         <Compile Include="Entities\MenuInfoEntity.fs" />
         <Compile Include="Entities\MenuEntity.fs" />
         <Compile Include="Attributes\PlatformAttribute.fs" />

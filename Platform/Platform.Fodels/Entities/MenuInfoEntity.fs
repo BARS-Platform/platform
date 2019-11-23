@@ -3,7 +3,7 @@ open Platform.Fodels.Enums
 
 type [<AllowNullLiteral>] MenuInfoEntity() =
     
-    public new(description: string, permissionId: string, sectionName: Sections, link: string, icon: Icons) as newMenuInfo =
+    public new(description: string, permissionId: PermissionNamesForFodels, sectionName: Sections, link: string, icon: Icons) as newMenuInfo =
         MenuInfoEntity()
         then
             newMenuInfo.Description <- description
@@ -19,7 +19,7 @@ type [<AllowNullLiteral>] MenuInfoEntity() =
         and set (value) = this.description <- value
         
     [<DefaultValue>]
-    val mutable private permissionId: string
+    val mutable private permissionId: PermissionNamesForFodels
     member this.PermissionId
         with get () = this.permissionId
         and set (value) = this.permissionId <- value

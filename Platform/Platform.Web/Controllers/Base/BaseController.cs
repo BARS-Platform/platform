@@ -33,21 +33,21 @@ namespace Platform.Web.Controllers.Base
         /// Метод для создания объекта.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPut]
         public virtual T Create(T entity) => Repository.Create(entity);
         
         /// <summary>
         /// Метод для изменения объекта.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         public virtual T Update(T entity) => Repository.Update(entity);
         
         /// <summary>
         /// Метод для удаления объекта.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpDelete]
         public virtual bool Delete(T entity) => Repository.Delete(entity);
     }
 }

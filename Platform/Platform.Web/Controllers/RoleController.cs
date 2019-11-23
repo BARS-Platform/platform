@@ -8,7 +8,7 @@ using Platform.Web.Controllers.Base;
 
 namespace Platform.Web.Controllers
 {
-    [Authorize(PermissionNamesHelper.ViewAdmin)]
+    //[Authorize(PermissionNamesHelper.ViewAdmin)]
     [Route("api/[controller]/[action]")]
     public class RoleController : BaseController<Role>
     {
@@ -17,22 +17,23 @@ namespace Platform.Web.Controllers
         {
         }
 
-        [Authorize(PermissionNamesHelper.RoleView)]
+        //[Authorize(PermissionNamesHelper.RoleView)]
         public override Role Get(int id) => base.Get(id);
 
-        [Authorize(PermissionNamesHelper.RoleView)]
+        //[Authorize(PermissionNamesHelper.RoleView)]
         public override IEnumerable<Role> GetAll() => base.GetAll();
 
-        [Authorize(PermissionNamesHelper.RoleEdit)]
+        //[Authorize(PermissionNamesHelper.RoleEdit)]
         public override Role Create(Role entity) => base.Create(entity);
 
-        [Authorize(PermissionNamesHelper.RoleEdit)]
+        //[Authorize(PermissionNamesHelper.RoleEdit)]
         public override Role Update(Role entity) => base.Update(entity);
 
-        [Authorize(PermissionNamesHelper.RoleEdit)]
+        //[Authorize(PermissionNamesHelper.RoleEdit)]
         public override bool Delete(Role entity) => base.Delete(entity);
 
-        [Authorize(PermissionNamesHelper.RoleEdit)]
+        //[Authorize(PermissionNamesHelper.RoleEdit)]
+        [HttpPut]
         public void AddRoleToUser(int userId, int roleId)
         {
             var user = Repository.Get<User>(userId);
@@ -40,15 +41,17 @@ namespace Platform.Web.Controllers
             Repository.Create(new UserRole(user, role));
         }
         
-        [Authorize(PermissionNamesHelper.RoleEdit)]
-        public void AddRoleToUser(int userId, string roleName)
+        //[Authorize(PermissionNamesHelper.RoleEdit)]
+        [HttpPut]
+        public void AddRoleToUserByName(int userId, string roleName)
         {
             var user = Repository.Get<User>(userId);
             var role = Repository.FindByPredicate<Role>(x => x.RoleName == roleName);
             Repository.Create(new UserRole(user, role));
         }
         
-        [Authorize(PermissionNamesHelper.PermissionEdit)]
+        //[Authorize(PermissionNamesHelper.PermissionEdit)]
+        [HttpPut]
         public void AddPermissionToRole(int roleId, int permissionId)
         {
             var role = Repository.Get<Role>(roleId);
@@ -56,8 +59,9 @@ namespace Platform.Web.Controllers
             Repository.Create(new RolePermission(role, permission));
         }
         
-        [Authorize(PermissionNamesHelper.PermissionEdit)]
-        public void AddPermissionToRole(int roleId, string permissionId)
+        //[Authorize(PermissionNamesHelper.PermissionEdit)]
+        [HttpPut]
+        public void AddPermissionToRoleByName(int roleId, string permissionId)
         {
             var role = Repository.Get<Role>(roleId);
             var permission = Repository.FindByPredicate<Permission>(x => x.PermissionId == permissionId);

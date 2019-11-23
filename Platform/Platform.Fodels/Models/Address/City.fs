@@ -5,7 +5,7 @@ open System
 open Platform.Fodels.Interfaces
 open Platform.Fodels.Attributes
 
-type [<AllowNullLiteral>] [<MenuAttribute("City", "ViewModels", Sections.Models, "city", Icons.Star)>] City() =
+type [<AllowNullLiteral>] [<MenuAttribute("City", PermissionNamesForFodels.ViewModels, Sections.Models, "city", Icons.Star)>] City() =
     member this.Id
         with get () = this.id
         and set (value) = this.id <- value

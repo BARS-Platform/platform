@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Platform.Fodels.Enums;
 
-namespace Platform.Services.Common
+namespace Platform.Services.Helpers
 {
     public static class MenuExtensions
     {
@@ -32,6 +32,21 @@ namespace Platform.Services.Common
                 Sections.Dictionary => "Справочники",
                 Sections.Administration => "Администрирование",
                 _ => throw new ArgumentOutOfRangeException(nameof(section), section, null)
+            };
+        }
+
+        public static string GetString(this PermissionNamesForFodels permissionName)
+        {
+            return permissionName switch
+            {
+                PermissionNamesForFodels.ViewModels => PermissionNamesHelper.ViewModels,
+                PermissionNamesForFodels.ViewDictionaries => PermissionNamesHelper.ViewDictionaries,
+                PermissionNamesForFodels.ViewAdmin => PermissionNamesHelper.ViewAdmin,
+                PermissionNamesForFodels.RoleView => PermissionNamesHelper.RoleView,
+                PermissionNamesForFodels.RoleEdit => PermissionNamesHelper.RoleEdit,
+                PermissionNamesForFodels.PermissionView => PermissionNamesHelper.PermissionView,
+                PermissionNamesForFodels.PermissionEdit => PermissionNamesHelper.PermissionEdit,
+                _ => throw new ArgumentOutOfRangeException(nameof(permissionName), permissionName, null)
             };
         }
     }

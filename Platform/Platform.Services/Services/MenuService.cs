@@ -20,7 +20,7 @@ namespace Platform.Services.Services
             var sections = GetSections();
             
             var attributeValues = TypeHelper.GetAttributes<MenuAttribute>()
-                .Where(x => permissionIds.Contains(x.Value.PermissionId))
+                .Where(x => permissionIds.Contains(x.Value.PermissionId.GetString()))
                 .ToList();
 
             var menuSections = new List<MenuEntity>();
@@ -55,7 +55,7 @@ namespace Platform.Services.Services
             };
         }
         
-        private static List<string> GetSections()
+        private static IEnumerable<string> GetSections()
         {
             return new List<string>
             {
