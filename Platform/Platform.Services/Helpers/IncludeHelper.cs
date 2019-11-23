@@ -30,29 +30,7 @@ namespace Platform.Services.Helpers
 				var parentType = addressTypes.FirstOrDefault(x => x.Name == parent);
 				if (first)
 				{
-					ParameterExpression pe = Expression.Parameter(curElemType, "source");
-					Expression lastMember = pe;
-					MemberExpression member = Expression.Property(lastMember, parent);
-
-					var expressionLambdaMethod = typeof(Expression).GetMethods()
-						.Single(methodInfo =>
-						{
-							if (!methodInfo.IsGenericMethod)
-								return false;
-							var parameters = methodInfo.GetParameters();
-							if (parameters.Length != 2)
-								return false;
-							if (parameters[0].ParameterType != typeof(Expression))
-								return false;
-							if (parameters[1].ParameterType != typeof(ParameterExpression[]))
-								return false;
-							return true;
-						});
-
-					var genericFunc = typeof(Func<,>).MakeGenericType(curElemType, parentType);
-					var genericMethod = expressionLambdaMethod.MakeGenericMethod(genericFunc);
-
-					var lambda = genericMethod.Invoke(null, new object[] {member, new[] {pe}});
+					var lambda = MakeFuncLambdaExpressions<T>(curElemType, parent, parentType);
 
 					var include = typeof(EntityFrameworkQueryableExtensions)
 						.GetMethods()
@@ -67,29 +45,7 @@ namespace Platform.Services.Helpers
 				}
 				else
 				{
-					ParameterExpression pe = Expression.Parameter(curElemType, "source");
-					Expression lastMember = pe;
-					MemberExpression member = Expression.Property(lastMember, parent);
-
-					var expressionLambdaMethod = typeof(Expression).GetMethods()
-						.Single(methodInfo =>
-						{
-							if (!methodInfo.IsGenericMethod)
-								return false;
-							var parameters = methodInfo.GetParameters();
-							if (parameters.Length != 2)
-								return false;
-							if (parameters[0].ParameterType != typeof(Expression))
-								return false;
-							if (parameters[1].ParameterType != typeof(ParameterExpression[]))
-								return false;
-							return true;
-						});
-
-					var genericFunc = typeof(Func<,>).MakeGenericType(curElemType, parentType);
-					var genericMethod = expressionLambdaMethod.MakeGenericMethod(genericFunc);
-
-					var lambda = genericMethod.Invoke(null, new object[] {member, new[] {pe}});
+					var lambda = MakeFuncLambdaExpressions<T>(curElemType, parent, parentType);
 
 					var include = typeof(EntityFrameworkQueryableExtensions)
 						.GetMethods()
@@ -104,6 +60,63 @@ namespace Platform.Services.Helpers
 			}
  
 			return (IQueryable<T>) operationHealth;
+		}
+
+		private static object lanvbmsd<T>(Type curElemType, string parent, Type parentType) where T : class, IAddressElement
+		{
+			ParameterExpression pe = Expression.Parameter(curElemType, "source");
+			Expression lastMember = pe;
+			MemberExpression member = Expression.Property(lastMember, parent);
+
+			var expressionLambdaMethod = typeof(Expression).GetMethods()
+				.Single(methodInfo =>
+				{
+					if (!methodInfo.IsGenericMethod)
+						return false;
+					var parameters = methodInfo.GetParameters();
+					if (parameters.Length != 2)
+						return false;
+					if (parameters[0].ParameterType != typeof(Expression))
+						return false;
+					if (parameters[1].ParameterType != typeof(ParameterExpression[]))
+						return false;
+					return true;
+				});
+
+			var genericFunc = typeof(Func<,>).MakeGenericType(curElemType, parentType);
+			var genericMethod = expressionLambdaMethod.MakeGenericMethod(genericFunc);
+
+			var lambda = genericMethod.Invoke(null, new object[] {member, new[] {pe}});
+			return lambda;
+		}
+
+		private static object MakeFuncLambdaExpressions<T>(Type curElemType, string parent, Type parentType)
+			where T : class, IAddressElement
+		{
+			ParameterExpression pe = Expression.Parameter(curElemType, "source");
+			Expression lastMember = pe;
+			MemberExpression member = Expression.Property(lastMember, parent);
+
+			var expressionLambdaMethod = typeof(Expression).GetMethods()
+				.Single(methodInfo =>
+				{
+					if (!methodInfo.IsGenericMethod)
+						return false;
+					var parameters = methodInfo.GetParameters();
+					if (parameters.Length != 2)
+						return false;
+					if (parameters[0].ParameterType != typeof(Expression))
+						return false;
+					if (parameters[1].ParameterType != typeof(ParameterExpression[]))
+						return false;
+					return true;
+				});
+
+			var genericFunc = typeof(Func<,>).MakeGenericType(curElemType, parentType);
+			var genericMethod = expressionLambdaMethod.MakeGenericMethod(genericFunc);
+
+			var lambda = genericMethod.Invoke(null, new object[] {member, new[] {pe}});
+			return lambda;
 		}
 	}
 }
