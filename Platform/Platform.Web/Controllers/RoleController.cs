@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Platform.Fatabase;
 using Platform.Fodels.Models;
+using Platform.Services.Helpers;
 using Platform.Web.Controllers.Base;
 
 namespace Platform.Web.Controllers
@@ -14,13 +15,13 @@ namespace Platform.Web.Controllers
         {
         }
 
-        [Authorize("RoleEdit")]
+        [Authorize(PermissionNamesHelper.RoleEdit)]
         public override Role Create(Role entity) => base.Create(entity);
 
-        [Authorize("RoleEdit")]
+        [Authorize(PermissionNamesHelper.RoleEdit)]
         public override Role Update(Role entity) => base.Update(entity);
 
-        [Authorize("RoleEdit")]
+        [Authorize(PermissionNamesHelper.RoleEdit)]
         public override bool Delete(Role entity) => base.Delete(entity);
     }
 }

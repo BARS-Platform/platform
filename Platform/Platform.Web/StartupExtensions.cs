@@ -15,6 +15,7 @@ using Platform.Fodels;
 using Platform.Fodels.Models;
 using Platform.Services.Common;
 using Platform.Services.Handlers;
+using Platform.Services.Helpers;
 using Platform.Services.Requirements;
 using Platform.Services.Services;
 using Platform.Web.Services.SwaggerServices;
@@ -25,6 +26,7 @@ namespace Platform.Web
     {
         private static List<Role> _registeredRoles;
         private static List<Permission> _registeredPermissions;
+        private static Dictionary<string, List<string>> _registeredRolePermissions;
         
         public static void AddJwtAuthentication(this IServiceCollection services)
         {
@@ -48,19 +50,45 @@ namespace Platform.Web
         {
             _registeredRoles = new List<Role>
             {
-                new Role("Admin", "Администратор"),
-                new Role("User", "Пользователь")
+                new Role(RoleNamesHelper.Admin, "Администратор"),
+                new Role(RoleNamesHelper.User, "Пользователь")
             };
 
             _registeredPermissions = new List<Permission>
             {
-                new Permission("ViewModels", "Просмотр моделей"),
-                new Permission("ViewDictionaries", "Просмотр моделей"),
-                new Permission("ViewAdmin", "Просмотр моделей"),
-                new Permission("RoleView", "Просмотр Ролей"),
-                new Permission("RoleEdit", "Изменение Ролей"),
-                new Permission("PermissionView", "Просмотр Разрешений"),
-                new Permission("PermissionEdit", "Изменение Разрешений")
+                new Permission(PermissionNamesHelper.ViewModels, "Просмотр моделей"),
+                new Permission(PermissionNamesHelper.ViewDictionaries, "Просмотр справочников"),
+                new Permission(PermissionNamesHelper.ViewAdmin, "Просмотр администрирования"),
+                new Permission(PermissionNamesHelper.RoleView, "Просмотр Ролей"),
+                new Permission(PermissionNamesHelper.RoleEdit, "Изменение Ролей"),
+                new Permission(PermissionNamesHelper.PermissionView, "Просмотр Разрешений"),
+                new Permission(PermissionNamesHelper.PermissionEdit, "Изменение Разрешений")
+            };
+            
+            _registeredRolePermissions = new Dictionary<string, List<string>>
+            {
+                {
+                    RoleNamesHelper.Admin, new List<string>
+                    {
+                        PermissionNamesHelper.ViewModels,
+                        PermissionNamesHelper.ViewDictionaries,
+                        PermissionNamesHelper.ViewAdmin,
+                        PermissionNamesHelper.RoleView,
+                        PermissionNamesHelper.PermissionView,
+                        PermissionNamesHelper.RoleEdit,
+                        PermissionNamesHelper.RoleEdit
+                    }
+                },
+                
+                {
+                    RoleNamesHelper.User, new List<string>
+                    {
+                        PermissionNamesHelper.ViewModels,
+                        PermissionNamesHelper.ViewDictionaries,
+                        PermissionNamesHelper.RoleView,
+                        PermissionNamesHelper.PermissionView
+                    }
+                }
             };
             
             services.AddAuthorization(options =>
@@ -134,9 +162,9 @@ namespace Platform.Web
 
         public static void CheckRegisteredRolesAndPermissionsForExisting(this IServiceProvider serviceProvider)
         {
-            var roleRepository = serviceProvider.GetService<IRepository>();
+            var repository = serviceProvider.GetService<IRepository>();
             var roleNames = _registeredRoles.Select(x => x.RoleName);
-            var existingRoles = roleRepository
+            var existingRoles = repository
                 .FindAllByPredicate<Role>(role => roleNames.Contains(role.RoleName))
                 .ToList();
             var notExistingRoles = _registeredRoles
@@ -145,12 +173,11 @@ namespace Platform.Web
             
             foreach (var role in notExistingRoles)
             {
-                roleRepository.Create(role);
+                repository.Create(role);
             }
-
-            var permissionRepository = serviceProvider.GetService<IRepository>();
+            
             var permissionIds = _registeredPermissions.Select(x => x.PermissionId);
-            var existingPermissions = permissionRepository
+            var existingPermissions = repository
                 .FindAllByPredicate<Permission>(perm => permissionIds.Contains(perm.PermissionId))
                 .ToList();
             var notExistingPermissions = _registeredPermissions
@@ -159,7 +186,18 @@ namespace Platform.Web
 
             foreach (var permission in notExistingPermissions)
             {
-                permissionRepository.Create(permission);
+                repository.Create(permission);
+            }
+            
+            foreach (var rolePermission in _registeredRolePermissions)
+            {
+                var role = repository.FindByPredicate<Role>(x => x.RoleName == rolePermission.Key);
+                var permissions =
+                    repository.FindAllByPredicate<Permission>(x => rolePermission.Value.Contains(x.PermissionId));
+                foreach (var permission in permissions)
+                {
+                    repository.Create(new RolePermission(role, permission));
+                }
             }
         }
 
