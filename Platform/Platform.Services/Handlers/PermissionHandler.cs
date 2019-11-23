@@ -22,11 +22,12 @@ namespace Platform.Services.Handlers
 		protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
 			PermissionRequirement requirement)
 		{
-			var roles = context.User.Claims
-				.Where(x => x.Type == ClaimTypes.Role);
+			var roleNames = context.User.Claims
+				.Where(x => x.Type == ClaimTypes.Role)
+				.Select(x => x.Value);
 
 			var roleIds = _repository
-				.FindAllByPredicate<Role>(x => roles.Any(y => y.Value == x.RoleName))
+				.FindAllByPredicate<Role>(x => roleNames.Contains(x.RoleName))
 				.Select(x => x.Id);
 
 			var permissionIds = _repository
