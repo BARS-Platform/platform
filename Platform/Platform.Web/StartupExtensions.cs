@@ -3,24 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.FSharp.Collections;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Platform.Domain.Common;
 using Platform.Domain.DomainServices;
 using Platform.Fatabase;
 using Platform.Fodels;
 using Platform.Fodels.Models;
 using Platform.Services.Common;
 using Platform.Services.Handlers;
-using Platform.Services.Helpers;
 using Platform.Services.Requirements;
 using Platform.Services.Services;
 using Platform.Web.Services.SwaggerServices;
@@ -61,6 +55,8 @@ namespace Platform.Web
             _registeredPermissions = new List<Permission>
             {
                 new Permission("ViewModels", "Просмотр моделей"),
+                new Permission("ViewDictionaries", "Просмотр моделей"),
+                new Permission("ViewAdmin", "Просмотр моделей"),
                 new Permission("RoleView", "Просмотр Ролей"),
                 new Permission("RoleEdit", "Изменение Ролей"),
                 new Permission("PermissionView", "Просмотр Разрешений"),

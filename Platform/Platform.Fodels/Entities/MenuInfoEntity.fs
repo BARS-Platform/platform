@@ -1,13 +1,14 @@
 namespace Platform.Fodels.Entities
+open Platform.Fodels.Enums
 
 type [<AllowNullLiteral>] MenuInfoEntity() =
     
-    public new(description: string, permissionId: string, sectionName: string, link: string, icon: string) as newMenuInfo =
+    public new(description: string, permissionId: string, sectionName: Sections, link: string, icon: Icons) as newMenuInfo =
         MenuInfoEntity()
         then
             newMenuInfo.Description <- description
             newMenuInfo.PermissionId <- permissionId
-            newMenuInfo.SectionName <- sectionName
+            newMenuInfo.Section <- sectionName
             newMenuInfo.Link <- link
             newMenuInfo.Icon <- icon
     
@@ -24,10 +25,10 @@ type [<AllowNullLiteral>] MenuInfoEntity() =
         and set (value) = this.permissionId <- value
         
     [<DefaultValue>]
-    val mutable private sectionName: string
-    member this.SectionName
-        with get () = this.sectionName
-        and set (value) = this.sectionName <- value
+    val mutable private section: Sections
+    member this.Section
+        with get () = this.section
+        and set (value) = this.section <- value
     
     [<DefaultValue>]
     val mutable private link: string
@@ -36,7 +37,7 @@ type [<AllowNullLiteral>] MenuInfoEntity() =
         and set (value) = this.link <- value
         
     [<DefaultValue>]
-    val mutable private icon: string
+    val mutable private icon: Icons
     member this.Icon
         with get () = this.icon
         and set (value) = this.icon <- value
