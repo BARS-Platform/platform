@@ -27,7 +27,7 @@ namespace Platform.Web.Controllers
         [HttpGet]
         public IEnumerable<Role> GetAll()
         {
-            var roles = _repository.FindAllByPredicate<Role>(x => true);
+            var roles = _repository.GetAll<Role>();
             return roles;
         }
     }

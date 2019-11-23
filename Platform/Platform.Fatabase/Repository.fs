@@ -19,6 +19,9 @@ type BaseRepository(context: ApplicationDbContext) =
         member this.Get id =
             context.Find id
             
+        member this.GetAll() =
+            context.Set<'T>().AsQueryable()
+            
         member this.GetWithRelated<'T when 'T :> IEntityBase and 'T: not struct> (id, includeFunc)  =
             includeFunc.Invoke(context.Set<'T>()).SingleOrDefault(fun t -> t.Id = id)
 
