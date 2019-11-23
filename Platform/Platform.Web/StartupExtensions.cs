@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -76,7 +77,7 @@ namespace Platform.Web
                         PermissionNamesHelper.RoleView,
                         PermissionNamesHelper.PermissionView,
                         PermissionNamesHelper.RoleEdit,
-                        PermissionNamesHelper.RoleEdit
+                        PermissionNamesHelper.PermissionEdit
                     }
                 },
                 
@@ -159,8 +160,7 @@ namespace Platform.Web
                 c.IncludeXmlComments(xmlPath);
             });
         }
-
-        public static void CheckRegisteredRolesAndPermissionsForExisting(this IServiceProvider serviceProvider)
+        public static void CheckRegisteredRolesForExisting(this IServiceProvider serviceProvider)
         {
             var repository = serviceProvider.GetService<IRepository>();
             var roleNames = _registeredRoles.Select(x => x.RoleName);
@@ -175,7 +175,11 @@ namespace Platform.Web
             {
                 repository.Create(role);
             }
-            
+        }
+        
+        public static void CheckRegisteredPermissionsForExisting(this IServiceProvider serviceProvider)
+        {
+            var repository = serviceProvider.GetService<IRepository>();
             var permissionIds = _registeredPermissions.Select(x => x.PermissionId);
             var existingPermissions = repository
                 .FindAllByPredicate<Permission>(perm => permissionIds.Contains(perm.PermissionId))
@@ -188,15 +192,35 @@ namespace Platform.Web
             {
                 repository.Create(permission);
             }
-            
-            foreach (var rolePermission in _registeredRolePermissions)
+        }
+        
+        public static void CheckRegisteredRolePermissionsForExisting(this IServiceProvider serviceProvider)
+        {
+            var repository = serviceProvider.GetService<IRepository>();
+            var registeredRoles = _registeredRolePermissions.Select(x => x.Key);
+
+            foreach (var role in registeredRoles)
             {
-                var role = repository.FindByPredicate<Role>(x => x.RoleName == rolePermission.Key);
-                var permissions =
-                    repository.FindAllByPredicate<Permission>(x => rolePermission.Value.Contains(x.PermissionId));
-                foreach (var permission in permissions)
+                var permissionsForRole = _registeredRolePermissions[role];
+                var actualRole = repository.FindByPredicate<Role>(x => x.RoleName == role);
+                
+                var actualPermissions = repository
+                        .FindAllByPredicate<RolePermission>(x => x.Role.RoleName == role,
+                            query => query
+                                .Include(x => x.Role)
+                                .Include(x => x.Permission))
+                        .Select(x => x.Permission.PermissionId)
+                        .ToList();
+
+                var notExistingRolePermissions = permissionsForRole
+                    .Where(x => !actualPermissions.Contains(x));
+                var permissionEntities = repository
+                    .FindAllByPredicate<Permission>(x => notExistingRolePermissions.Contains(x.PermissionId))
+                    .ToList();
+
+                foreach (var permission in permissionEntities)
                 {
-                    repository.Create(new RolePermission(role, permission));
+                    repository.Create(new RolePermission(actualRole, permission));
                 }
             }
         }
