@@ -1,34 +1,26 @@
-﻿using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using Platform.Fatabase;
-using Platform.Fodels.Entities;
 using Platform.Fodels.Models;
-using Platform.Services.Services;
+using Platform.Web.Controllers.Base;
 
 namespace Platform.Web.Controllers
 {
     [Route("api/[controller]/[action]")]
-    public class RoleController : Controller
+    public class RoleController : BaseController<Role>
     {
-        private readonly IRepository _repository;
-        
         public RoleController(IRepository repository)
+            :base (repository)
         {
-            _repository = repository;
         }
-        
-        /// <summary>
-        /// Метод для получения ролей.
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public IEnumerable<Role> GetAll()
-        {
-            var roles = _repository.GetAll<Role>();
-            return roles;
-        }
+
+        [Authorize("RoleEdit")]
+        public override Role Create(Role entity) => base.Create(entity);
+
+        [Authorize("RoleEdit")]
+        public override Role Update(Role entity) => base.Update(entity);
+
+        [Authorize("RoleEdit")]
+        public override bool Delete(Role entity) => base.Delete(entity);
     }
 }
