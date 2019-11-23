@@ -12,10 +12,6 @@ namespace Platform.Services.Helpers
 	{
 		public static IQueryable<T> IncludeAllAddressItems<T>(this IQueryable<T> source) where T : class, IAddressElement
 		{
-			using (var applicationDbContext = new ApplicationDbContext())
-			{
-				applicationDbContext.Apartments.Include(x => x.House).ThenInclude(x => x.Street).ThenInclude(x=>x.City);
-			}
 			var addressTypes = TypeHelper.GetTypes(typeof(IAddressElement));
 			var curElemType = source.ElementType;
 			var initialQueryType = source.ElementType;
@@ -38,7 +34,6 @@ namespace Platform.Services.Helpers
 							methodInfo.Name == "Include" &&
 							methodInfo.GetParameters()[1].ParameterType != typeof(string))
 						.MakeGenericMethod(curElemType, parentType);
-
 					operationHealth = include.Invoke(null, new[] {source, lambda});
 
 					first = false;
