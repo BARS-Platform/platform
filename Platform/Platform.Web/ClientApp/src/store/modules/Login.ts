@@ -2,7 +2,6 @@ import { User } from '@/models/user'
 import * as api from '../api/api'
 import * as jwtHelpers from '../helpers/jwtHelpers'
 import { Cookies } from 'quasar'
-import VueJwtDecode from 'vue-jwt-decode'
 
 import axios from 'axios'
 import { VuexModule, Module, MutationAction, Mutation, Action } from 'vuex-module-decorators'
@@ -21,7 +20,7 @@ export default class LoginModule extends VuexModule {
     return this.user
   }
 
-  get isAuthenticated() {
+  get IsAuthenticated() {
     return this.user != null
   }
 

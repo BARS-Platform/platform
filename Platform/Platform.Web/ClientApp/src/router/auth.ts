@@ -3,7 +3,7 @@ import LoginModule from '@/store/modules/Login'
 
 export default (to: any, from: any, next: any) => {
   let loginStore = getModule(LoginModule)
-  if (loginStore.isAuthenticated) {
+  if (loginStore.IsAuthenticated) {
     next()
   } else {
     loginStore.authenticateWithToken().then(() => {
