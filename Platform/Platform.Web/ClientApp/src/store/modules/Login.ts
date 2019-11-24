@@ -46,7 +46,8 @@ export default class LoginModule extends VuexModule {
     var user = jwtHelpers.parseToken(token)
     api.setJWT(token)
     Cookies.set('authorization_token', token, {
-      expires: 1
+      expires: 1,
+      path: '/'
     })
     return {
       user: user
@@ -67,7 +68,9 @@ export default class LoginModule extends VuexModule {
 
   @Action({ commit: 'CLEAR_USER' })
   async logOut() {
-    Cookies.remove('authorization_token')
+    Cookies.remove('authorization_token', {
+      path: '/'
+    })
     api.clearJWT()
     return null
   }

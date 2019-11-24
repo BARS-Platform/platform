@@ -6,7 +6,10 @@
         <q-btn v-for="menuItem in menuItems" :key="menuItems.title" stretch="stretch" flat="flat" :label="menuItem.title" v-if="isAuthenticated">
           <q-menu fit>
             <q-list dense style="min-width: 100px">
-              <q-item clickable v-for="children in menuItem.children">
+              <q-item clickable v-for="children in menuItem.children" :key="children.title" clickable v-ripple :to="`/models${children.link}`" exact>
+                <q-item-section avatar>
+                  <q-icon color="primary" :name="children.icon" />
+                </q-item-section>
                 <q-item-section>{{ children.title }}</q-item-section>
               </q-item>
             </q-list>
