@@ -32,7 +32,7 @@ namespace Platform.Services.Services
                     .Select(x => new MenuEntity()
                     {
                         Icon = x.Value.Icon.GetString(),
-                        Link = x.Value.Link,
+                        Link = "/" + x.Value.Link,
                         Title = x.Value.Description
                     })
                     .ToList();
