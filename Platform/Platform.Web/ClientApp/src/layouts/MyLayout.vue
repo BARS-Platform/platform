@@ -20,6 +20,7 @@
               v-ripple
               :to="`${menuItem.link}${children.link}`"
               exact
+              style="min-height: 50px"
             >
               <q-item-section avatar>
                 <q-icon color="primary" :name="children.icon" />
