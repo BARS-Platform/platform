@@ -5,7 +5,7 @@ import auth from './auth'
 const routes: Array<RouteConfig> = [
   {
     path: '/',
-    component: () => import('@/layouts/MyLayout.vue'),
+    component: () => import('@/layouts/Default.vue'),
     children: [
       {
         path: '',
