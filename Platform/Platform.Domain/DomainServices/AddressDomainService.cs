@@ -1,11 +1,13 @@
 using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Platform.Domain.Common;
 using Platform.Fatabase;
 using Platform.Fodels.Enums;
 using Platform.Fodels.Models;
 using Platform.Fodels.Models.Address;
 using Platform.Services;
+using Platform.Services.Helpers;
 
 namespace Platform.Domain.DomainServices
 {
@@ -87,11 +89,11 @@ namespace Platform.Domain.DomainServices
 			return elType switch
 			{
 				AddressItem.Country => (IAddressElement) _repository.Get<Country>(elementId),
-				AddressItem.State => _repository.Get<State>(elementId),
-				AddressItem.City => _repository.Get<City>(elementId),
-				AddressItem.Street => _repository.Get<Street>(elementId),
-				AddressItem.House => _repository.Get<House>(elementId),
-				AddressItem.Apartment => _repository.Get<Apartment>(elementId),
+				AddressItem.State => _repository.GetWithRelated<State>(elementId, s => s.Include(x => x.Country)),
+				AddressItem.City => _repository.GetWithRelated<Apartment>(elementId, queryable => queryable.IncludeAllAddressItems()),
+				AddressItem.Street => _repository.GetWithRelated<Apartment>(elementId, queryable => queryable.IncludeAllAddressItems()),
+				AddressItem.House => _repository.GetWithRelated<Apartment>(elementId, queryable => queryable.IncludeAllAddressItems()),
+				AddressItem.Apartment => _repository.GetWithRelated<Apartment>(elementId, queryable => queryable.IncludeAllAddressItems()),
 				_ => null
 			};
 		}

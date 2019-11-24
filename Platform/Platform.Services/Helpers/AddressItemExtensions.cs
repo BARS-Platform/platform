@@ -1,6 +1,6 @@
 using Platform.Fodels.Enums;
 
-namespace Platform.Domain.Common
+namespace Platform.Services.Helpers
 {
 	public static class AddressItemExtensions
 	{
