@@ -2,19 +2,32 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated="">
       <q-toolbar>
-        <q-toolbar-title>Platform</q-toolbar-title>
-        <q-btn v-for="menuItem in menuItems" :key="menuItems.title" stretch="stretch" flat="flat" :label="menuItem.title" v-if="isAuthenticated">
-          <q-menu fit>
-            <q-list dense style="min-width: 100px">
-              <q-item clickable v-for="children in menuItem.children" :key="children.title" clickable v-ripple :to="`/models${children.link}`" exact>
-                <q-item-section avatar>
-                  <q-icon color="primary" :name="children.icon" />
-                </q-item-section>
-                <q-item-section>{{ children.title }}</q-item-section>
-              </q-item>
-            </q-list>
-          </q-menu>
-        </q-btn>
+        <router-link to="/" tag="q-toolbar-title" style="cursor: pointer">Platform</router-link>
+        <q-btn-dropdown
+          v-for="menuItem in menuItems"
+          :key="menuItems.title"
+          stretch="stretch"
+          flat="flat"
+          :label="menuItem.title"
+          v-if="isAuthenticated"
+        >
+          <q-list dense style="min-width: 100px">
+            <q-item
+              clickable
+              v-for="children in menuItem.children"
+              :key="children.title"
+              clickable
+              v-ripple
+              :to="`${menuItem.link}${children.link}`"
+              exact
+            >
+              <q-item-section avatar>
+                <q-icon color="primary" :name="children.icon" />
+              </q-item-section>
+              <q-item-section>{{ children.title }}</q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
         <q-btn stretch="stretch" flat="flat" v-if="!isAuthenticated" label="Войти" to="/login" />
         <q-btn stretch="stretch" flat="flat" v-else="v-else" label="Выйти" @click="logOut" />
       </q-toolbar>
@@ -57,5 +70,4 @@ export default class MyLayout extends Vue {
 }
 </script>
 
-<style lang="stylus">
-</style>
+<style lang="stylus"></style>
