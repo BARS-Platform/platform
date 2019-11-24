@@ -19,6 +19,13 @@ const routes: Array<RouteConfig> = [
         props: true,
         beforeEnter: auth
       },
+      {
+        path: '/administration/:name',
+        component: () => import('@/pages/models/Index.vue'),
+        name: 'administration',
+        props: true,
+        beforeEnter: auth
+      },
       { path: '/register', component: () => import('@/pages/authentication/Register.vue') },
       { path: '/login', component: () => import('@/pages/authentication/Login.vue') }
     ]
