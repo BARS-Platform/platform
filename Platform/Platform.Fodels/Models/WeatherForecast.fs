@@ -5,7 +5,7 @@ open Platform.Fodels.Interfaces
 open Platform.Fodels.Enums
 open Platform.Fodels.Attributes
 
-type [<AllowNullLiteral>] WeatherForecast() =
+type [<AllowNullLiteral>] [<Menu("WeatherForecast", PermissionNamesForFodels.ViewModels, Sections.Models, "weatherForecast", Icons.Home)>] WeatherForecast() =
     member this.Id
         with get () = this.id
         and set (value) = this.id <- value

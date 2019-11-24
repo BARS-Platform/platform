@@ -8,7 +8,13 @@
     <ItemGroup>
         <Compile Include="Enums\AttributesEnum.fs" />
         <Compile Include="Enums\AddressItem.fs" />
+        <Compile Include="Enums\Icons.fs" />
+        <Compile Include="Enums\Sections.fs" />
+        <Compile Include="Enums\PermissionNamesForFodels.fs" />
+        <Compile Include="Entities\MenuInfoEntity.fs" />
+        <Compile Include="Entities\MenuEntity.fs" />
         <Compile Include="Attributes\PlatformAttribute.fs" />
+        <Compile Include="Attributes\MenuAttribute.fs" />
         <Compile Include="Interfaces\IEntityBase.fs" />
         <Compile Include="Interfaces\IAddressElement.fs" />
         <Compile Include="Models\CurrencyReferenceBook.fs" />

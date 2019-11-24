@@ -3,8 +3,9 @@ namespace Platform.Fodels.Models.Address
 open Platform.Fodels.Enums
 open System
 open Platform.Fodels.Interfaces
+open Platform.Fodels.Attributes
 
-type [<AllowNullLiteral>] House() =
+type [<AllowNullLiteral>] [<MenuAttribute("House", PermissionNamesForFodels.ViewModels, Sections.Models, "house", Icons.Star)>] House() =
     member this.Id
         with get () = this.id
         and set (value) = this.id <- value

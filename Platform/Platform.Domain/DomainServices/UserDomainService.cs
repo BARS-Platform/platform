@@ -1,8 +1,10 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Platform.Domain.Common;
-using Platform.Domain.Services;
 using Platform.Fatabase;
 using Platform.Fodels.Models;
+using Platform.Services.Common;
+using Platform.Services.Helpers;
+using Platform.Services.Services;
 
 namespace Platform.Domain.DomainServices
 {
@@ -56,7 +58,9 @@ namespace Platform.Domain.DomainServices
 		{
 			var user = new User(login, _checkerService.HashPassword(password), email);
 
-			_repository.Create(user);
+			user = _repository.Create(user);
+			var role = _repository.FindByPredicate<Role>(x => x.RoleName == RoleNamesHelper.User);
+			_repository.Create(new UserRole(user, role));
 
 			return new OperationResult()
 			{

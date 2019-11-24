@@ -7,7 +7,7 @@ using Platform.Fodels.Attributes;
 using Platform.Fodels.Interfaces;
 using Platform.Fodels.Enums;
 using Microsoft.OpenApi.Any;
-using Platform.Services;
+using Platform.Services.Helpers;
 
 namespace Platform.Web.Services.SwaggerServices
 {

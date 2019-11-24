@@ -3,8 +3,9 @@ namespace Platform.Fodels.Models.Address
 open Platform.Fodels.Enums
 open System
 open Platform.Fodels.Interfaces
+open Platform.Fodels.Attributes
 
-type [<AllowNullLiteral>] Street() =
+type [<AllowNullLiteral>] [<MenuAttribute("Street", PermissionNamesForFodels.ViewModels, Sections.Models, "street", Icons.Star)>] Street() =
     member this.Id
         with get () = this.id
         and set (value) = this.id <- value
