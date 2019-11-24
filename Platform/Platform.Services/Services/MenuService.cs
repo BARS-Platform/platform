@@ -43,6 +43,7 @@ namespace Platform.Services.Services
                     menuSections.Add(new MenuEntity
                     {
                         Title = section,
+                        Link = "/" + MenuExtensions.SectionLinks[section],
                         Children = itemsFromSection
                     });
                 }

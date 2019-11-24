@@ -11,6 +11,13 @@ namespace Platform.Services.Helpers
             {Sections.Models.GetString(), "ViewModels"},
             {Sections.Dictionary.GetString(), "ViewDictionaries"},
             {Sections.Administration.GetString(), "ViewAdmin"}
+        };
+        
+        public static readonly Dictionary<string, string> SectionLinks = new Dictionary<string, string>
+        {
+            {Sections.Models.GetString(), "models"},
+            {Sections.Dictionary.GetString(), "dictionaries"},
+            {Sections.Administration.GetString(), "administration"}
         }; 
         
         public static string GetString(this Icons icon)
