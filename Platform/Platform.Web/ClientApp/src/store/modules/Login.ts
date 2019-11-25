@@ -2,7 +2,6 @@ import { User } from '@/models/user'
 import * as api from '../api/api'
 import * as jwtHelpers from '../helpers/jwtHelpers'
 import { Cookies } from 'quasar'
-import VueJwtDecode from 'vue-jwt-decode'
 
 import axios from 'axios'
 import { VuexModule, Module, MutationAction, Mutation, Action } from 'vuex-module-decorators'
@@ -21,7 +20,7 @@ export default class LoginModule extends VuexModule {
     return this.user
   }
 
-  get isAuthenticated() {
+  get IsAuthenticated() {
     return this.user != null
   }
 
@@ -47,7 +46,8 @@ export default class LoginModule extends VuexModule {
     var user = jwtHelpers.parseToken(token)
     api.setJWT(token)
     Cookies.set('authorization_token', token, {
-      expires: 1
+      expires: 1,
+      path: '/'
     })
     return {
       user: user
@@ -68,7 +68,9 @@ export default class LoginModule extends VuexModule {
 
   @Action({ commit: 'CLEAR_USER' })
   async logOut() {
-    Cookies.remove('authorization_token')
+    Cookies.remove('authorization_token', {
+      path: '/'
+    })
     api.clearJWT()
     return null
   }

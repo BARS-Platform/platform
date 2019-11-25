@@ -5,7 +5,7 @@ export const api = axios.create({
 })
 
 export function setJWT(jwt: string) {
-  api.defaults.headers.common['Authorization'] = jwt
+  api.defaults.headers.common['Authorization'] = `Bearer ${jwt}`
 }
 
 export function clearJWT() {
