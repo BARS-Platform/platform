@@ -79,3 +79,9 @@ type ApplicationDbContext() =
     member x.Apartments
         with get () = x.apartments
         and set v = x.apartments <- v
+
+    [<DefaultValue>]
+    val mutable addresses: DbSet<Address>
+    member x.Addresses
+        with get () = x.addresses
+        and set v = x.addresses <- v

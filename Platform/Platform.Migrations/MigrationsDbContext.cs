@@ -18,6 +18,7 @@ namespace Platform.Migrations
 		public DbSet<Street> Streets { get; set; }
 		public DbSet<House> Houses { get; set; }
 		public DbSet<Apartment> Apartments { get; set; }
+		public DbSet<Address> Addresses { get; set; }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{

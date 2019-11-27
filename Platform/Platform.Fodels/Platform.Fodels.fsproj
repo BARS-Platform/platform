@@ -26,6 +26,7 @@
         <Compile Include="Models\Address\Street.fs" />
         <Compile Include="Models\Address\House.fs" />
         <Compile Include="Models\Address\Apartment.fs" />
+        <Compile Include="Models\Address\Address.fs" />
         <Compile Include="Models\Permission.fs" />
         <Compile Include="Models\Role.fs" />
         <Compile Include="Models\UserRole.fs" />

@@ -7,4 +7,3 @@ type AddressItem =
     | Street = 3
     | House = 4
     | Apartment = 5
-
