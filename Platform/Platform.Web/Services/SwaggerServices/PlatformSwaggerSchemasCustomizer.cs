@@ -37,7 +37,7 @@ namespace Platform.Web.Services.SwaggerServices
                 {
                     if (modelPropertiesDict.ContainsKey(property.Key.ToLower()))
                     {
-                        property.Value.Extensions.Add("dispalyIn", modelPropertiesDict[property.Key.ToLower()]);
+                        property.Value.Extensions.Add("displayIn", modelPropertiesDict[property.Key.ToLower()]);
                     }
                 }
             }
