@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices;
@@ -29,8 +30,12 @@ namespace Platform.Web
 			services.RegisterSwagger();
 		}
 
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger, IServiceProvider provider)
 		{
+			provider.CheckRegisteredRolesForExisting();
+			provider.CheckRegisteredPermissionsForExisting();
+			provider.CheckRegisteredRolePermissionsForExisting();
+			
 			app.UseHttpsRedirection();
 
 			if (env.IsDevelopment())
@@ -44,11 +49,6 @@ namespace Platform.Web
 				app.UseExceptionHandler("/System/Error");
 				app.UseHsts();
 			}
-			
-			logger.LogInformation("Handling undone DB migrations...");
-			
-//			Спасибо, F# !!!!!!!!!!1!1!!!
-			ExecuteNewMigrations();
 
 			logger.LogInformation("Initializing Swagger...");
             app.UseSwagger();
@@ -74,12 +74,6 @@ namespace Platform.Web
 					new SpaOptions {SourcePath = "ClientApp"}
 				);
 			});
-		}
-
-		private void ExecuteNewMigrations()
-		{
-			using var context = new MigrationsDbContext();
-			context.Database.Migrate();
 		}
 	}
 }

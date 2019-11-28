@@ -7,6 +7,7 @@ using Platform.Fodels.Attributes;
 using Platform.Fodels.Interfaces;
 using Platform.Fodels.Enums;
 using Microsoft.OpenApi.Any;
+using Platform.Services.Helpers;
 
 namespace Platform.Web.Services.SwaggerServices
 {
@@ -15,17 +16,11 @@ namespace Platform.Web.Services.SwaggerServices
     /// </summary>
     public class PlatformSwaggerSchemasCustomizer
     {
-        private readonly List<Type> _listModels;
+        private readonly Type[] _listModels;
 
         public PlatformSwaggerSchemasCustomizer()
         {
-            _listModels = AppDomain.CurrentDomain
-                .GetAssemblies()
-                .Where(x => !x.IsDynamic)
-                .SelectMany(x => x.GetExportedTypes()
-                                    .Where(y => y.IsClass)
-                                    .Where(y => typeof(IPlatformModel).IsAssignableFrom(y)))
-                .ToList();
+            _listModels = TypeHelper.GetTypes(typeof(IEntityBase));
         }
 
         /// <summary>
@@ -33,7 +28,8 @@ namespace Platform.Web.Services.SwaggerServices
         /// </summary>
         public void CustomizeDefaultSwaggerSchemas(Dictionary<string, OpenApiSchema> defaultSchemas)
         {
-            foreach(var model in defaultSchemas)
+            foreach(var model in defaultSchemas
+                .Where(x => _listModels.Select(x => x.Name).Contains(x.Key)))
             {
                 var modelPropertiesDict = GetModelPropertiesAttributesDict(model.Key);
 
@@ -41,7 +37,7 @@ namespace Platform.Web.Services.SwaggerServices
                 {
                     if (modelPropertiesDict.ContainsKey(property.Key.ToLower()))
                     {
-                        property.Value.Extensions.Add("dispalyIn", modelPropertiesDict[property.Key.ToLower()]);
+                        property.Value.Extensions.Add("displayIn", modelPropertiesDict[property.Key.ToLower()]);
                     }
                 }
             }
@@ -56,7 +52,7 @@ namespace Platform.Web.Services.SwaggerServices
         private Dictionary<string, OpenApiObject> GetModelPropertiesAttributesDict(string modelName)
         {            
             var modelType = _listModels
-                .FirstOrDefault(x => x.Name == modelName) ?? throw new Exception("Не найдена соответствующая модель");
+                .Single(x => x.Name == modelName);
 
             var modelProperties = modelType.GetProperties();
 

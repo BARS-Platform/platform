@@ -5,10 +5,14 @@ open Platform.Fodels.Enums
 open Platform.Fodels.Interfaces
 
 type [<AllowNullLiteral>] [<Platform(AttributesEnum.Grid ||| AttributesEnum.Form)>] CurrencyReferenceBook() =
-    interface IPlatformModel with
+    member this.Id
+        with get () = this.id
+        and set (value) = this.id <- value
+
+    interface IEntityBase with
         member this.Id
-            with get () = this.id
-            and set (value) = this.id <- value
+            with get () = this.Id
+            and set(value) = this.Id <- value
 
     [<DefaultValue>]
     val mutable private id: int

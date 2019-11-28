@@ -5,18 +5,22 @@ open Platform.Fodels.Interfaces
 open Platform.Fodels.Enums
 open Platform.Fodels.Attributes
 
-type [<AllowNullLiteral>] WeatherForecast() =
-    interface IPlatformModel with
+type [<AllowNullLiteral>] [<Menu("WeatherForecast", PermissionNamesForFodels.ViewModels, Sections.Models, "weatherForecast", Icons.Home)>] WeatherForecast() =
+    member this.Id
+        with get () = this.id
+        and set (value) = this.id <- value
+
+    interface IEntityBase with
         member this.Id
-            with get () = this.id
-            and set (value) = this.id <- value
+            with get () = this.Id
+            and set (value) = this.Id <- value
 
     [<DefaultValue>]
     val mutable private id: int
 
     [<DefaultValue>]
     val mutable private date: DateTime
-    
+
     [<Platform(AttributesEnum.Form ||| AttributesEnum.Grid)>]
     member this.Date
         with get () = this.date
@@ -24,7 +28,7 @@ type [<AllowNullLiteral>] WeatherForecast() =
 
     [<DefaultValue>]
     val mutable private tempC: int
-    
+
     [<Platform(AttributesEnum.Grid)>]
     member this.TemperatureC
         with get () = this.tempC
@@ -38,7 +42,7 @@ type [<AllowNullLiteral>] WeatherForecast() =
 
     [<DefaultValue>]
     val mutable private myProp: int
-    
+
     [<Platform(AttributesEnum.Form)>]
     member this.MyProperty
         with get () = this.myProp
@@ -46,7 +50,7 @@ type [<AllowNullLiteral>] WeatherForecast() =
 
     [<DefaultValue>]
     val mutable private sum: string
-    member public this.Summary
+    member this.Summary
         with get () = this.sum
         and set value = this.sum <- value
 

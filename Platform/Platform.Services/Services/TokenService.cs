@@ -1,20 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
-using Platform.Domain.Common;
-using Platform.Fodels;
+using Platform.Fatabase;
 using Platform.Fodels.Models;
+using Platform.Services.Common;
 
-namespace Platform.Domain.Services
+namespace Platform.Services.Services
 {
 	/// <summary>
 	/// Service that generate JWT tokens.
 	/// </summary>
 	public class TokenService
 	{
-		internal JwtSecurityToken GenerateToken(User user)
+		private readonly IRepository _repository;
+
+		public TokenService(IRepository repository)
+		{
+			_repository = repository;
+		}
+
+		public JwtSecurityToken GenerateToken(User user)
 		{
 			var key = JwtOptions.GetSymmetricSecurityKey();
 			var now = DateTime.Now;
@@ -30,14 +38,20 @@ namespace Platform.Domain.Services
 
 		private ClaimsIdentity GetIdentity(User user)
 		{
-			var userWithRole = new {user.Login, user.Email, Role = new {Name = "admin"}}; //add role to User model?
 			var claims = new List<Claim>
 			{
 				new Claim(ClaimTypes.Name, user.Login),
 				new Claim(ClaimTypes.Email, user.Email)
 			};
-			if (userWithRole.Role != null)
-				claims.Add(new Claim(ClaimTypes.Role, userWithRole.Role.Name));
+
+			var userEntity = _repository.FindByPredicate<User>(x => x.Login == user.Login);
+
+			var claimsWithRoles = _repository
+				.FindAllByPredicate<UserRole>(x => x.User.Id == userEntity.Id)
+				.Select(userRole => new Claim(ClaimTypes.Role, userRole.Role.RoleName))
+				.ToList();
+
+			claims.AddRange(claimsWithRoles);
 
 			var claimsIdentity =
 				new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
