@@ -90,6 +90,7 @@ export default class RegisterPage extends Vue {
       }
       this.$q.loading.hide()
       this.clearForm(response.parameterName)
+      this.$store.dispatch('menu/getMenuItems')
     } else {
       this.$q.notify({
         message: 'Введите корректные данные',

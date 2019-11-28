@@ -1,4 +1,4 @@
-﻿namespace Platform.Domain.Common
+﻿namespace Platform.Services.Common
 {
     public class OperationResult
     {

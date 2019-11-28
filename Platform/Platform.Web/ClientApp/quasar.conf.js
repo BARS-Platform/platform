@@ -55,6 +55,7 @@ module.exports = function(ctx) {
         'QToolbar',
         'QToolbarTitle',
         'QBtn',
+        'QBtnDropdown',
         'QIcon',
         'QList',
         'QItem',
@@ -69,12 +70,14 @@ module.exports = function(ctx) {
         'QCardActions',
         'QInput',
         'QSpace',
-        'QForm'
+        'QForm',
+        'QMenu',
+        'QSeparator'
       ],
 
       cssAddon: true,
 
-      directives: ['Ripple'],
+      directives: ['Ripple', 'ClosePopup'],
 
       plugins: ['Notify', 'Cookies', 'Loading'],
 

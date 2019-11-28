@@ -1,18 +1,20 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Platform.Domain.Common;
-using Platform.Domain.Services;
 using Platform.Fatabase;
 using Platform.Fodels.Models;
+using Platform.Services.Common;
+using Platform.Services.Helpers;
+using Platform.Services.Services;
 
 namespace Platform.Domain.DomainServices
 {
 	public class UserDomainService
 	{
-		private readonly IRepository<User> _repository;
+		private readonly IRepository _repository;
 		private readonly PasswordCheckerService _checkerService;
 		private readonly TokenService _tokenService;
 
-		public UserDomainService(IRepository<User> repository,
+		public UserDomainService(IRepository repository,
 			PasswordCheckerService checkerService, TokenService tokenService)
 		{
 			_repository = repository;
@@ -22,21 +24,21 @@ namespace Platform.Domain.DomainServices
 
 		public OperationResult CheckLoginUsed(string login)
 		{
-			var user = _repository.FindByPredicate(x => x.Login == login);
+			var user = _repository.FindByPredicate<User>(x => x.Login == login);
 
 			return new OperationResult(user == null);
 		}
 
 		public OperationResult CheckEmailUsed(string email)
 		{
-			var user = _repository.FindByPredicate(x => x.Email == email);
+			var user = _repository.FindByPredicate<User>(x => x.Email == email);
 
 			return new OperationResult(user == null);
 		}
 
 		public OperationResult LogIn(string login, string password)
 		{
-			var user = _repository.FindByPredicate(x => x.Login == login)
+			var user = _repository.FindByPredicate<User>(x => x.Login == login)
 			           ?? throw new AuthorizationException(
 				           "User with such login does not exist. Please review your credentials.", nameof(login));
 
@@ -56,7 +58,9 @@ namespace Platform.Domain.DomainServices
 		{
 			var user = new User(login, _checkerService.HashPassword(password), email);
 
-			_repository.Create(user);
+			user = _repository.Create(user);
+			var role = _repository.FindByPredicate<Role>(x => x.RoleName == RoleNamesHelper.User);
+			_repository.Create(new UserRole(user, role));
 
 			return new OperationResult()
 			{

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Cryptography;
 
-namespace Platform.Domain.Services
+namespace Platform.Services.Services
 {
 	/// <summary>
 	/// Service that validates user's password.
@@ -16,7 +16,7 @@ namespace Platform.Domain.Services
 		/// <summary>
 		/// Get password's hash by SHA256 algorithm.
 		/// </summary>
-		internal string HashPassword(string password)
+		public string HashPassword(string password)
 		{
 			using var algorithm = new Rfc2898DeriveBytes(
 				password,
@@ -34,7 +34,7 @@ namespace Platform.Domain.Services
 		/// </summary>
 		/// <param name="hash">Hash, stored at user record in database.</param>
 		/// <param name="password">Received input</param>
-		internal bool Check(string hash, string password)
+		public bool Check(string hash, string password)
 		{
 			var parts = hash.Split('.', 2);
 
