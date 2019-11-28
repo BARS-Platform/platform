@@ -8,7 +8,7 @@ using Platform.Web.Controllers.Base;
 
 namespace Platform.Web.Controllers
 {
-    //[Authorize(PermissionNamesHelper.ViewAdmin)]
+    [Authorize(PermissionNamesHelper.ViewAdmin)]
     [Route("api/[controller]/[action]")]
     public class RoleController : BaseController<Role>
     {
@@ -17,22 +17,22 @@ namespace Platform.Web.Controllers
         {
         }
 
-        //[Authorize(PermissionNamesHelper.RoleView)]
+        [Authorize(PermissionNamesHelper.RoleView)]
         public override Role Get(int id) => base.Get(id);
 
-        //[Authorize(PermissionNamesHelper.RoleView)]
+        [Authorize(PermissionNamesHelper.RoleView)]
         public override IEnumerable<Role> GetAll() => base.GetAll();
 
-        //[Authorize(PermissionNamesHelper.RoleEdit)]
+        [Authorize(PermissionNamesHelper.RoleEdit)]
         public override Role Create(Role entity) => base.Create(entity);
 
-        //[Authorize(PermissionNamesHelper.RoleEdit)]
+        [Authorize(PermissionNamesHelper.RoleEdit)]
         public override Role Update(Role entity) => base.Update(entity);
 
-        //[Authorize(PermissionNamesHelper.RoleEdit)]
+        [Authorize(PermissionNamesHelper.RoleEdit)]
         public override bool Delete(Role entity) => base.Delete(entity);
 
-        //[Authorize(PermissionNamesHelper.RoleEdit)]
+        [Authorize(PermissionNamesHelper.RoleEdit)]
         [HttpPut]
         public void AddRoleToUser(int userId, int roleId)
         {
@@ -41,7 +41,7 @@ namespace Platform.Web.Controllers
             Repository.Create(new UserRole(user, role));
         }
         
-        //[Authorize(PermissionNamesHelper.RoleEdit)]
+        [Authorize(PermissionNamesHelper.RoleEdit)]
         [HttpPut]
         public void AddRoleToUserByName(int userId, string roleName)
         {
@@ -50,7 +50,7 @@ namespace Platform.Web.Controllers
             Repository.Create(new UserRole(user, role));
         }
         
-        //[Authorize(PermissionNamesHelper.PermissionEdit)]
+        [Authorize(PermissionNamesHelper.PermissionEdit)]
         [HttpPut]
         public void AddPermissionToRole(int roleId, int permissionId)
         {
@@ -59,7 +59,7 @@ namespace Platform.Web.Controllers
             Repository.Create(new RolePermission(role, permission));
         }
         
-        //[Authorize(PermissionNamesHelper.PermissionEdit)]
+        [Authorize(PermissionNamesHelper.PermissionEdit)]
         [HttpPut]
         public void AddPermissionToRoleByName(int roleId, string permissionId)
         {
