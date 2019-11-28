@@ -85,9 +85,7 @@ namespace Platform.Web
                     RoleNamesHelper.User, new List<string>
                     {
                         PermissionNamesHelper.ViewModels,
-                        PermissionNamesHelper.ViewDictionaries,
-                        PermissionNamesHelper.RoleView,
-                        PermissionNamesHelper.PermissionView
+                        PermissionNamesHelper.ViewDictionaries
                     }
                 }
             };
