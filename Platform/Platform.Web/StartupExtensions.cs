@@ -92,15 +92,8 @@ namespace Platform.Web
             
             services.AddAuthorization(options =>
             {
-                foreach (var role in _registeredRoles)
-                {
-                    options.RegisterRole(role);
-                }
-                
-                foreach (var permission in _registeredPermissions)
-                {
-                    options.RegisterPermission(permission);
-                }
+                _registeredRoles.ForEach(options.RegisterRole);
+                _registeredPermissions.ForEach(options.RegisterPermission);
             });
         }
 
@@ -165,14 +158,11 @@ namespace Platform.Web
             var existingRoles = repository
                 .FindAllByPredicate<Role>(role => roleNames.Contains(role.RoleName))
                 .ToList();
-            var notExistingRoles = _registeredRoles
-                .Where(x => !existingRoles.Contains(x))
-                .ToList();
             
-            foreach (var role in notExistingRoles)
-            {
-                repository.Create(role);
-            }
+            _registeredRoles
+                .Where(x => !existingRoles.Contains(x))
+                .ToList()
+                .ForEach(role => repository.Create(role));
         }
         
         public static void CheckRegisteredPermissionsForExisting(this IServiceProvider serviceProvider)
@@ -182,14 +172,11 @@ namespace Platform.Web
             var existingPermissions = repository
                 .FindAllByPredicate<Permission>(perm => permissionIds.Contains(perm.PermissionId))
                 .ToList();
-            var notExistingPermissions = _registeredPermissions
+            
+            _registeredPermissions
                 .Where(x => !existingPermissions.Contains(x))
-                .ToList();
-
-            foreach (var permission in notExistingPermissions)
-            {
-                repository.Create(permission);
-            }
+                .ToList()
+                .ForEach(permission => repository.Create(permission));
         }
         
         public static void CheckRegisteredRolePermissionsForExisting(this IServiceProvider serviceProvider)
@@ -210,16 +197,23 @@ namespace Platform.Web
                         .Select(x => x.Permission.PermissionId)
                         .ToList();
 
+                var permissionsForDelete = actualPermissions
+                    .Where(x => !permissionsForRole.Contains(x));
+                repository
+                    .FindAllByPredicate<RolePermission>(x => x.Role.RoleName == role,
+                        query => query
+                            .Include(x => x.Role)
+                            .Include(x => x.Permission))
+                    .Where(x => permissionsForDelete.Contains(x.Permission.PermissionId))
+                    .ToList()
+                    .ForEach(rolePermission => repository.Delete(rolePermission));
+
                 var notExistingRolePermissions = permissionsForRole
                     .Where(x => !actualPermissions.Contains(x));
-                var permissionEntities = repository
+                repository
                     .FindAllByPredicate<Permission>(x => notExistingRolePermissions.Contains(x.PermissionId))
-                    .ToList();
-
-                foreach (var permission in permissionEntities)
-                {
-                    repository.Create(new RolePermission(actualRole, permission));
-                }
+                    .ToList()
+                    .ForEach(permission => repository.Create(new RolePermission(actualRole, permission)));
             }
         }
 
