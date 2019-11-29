@@ -17,6 +17,7 @@
     "quasar": "^1.2.0",
     "vue-class-component": "^7.1.0",
     "vue-property-decorator": "^8.2.2",
+    "vue-router-multiguard": "^1.0.3",
     "vuelidate": "^0.7.4",
     "vuelidate-property-decorators": "^1.0.28",
     "vuex": "^3.1.1",
