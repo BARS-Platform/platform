@@ -1,12 +1,16 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Platform.Domain.Common;
 using Platform.Domain.DomainServices;
+using Platform.Fatabase;
 using Platform.Fodels.Enums;
 using Platform.Fodels.Models;
 using Platform.Fodels.Models.Address;
+using Platform.Services.Dto;
 using Platform.Services.Common;
 
 namespace Platform.Web.Controllers
@@ -15,18 +19,22 @@ namespace Platform.Web.Controllers
 	public class AddressController : Controller
 	{
 		private readonly AddressDomainService _service;
+        private readonly IRepository _repository;
 
-		public AddressController(AddressDomainService service)
+		public AddressController(
+            AddressDomainService service,
+            IRepository repository)
 		{
 			_service = service;
-		}
+            _repository = repository;
+        }
 
 		/// <summary>
 		/// Add address element
 		/// </summary>
 		[HttpPost]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public IActionResult AddItem(AddressDto dto)
+		public IActionResult AddItem(Fodels.Models.AddressDto dto)
 		{
 			OperationResult Add() => _service.CreateItem(dto);
 			return HandleRequest(Add);
@@ -74,5 +82,28 @@ namespace Platform.Web.Controllers
 			var result = function();
 			return result.Success ? (IActionResult) Ok(result) : Conflict(result);
 		}
-	}
+
+        /// <summary>
+        /// Update address element
+        /// </summary>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult GetAll()
+        {
+            var list = _repository.GetAll<Apartment>()
+                .Select(x => new Platform.Services.Dto.AddressDto
+                {
+                    Id = x.Id,
+                    CountryName = x.House.Street.City.State.Country.Name,
+                    StateName = x.House.Street.City.State.Name,
+                    CityName = x.House.Street.City.Name,
+                    StreetName = x.House.Street.Name,
+                    HouseNumber = x.House.Name,
+                    ApartmentNumber = x.Name
+                })
+                .ToList();
+
+            return Ok(list);
+        }
+    }
 }

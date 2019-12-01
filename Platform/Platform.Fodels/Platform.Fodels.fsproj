@@ -13,6 +13,7 @@
         <Compile Include="Enums\PermissionNamesForFodels.fs" />
         <Compile Include="Entities\MenuInfoEntity.fs" />
         <Compile Include="Entities\MenuEntity.fs" />
+        <Compile Include="Attributes\LabelAttribute.fs" />
         <Compile Include="Attributes\PlatformAttribute.fs" />
         <Compile Include="Attributes\MenuAttribute.fs" />
         <Compile Include="Interfaces\IEntityBase.fs" />
