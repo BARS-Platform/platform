@@ -22,7 +22,7 @@ namespace Platform.Web.Services.SwaggerServices
 
         public PlatformSwaggerSchemasCustomizer()
         {
-            _listModels = TypeHelper.GetTypes(typeof(IEntityBase));
+            _listModels = TypeHelper.GetTypes(typeof(IEntityDto));
         }
 
         public void AddAdditionalSchemas(ISchemaGenerator schemaGenerator, SchemaRepository schemaRepository)
