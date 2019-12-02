@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-center"><q-table :columns="Columns" v-if="Columns && model.modelName"> </q-table></q-page>
+  <q-page class="flex flex-center"><q-table :columns="Columns" :data="Data" v-if="Model.modelName && Columns && Data"> </q-table></q-page>
 </template>
 
 <script lang="ts">
@@ -17,28 +17,30 @@ import { Model } from '@/models/model'
 export default class ModelIndex extends Vue {
   private modelStore = getModule(ModelModule)
   routeParam = 'name'
-  model: Model = new Model()
+
+  get Model() {
+    return this.modelStore.Model
+  }
+
+  get Data() {
+    return this.modelStore.Data
+  }
 
   get Columns() {
-    return grid.getColumns(this.model.properties)
+    return grid.getColumns(this.Model.properties)
   }
 
   @Watch('$route', { immediate: true, deep: true })
-  onUrlChange(newVal: any) {
+  async onUrlChange(newVal: any) {
     let currentParam = this.$router.currentRoute.params[this.routeParam]
 
     access.check(currentParam, this.$router)
 
-    this.modelStore
-      .getCurrentModel(currentParam)
-      .then(model => {
-        this.model = model
-      })
-      .catch(error => {
-        console.log(error)
-        notify.error(error)
-        this.model = new Model()
-      })
+    await this.modelStore.getCurrentModel(currentParam)
+
+    if (this.Model.modelName) {
+      await this.modelStore.getData(currentParam)
+    }
   }
 }
 </script>
