@@ -1,5 +1,5 @@
 import * as permissionHelper from '@/router/helpers/permissionHelper'
-import * as notify from '@/pages/utils/notify'
+import * as notify from '@/utils/notify'
 import VueRouter from 'vue-router'
 
 export function check(currentParam: string, router: VueRouter) {
