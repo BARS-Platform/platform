@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
-import * as permissionHelper from '@/router/helpers/permissionHelper'
+import * as access from '@/pages/utils/access'
 
 @Component
 export default class ModelIndex extends Vue {
@@ -17,14 +17,7 @@ export default class ModelIndex extends Vue {
   @Watch('$route', { immediate: true, deep: true })
   onUrlChange(newVal: any) {
     let currentParam = this.$router.currentRoute.params[this.modelProperty]
-    if (!permissionHelper.Check(currentParam)) {
-      this.$q.notify({
-        message: 'Доступ запрещен',
-        color: 'negative',
-        timeout: 2000
-      })
-      this.$router.push('/')
-    }
+    access.check(currentParam, this.$router)
     this.currentModel = currentParam
   }
 }
