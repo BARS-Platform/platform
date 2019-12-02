@@ -84,8 +84,7 @@ namespace Platform.Web
                 {
                     spa.Options.SourcePath = "ClientApp";
 
-                    if (env.IsDevelopment())
-                        spa.UseProxyToSpaDevelopmentServer($"http://localhost:8080");
+                    spa.UseProxyToSpaDevelopmentServer($"http://localhost:8080");
                 });
             }
         }

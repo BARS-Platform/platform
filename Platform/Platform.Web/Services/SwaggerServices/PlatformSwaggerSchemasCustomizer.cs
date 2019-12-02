@@ -30,7 +30,7 @@ namespace Platform.Web.Services.SwaggerServices
             foreach(var model in _listModels
                 .Where(x => !schemaRepository.Schemas
                     .Select(schema => schema.Key.ToLower())
-                    .Contains(x.Name.ToString().ToLower())))
+                    .Contains(x.Name.ToLower())))
             {
                 schemaGenerator.GenerateSchema(model, schemaRepository);
             }
