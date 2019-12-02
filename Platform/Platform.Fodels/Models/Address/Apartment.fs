@@ -5,7 +5,7 @@ open System
 open Platform.Fodels.Interfaces
 open Platform.Fodels.Attributes
 
-type [<AllowNullLiteral>] [<MenuAttribute("Квартира", PermissionNamesForFodels.ViewModels, Sections.Models, "Apartment", Icons.Home)>] Apartment() =
+type [<AllowNullLiteral>] [<MenuAttribute("Квартиры", PermissionNamesForFodels.ViewModels, Sections.Models, "Apartment", Icons.Home)>] Apartment() =
     member this.Id
         with get () = this.id
         and set (value) = this.id <- value

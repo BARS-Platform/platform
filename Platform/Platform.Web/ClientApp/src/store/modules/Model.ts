@@ -4,6 +4,7 @@ import SwaggerParser from 'swagger-parser'
 import { OpenAPIV3 } from 'openapi-types'
 import { Model } from '@/models/model'
 import { PlatformSchemaObject } from '@/models/OpenAPIV3/PlatformSchemaObject'
+import * as model from '@/utils/model'
 
 @Module({
   dynamic: true,
@@ -20,10 +21,10 @@ export default class ModelModule extends VuexModule {
 
     let model: Model
 
-    try {
-      model = new Model(schemaModel)
-    } catch {
-      throw 'Данная модель не найдена в схеме'
+    model = new Model(schemaModel)
+
+    if (model.modelName === '' || model.properties.length === 0) {
+      throw 'Данная модель не найдена в схеме swagger'
     }
 
     return model

@@ -5,7 +5,7 @@ open System
 open Platform.Fodels.Interfaces
 open Platform.Fodels.Attributes
 
-type [<AllowNullLiteral>] [<MenuAttribute("Регион", PermissionNamesForFodels.ViewModels, Sections.Models, "State", Icons.Star)>] State() =
+type [<AllowNullLiteral>] [<MenuAttribute("Регионы", PermissionNamesForFodels.ViewModels, Sections.Models, "State", Icons.Star)>] State() =
     member this.Id
         with get () = this.id
         and set (value) = this.id <- value

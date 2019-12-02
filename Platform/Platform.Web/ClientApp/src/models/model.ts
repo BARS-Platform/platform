@@ -11,8 +11,8 @@ export class Model implements IModel {
 
   public properties: Property[]
 
-  constructor(schema: PlatformSchemaObject) {
-    this.modelName = schema.modelName
-    this.properties = model.convertProperties(schema.properties!)
+  constructor(schema?: PlatformSchemaObject) {
+    this.modelName = (schema && schema.modelName) || ''
+    this.properties = model.convertProperties((schema && schema.properties) || [])
   }
 }

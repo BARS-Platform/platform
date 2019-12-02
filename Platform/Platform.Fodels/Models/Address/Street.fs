@@ -5,7 +5,7 @@ open System
 open Platform.Fodels.Interfaces
 open Platform.Fodels.Attributes
 
-type [<AllowNullLiteral>] [<MenuAttribute("Улица", PermissionNamesForFodels.ViewModels, Sections.Models, "Street", Icons.Star)>] Street() =
+type [<AllowNullLiteral>] [<MenuAttribute("Улицы", PermissionNamesForFodels.ViewModels, Sections.Models, "Street", Icons.Star)>] Street() =
     member this.Id
         with get () = this.id
         and set (value) = this.id <- value
