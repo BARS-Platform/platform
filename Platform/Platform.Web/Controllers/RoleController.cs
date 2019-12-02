@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Platform.Fatabase;
 using Platform.Fodels.Models;
+using Platform.Services.Common;
 using Platform.Services.Dto;
 using Platform.Services.Helpers;
 using Platform.Web.Controllers.Base;
@@ -23,8 +24,8 @@ namespace Platform.Web.Controllers
         public override IActionResult Get(int id) => base.Get(id);
 
         [Authorize(PermissionNamesHelper.RoleView)]
-        public override IActionResult GetAll() =>
-            Ok(Repository.GetAll<Role>().Select(RoleDto.ProjectionExpression).ToList());
+        public override IActionResult GetAll(ListParam listParam) =>
+            Ok(Repository.GetAll<Role>().Select(RoleDto.ProjectionExpression).FormData(listParam));
 
         [Authorize(PermissionNamesHelper.RoleEdit)]
         public override IActionResult Create(Role entity) => base.Create(entity);

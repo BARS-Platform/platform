@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Platform.Fatabase;
 using Platform.Fodels.Models.Address;
+using Platform.Services.Common;
 using Platform.Services.Dto.AddressDtos;
 using Platform.Services.Helpers;
 
@@ -20,12 +21,12 @@ namespace Platform.Web.Controllers.AddressControllers
         /// </summary>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetAll()
+        public IActionResult GetAll(ListParam listParam)
         {
             var list = _repository.GetAll<City>()
                 .IncludeAll()
                 .Select(CityDto.ProjectionExpression)
-                .ToList();
+                .FormData(listParam);
 
             return Ok(list);
         }

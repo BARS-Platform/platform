@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Platform.Fatabase;
 using Platform.Fodels.Interfaces;
+using Platform.Services.Common;
 
 namespace Platform.Web.Controllers.Base
 {
@@ -27,7 +28,7 @@ namespace Platform.Web.Controllers.Base
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public virtual IActionResult GetAll() => Ok(Repository.GetAll<T>());
+        public virtual IActionResult GetAll(ListParam listParam) => Ok(Repository.GetAll<T>().FormData(listParam));
         
         /// <summary>
         /// Метод для создания объекта.
