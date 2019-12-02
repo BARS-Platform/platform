@@ -14,6 +14,7 @@ namespace Platform.Web.Services.SwaggerServices
         }
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
+            _platformSwaggerSchemaCustomizer.AddAdditionalSchemas(context.SchemaGenerator, context.SchemaRepository);
             _platformSwaggerSchemaCustomizer.CustomizeDefaultSwaggerSchemas(context.SchemaRepository.Schemas);
         }
     }

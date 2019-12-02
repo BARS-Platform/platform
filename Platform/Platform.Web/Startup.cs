@@ -65,15 +65,28 @@ namespace Platform.Web
 
 			app.UseSpaStaticFiles();
 
-			app.UseEndpoints(endpoints =>
-			{
-				endpoints.MapControllers();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
 
-				endpoints.MapToVueCliProxy(
-					"{*path}",
-					new SpaOptions {SourcePath = "ClientApp"}
-				);
-			});
-		}
+                if (!env.IsDevelopment())
+                {
+                    endpoints.MapToVueCliProxy(
+                       "{*path}",
+                       new SpaOptions { SourcePath = "ClientApp" }
+                   );
+                }
+            });
+
+            if (env.IsDevelopment())
+            {
+                app.UseSpa(spa =>
+                {
+                    spa.Options.SourcePath = "ClientApp";
+
+                    spa.UseProxyToSpaDevelopmentServer($"http://localhost:8080");
+                });
+            }
+        }
 	}
 }

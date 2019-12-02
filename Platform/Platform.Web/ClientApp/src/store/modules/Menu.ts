@@ -16,7 +16,7 @@ export default class MenuModule extends VuexModule {
     return this.menuItems
   }
 
-  @Action
+  @Action({ rawError: true })
   async checkAccess(modelName: string) {
     const isAccess = await api.checkAccess(modelName)
 

@@ -1,11 +1,11 @@
-namespace Platform.Fodels.Models.Address
+﻿namespace Platform.Fodels.Models.Address
 
 open Platform.Fodels.Enums
 open System
 open Platform.Fodels.Interfaces
 open Platform.Fodels.Attributes
 
-type [<AllowNullLiteral>] [<MenuAttribute("City", PermissionNamesForFodels.ViewModels, Sections.Models, "city", Icons.Star)>] City() =
+type [<AllowNullLiteral>] [<MenuAttribute("Города", PermissionNamesForFodels.ViewModels, Sections.Models, "City", Icons.Star)>] City() =
     member this.Id
         with get () = this.id
         and set (value) = this.id <- value

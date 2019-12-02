@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Platform.Fatabase;
 using Platform.Fodels.Models;
+using Platform.Services.Dto;
 using Platform.Services.Helpers;
 using Platform.Web.Controllers.Base;
 
@@ -13,24 +15,25 @@ namespace Platform.Web.Controllers
     public class RoleController : BaseController<Role>
     {
         public RoleController(IRepository repository)
-            :base (repository)
+            : base(repository)
         {
         }
 
         [Authorize(PermissionNamesHelper.RoleView)]
-        public override Role Get(int id) => base.Get(id);
+        public override IActionResult Get(int id) => base.Get(id);
 
         [Authorize(PermissionNamesHelper.RoleView)]
-        public override IEnumerable<Role> GetAll() => base.GetAll();
+        public override IActionResult GetAll() =>
+            Ok(Repository.GetAll<Role>().Select(RoleDto.ProjectionExpression).ToList());
 
         [Authorize(PermissionNamesHelper.RoleEdit)]
-        public override Role Create(Role entity) => base.Create(entity);
+        public override IActionResult Create(Role entity) => base.Create(entity);
 
         [Authorize(PermissionNamesHelper.RoleEdit)]
-        public override Role Update(Role entity) => base.Update(entity);
+        public override IActionResult Update(Role entity) => base.Update(entity);
 
         [Authorize(PermissionNamesHelper.RoleEdit)]
-        public override bool Delete(Role entity) => base.Delete(entity);
+        public override IActionResult Delete(Role entity) => base.Delete(entity);
 
         [Authorize(PermissionNamesHelper.RoleEdit)]
         [HttpPut]
@@ -40,7 +43,7 @@ namespace Platform.Web.Controllers
             var role = Repository.Get<Role>(roleId);
             Repository.Create(new UserRole(user, role));
         }
-        
+
         [Authorize(PermissionNamesHelper.RoleEdit)]
         [HttpPut]
         public void AddRoleToUserByName(int userId, string roleName)
@@ -49,7 +52,7 @@ namespace Platform.Web.Controllers
             var role = Repository.FindByPredicate<Role>(x => x.RoleName == roleName);
             Repository.Create(new UserRole(user, role));
         }
-        
+
         [Authorize(PermissionNamesHelper.PermissionEdit)]
         [HttpPut]
         public void AddPermissionToRole(int roleId, int permissionId)
@@ -58,7 +61,7 @@ namespace Platform.Web.Controllers
             var permission = Repository.Get<Permission>(permissionId);
             Repository.Create(new RolePermission(role, permission));
         }
-        
+
         [Authorize(PermissionNamesHelper.PermissionEdit)]
         [HttpPut]
         public void AddPermissionToRoleByName(int roleId, string permissionId)

@@ -1,31 +1,46 @@
 <template>
-  <q-page class="flex flex-center">
-    {{ currentModel }}
-  </q-page>
+  <q-page class="flex flex-center"><q-table :columns="Columns" :data="Data" v-if="Model.modelName && Columns && Data"> </q-table></q-page>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
-import * as permissionHelper from '@/router/helpers/permissionHelper'
+
+import { getModule } from 'vuex-module-decorators'
+import ModelModule from '@/store/modules/Model'
+
+import * as access from '@/utils/access'
+import * as notify from '@/utils/notify'
+import * as grid from '@/utils/grid'
+import { Model } from '@/models/model'
 
 @Component
 export default class ModelIndex extends Vue {
-  modelProperty = 'name'
+  private modelStore = getModule(ModelModule)
+  routeParam = 'name'
 
-  currentModel = ''
+  get Model() {
+    return this.modelStore.Model
+  }
+
+  get Data() {
+    return this.modelStore.Data
+  }
+
+  get Columns() {
+    return grid.getColumns(this.Model.properties)
+  }
 
   @Watch('$route', { immediate: true, deep: true })
-  onUrlChange(newVal: any) {
-    let currentParam = this.$router.currentRoute.params[this.modelProperty]
-    if (!permissionHelper.Check(currentParam)) {
-      this.$q.notify({
-        message: 'Доступ запрещен',
-        color: 'negative',
-        timeout: 2000
-      })
-      this.$router.push('/')
+  async onUrlChange(newVal: any) {
+    let currentParam = this.$router.currentRoute.params[this.routeParam]
+
+    access.check(currentParam, this.$router)
+
+    await this.modelStore.getCurrentModel(currentParam)
+
+    if (this.Model.modelName) {
+      await this.modelStore.getData(currentParam)
     }
-    this.currentModel = currentParam
   }
 }
 </script>
