@@ -27,7 +27,7 @@ namespace Platform.Web.Controllers.Base
         /// Метод для получения объектов.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         public virtual IActionResult GetAll(ListParam listParam) => Ok(Repository.GetAll<T>().FormData(listParam));
         
         /// <summary>

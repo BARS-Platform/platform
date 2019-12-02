@@ -1,7 +1,7 @@
 import { api } from './api'
-import { RowData } from '../../models/rowData'
+import { ListResult } from '../../models/data/listResult'
 
-export async function getData(modelName: string): Promise<RowData[]> {
-  const response = await api.get(`/${modelName}/GetAll`)
-  return response.data as RowData[]
+export async function getData(listResult: ListResult): Promise<ListResult> {
+  const response = await api.post(`/${listResult.modelName}/GetAll`, listResult)
+  return response.data as ListResult
 }

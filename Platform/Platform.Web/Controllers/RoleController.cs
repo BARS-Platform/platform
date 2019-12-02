@@ -24,7 +24,7 @@ namespace Platform.Web.Controllers
         public override IActionResult Get(int id) => base.Get(id);
 
         [Authorize(PermissionNamesHelper.RoleView)]
-        public override IActionResult GetAll(ListParam listParam) =>
+        public override IActionResult GetAll([FromBody] ListParam listParam) =>
             Ok(Repository.GetAll<Role>().Select(RoleDto.ProjectionExpression).FormData(listParam));
 
         [Authorize(PermissionNamesHelper.RoleEdit)]

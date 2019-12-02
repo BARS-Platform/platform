@@ -19,9 +19,9 @@ namespace Platform.Web.Controllers.AddressControllers
         /// <summary>
         /// Получить все Адреса.
         /// </summary>
-        [HttpGet]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetAll(ListParam listParam)
+        public IActionResult GetAll([FromBody] ListParam listParam)
         {
             var list = _repository.GetAll<Apartment>()
                 .IncludeAll()

@@ -1,5 +1,13 @@
 <template>
-  <q-page class="flex flex-center"><q-table :columns="Columns" :data="Data" v-if="Model.modelName && Columns && Data"> </q-table></q-page>
+  <q-page class="flex flex-center">
+    <q-table
+      :columns="Columns"
+      :data="ListResult.data"
+      v-if="Model.modelName && Columns && ListResult"
+      :pagination.sync="ListResult.pagination"
+      @request="onRequest"
+    />
+  </q-page>
 </template>
 
 <script lang="ts">
@@ -12,6 +20,7 @@ import * as access from '@/utils/access'
 import * as notify from '@/utils/notify'
 import * as grid from '@/utils/grid'
 import { Model } from '@/models/model'
+import { ListResult } from '@/models/data/listResult'
 
 @Component
 export default class ModelIndex extends Vue {
@@ -22,12 +31,21 @@ export default class ModelIndex extends Vue {
     return this.modelStore.Model
   }
 
-  get Data() {
-    return this.modelStore.Data
+  get ListResult() {
+    return this.modelStore.ListResult
   }
 
   get Columns() {
     return grid.getColumns(this.Model.properties)
+  }
+
+  async onRequest(props: any) {
+    let currentParam = this.$router.currentRoute.params[this.routeParam]
+    if (this.Model.modelName) {
+      this.ListResult.modelName = currentParam
+      this.ListResult.pagination = props.pagination
+      await this.modelStore.getData(this.ListResult)
+    }
   }
 
   @Watch('$route', { immediate: true, deep: true })
@@ -39,7 +57,13 @@ export default class ModelIndex extends Vue {
     await this.modelStore.getCurrentModel(currentParam)
 
     if (this.Model.modelName) {
-      await this.modelStore.getData(currentParam)
+      this.ListResult.modelName = currentParam
+      this.ListResult.pagination = {
+        page: 1,
+        rowsPerPage: 5,
+        rowsNumber: 5
+      }
+      await this.modelStore.getData(this.ListResult)
     }
   }
 }
