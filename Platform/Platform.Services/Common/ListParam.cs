@@ -3,5 +3,7 @@
     public class ListParam
     {
         public Pagination Pagination{ get; set; }
+
+        public Filtration[] Filters { get; set; }
     }
 }

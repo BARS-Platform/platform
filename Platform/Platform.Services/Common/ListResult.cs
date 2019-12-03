@@ -26,6 +26,7 @@ namespace Platform.Services.Common
             return new ListResult<T>
             {
                 Data = query
+                    .Filter(listParam.Filters)
                     .Paging(listParam.Pagination)
                     .ToList(),
 <<<<<<< HEAD
