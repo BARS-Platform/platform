@@ -37,11 +37,11 @@ module.exports = function(ctx) {
       // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
 
       'roboto-font', // optional, you are not bound to it
-      'material-icons' // optional, you are not bound to it
+      'material-icons',
+      'fontawesome-v5'
     ],
 
     framework: {
-      // iconSet: 'ionicons-v4',
       // lang: 'de', // Quasar language
 
       // all: true, // --- includes everything; for dev only!
@@ -52,10 +52,12 @@ module.exports = function(ctx) {
         'QDrawer',
         'QPageContainer',
         'QPage',
+        'QSelect',
         'QToolbar',
         'QToolbarTitle',
         'QBtn',
         'QBtnDropdown',
+        'QDialog',
         'QIcon',
         'QList',
         'QItem',

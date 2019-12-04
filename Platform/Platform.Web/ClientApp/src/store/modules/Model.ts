@@ -7,6 +7,7 @@ import { Model } from '@/models/model'
 import { PlatformSchemaObject } from '@/models/OpenAPIV3/PlatformSchemaObject'
 import * as notify from '@/utils/notify'
 import { ListResult } from '@/models/data/listResult'
+import { ListParam } from '../../models/data/listParams'
 
 @Module({
   dynamic: true,
@@ -45,24 +46,18 @@ export default class ModelModule extends VuexModule {
   }
 
   @Action({ commit: 'SET_DATA', rawError: true })
-  async getData(listResult: ListResult) {
-    let result = listResult
+  async getData(listParam: ListParam) {
+    let result!: ListResult
     await api
-      .getData(listResult)
+      .getData(listParam)
       .then(response => {
-        console.log(response)
         result = response
       })
       .catch(() => {
         notify.error('Произошла ошибка при загрузке данных')
         result = {
-          modelName: listResult.modelName,
           data: [],
-          pagination: {
-            page: 1,
-            rowsNumber: 5,
-            rowsPerPage: 5
-          }
+          listParam: listParam
         }
       })
 

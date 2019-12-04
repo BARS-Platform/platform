@@ -8,24 +8,20 @@ namespace Platform.Services.Common
     {
         public IEnumerable<T> Data { get; set; }
 
-        public Pagination Pagination { get; set; }
+        public ListParam ListParam { get; set; }
     }
 
     public static class ListResult
     {
         public static ListResult<T> FormData<T>(this IQueryable<T> query, ListParam listParam) 
         {
+            listParam.Pagination.RowsNumber = query.Count();
             return new ListResult<T>
             {
                 Data = query
                     .Paging(listParam.Pagination)
                     .ToList(),
-                Pagination = new Pagination()
-                {
-                    Page = listParam.Pagination.Page,
-                    RowsPerPage = listParam.Pagination.RowsPerPage,
-                    RowsNumber = query.Count()
-                }
+                ListParam = listParam                
             };
         }
     }
