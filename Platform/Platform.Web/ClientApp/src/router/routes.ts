@@ -28,6 +28,13 @@ const routes: Array<RouteConfig> = [
         props: true,
         beforeEnter: multiguard([auth, permission])
       },
+      {
+        path: '/dictionaries/:name',
+        component: () => import('@/pages/models/Index.vue'),
+        name: 'dictionaries',
+        props: true,
+        beforeEnter: multiguard([auth, permission])
+      },
       { path: '/register', component: () => import('@/pages/authentication/Register.vue') },
       { path: '/login', component: () => import('@/pages/authentication/Login.vue') }
     ]
