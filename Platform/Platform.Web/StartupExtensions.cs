@@ -102,7 +102,7 @@ namespace Platform.Web
             services.AddSingleton<ApplicationConfiguration>();
 
             services.AddTransient<ApplicationDbContext>();
-            services.AddSingleton(typeof(IRepository), typeof(BaseRepository));
+            services.AddScoped<IRepository, BaseRepository>();
 
 			services.AddSingleton<PasswordCheckerService>();
 			services.AddSingleton<TokenService>();
