@@ -13,7 +13,7 @@
         public int RowsPerPage { get; set; }
 
         /// <summary>
-        /// Общее количество строк
+        /// Общее количество строк.
         /// </summary>
         public int RowsNumber { get; set; }
     }
