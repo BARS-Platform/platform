@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Platform.Fatabase;
 using Platform.Fodels.Models.Address;
+using Platform.Services.Common;
 using Platform.Services.Dto.AddressDtos;
 
 namespace Platform.Web.Controllers.AddressControllers
@@ -17,13 +18,13 @@ namespace Platform.Web.Controllers.AddressControllers
         /// <summary>
         /// Получить все Адреса.
         /// </summary>
-        [HttpGet]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetAll()
+        public IActionResult GetAll([FromBody] ListParam listParam)
         {
             var list = _repository.GetAll<Country>()
                 .Select(CountryDto.ProjectionExpression)
-                .ToList();
+                .FormData(listParam);
 
             return Ok(list);
         }

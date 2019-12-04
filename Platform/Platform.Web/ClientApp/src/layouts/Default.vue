@@ -2,7 +2,8 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated="">
       <q-toolbar>
-        <router-link to="/" tag="q-toolbar-title" style="cursor: pointer">Platform</router-link>
+        <router-link to="/" tag="q-toolbar-title" style="cursor: pointer; max-width: 100px">Platform</router-link>
+        <q-space />
         <dropdown-menu-item v-for="menuItem in menuItems" :key="menuItems.title" v-if="isAuthenticated" :menuItem="menuItem" />
         <q-btn stretch flat v-if="!isAuthenticated" label="Войти" to="/login" />
         <q-btn stretch flat v-else="v-else" label="Выйти" @click="logOut" />

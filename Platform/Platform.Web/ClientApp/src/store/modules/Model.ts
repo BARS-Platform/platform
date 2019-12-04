@@ -5,8 +5,9 @@ import SwaggerParser from 'swagger-parser'
 import { OpenAPIV3 } from 'openapi-types'
 import { Model } from '@/models/model'
 import { PlatformSchemaObject } from '@/models/OpenAPIV3/PlatformSchemaObject'
-import { RowData } from '@/models/rowData'
 import * as notify from '@/utils/notify'
+import { ListResult } from '@/models/data/listResult'
+import { ListParam } from '../../models/data/listParams'
 
 @Module({
   dynamic: true,
@@ -16,14 +17,14 @@ import * as notify from '@/utils/notify'
 })
 export default class ModelModule extends VuexModule {
   model: Model = new Model()
-  data: RowData[] = []
+  listResult: ListResult = new ListResult()
 
   get Model() {
     return this.model
   }
 
-  get Data() {
-    return this.data
+  get ListResult() {
+    return this.listResult
   }
 
   @Action({ commit: 'SET_MODEL', rawError: true })
@@ -45,19 +46,22 @@ export default class ModelModule extends VuexModule {
   }
 
   @Action({ commit: 'SET_DATA', rawError: true })
-  async getData(modelName: string) {
-    let rowData: RowData[] = []
+  async getData(listParam: ListParam) {
+    let result!: ListResult
     await api
-      .getData(modelName)
-      .then(data => {
-        rowData = data
+      .getData(listParam)
+      .then(response => {
+        result = response
       })
       .catch(() => {
         notify.error('Произошла ошибка при загрузке данных')
-        rowData = []
+        result = {
+          data: [],
+          listParam: listParam
+        }
       })
 
-    return rowData
+    return result
   }
 
   @Mutation
@@ -66,7 +70,7 @@ export default class ModelModule extends VuexModule {
   }
 
   @Mutation
-  SET_DATA(data: RowData[]) {
-    this.data = data
+  SET_DATA(listResult: ListResult) {
+    this.listResult = listResult
   }
 }
