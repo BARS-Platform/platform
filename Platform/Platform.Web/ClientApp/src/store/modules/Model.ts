@@ -7,7 +7,7 @@ import { Model } from '@/models/model'
 import { PlatformSchemaObject } from '@/models/OpenAPIV3/PlatformSchemaObject'
 import * as notify from '@/utils/notify'
 import { ListResult } from '@/models/data/listResult'
-import { ListParam } from '../../models/data/listParams'
+import { ListParam } from '@/models/data/listParam'
 
 @Module({
   dynamic: true,

@@ -31,3 +31,7 @@ export function getColumns(properties: Property[]) {
 
   return columns
 }
+
+export function isActionColumn(columnName: string) {
+  return columnName.startsWith('action')
+}
