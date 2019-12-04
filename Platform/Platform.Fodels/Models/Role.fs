@@ -4,7 +4,7 @@ open Platform.Fodels.Attributes
 open Platform.Fodels.Enums
 open Platform.Fodels.Interfaces
 
-type [<AllowNullLiteral>] [<MenuAttribute("Роли", PermissionNamesForFodels.RoleView, Sections.Administration, "Role", Icons.Cart)>] Role private () =
+type [<AllowNullLiteral>] [<MenuAttribute("Роли", PermissionNamesForFodels.RoleView, Sections.Administration, "Role", Icons.Person)>] Role private () =
     interface IEntityBase with
         member this.Id
             with get () = this.id
