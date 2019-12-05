@@ -18,7 +18,8 @@ namespace Platform.Services.Dto.AddressDtos
                 CityName = apartment.House.Street.City.Name,
                 StreetName = apartment.House.Street.Name,
                 HouseNumber = apartment.House.Name,
-                ApartmentNumber = apartment.Name
+                //TODO Исправить тип в модели
+                ApartmentNumber = int.Parse(apartment.Name)
             };
 
         public int Id { get; set; }
@@ -45,6 +46,6 @@ namespace Platform.Services.Dto.AddressDtos
 
         [Platform(AttributesEnum.Grid)]
         [Label("Квартира")]
-        public string ApartmentNumber { get; set; }
+        public int ApartmentNumber { get; set; }
     }
 }
