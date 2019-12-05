@@ -22,6 +22,10 @@ export default class DataGridFilterRow extends Vue {
     return !grid.isActionColumn(columnName)
   }
 
+  getRegularColumns(columns: { name: string }[]) {
+    return grid.getRegularColumns(columns)
+  }
+
   inDevelopment() {
     this.$q.notify({
       message: 'Данный функционал находится в разработке',

@@ -35,3 +35,7 @@ export function getColumns(properties: Property[]) {
 export function isActionColumn(columnName: string) {
   return columnName.startsWith('action')
 }
+
+export function getRegularColumns(columns: { name: string }[]) {
+	return columns.filter(x => !isActionColumn(x.name))
+}
