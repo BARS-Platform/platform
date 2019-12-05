@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Platform.Fatabase;
@@ -9,7 +8,7 @@ using Platform.Services.Dto;
 using Platform.Services.Helpers;
 using Platform.Web.Controllers.Base;
 
-namespace Platform.Web.Controllers
+namespace Platform.Web.Controllers.AdministrationControllers
 {
     [Authorize(PermissionNamesHelper.ViewAdmin)]
     [Route("api/[controller]/[action]")]
@@ -52,24 +51,6 @@ namespace Platform.Web.Controllers
             var user = Repository.Get<User>(userId);
             var role = Repository.FindByPredicate<Role>(x => x.RoleName == roleName);
             Repository.Create(new UserRole(user, role));
-        }
-
-        [Authorize(PermissionNamesHelper.PermissionEdit)]
-        [HttpPut]
-        public void AddPermissionToRole(int roleId, int permissionId)
-        {
-            var role = Repository.Get<Role>(roleId);
-            var permission = Repository.Get<Permission>(permissionId);
-            Repository.Create(new RolePermission(role, permission));
-        }
-
-        [Authorize(PermissionNamesHelper.PermissionEdit)]
-        [HttpPut]
-        public void AddPermissionToRoleByName(int roleId, string permissionId)
-        {
-            var role = Repository.Get<Role>(roleId);
-            var permission = Repository.FindByPredicate<Permission>(x => x.PermissionId == permissionId);
-            Repository.Create(new RolePermission(role, permission));
         }
     }
 }

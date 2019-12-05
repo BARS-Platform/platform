@@ -111,8 +111,8 @@ namespace Platform.Web
 
             services.AddSingleton<PlatformSwaggerSchemasCustomizer>();
 
-            services.AddSingleton<IAuthorizationHandler, RoleHandler>();
-            services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+            services.AddTransient<IAuthorizationHandler, RoleHandler>();
+            services.AddTransient<IAuthorizationHandler, PermissionHandler>();
 
             services.AddTransient<PermissionService>();
             services.AddTransient<MenuService>();

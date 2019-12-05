@@ -1,29 +1,27 @@
 ﻿using System.Linq;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Platform.Fatabase;
 using Platform.Fodels.Models.Address;
 using Platform.Services.Common;
 using Platform.Services.Dto.AddressDtos;
 using Platform.Services.Helpers;
+using Platform.Web.Controllers.Base;
 
 namespace Platform.Web.Controllers.AddressControllers
 {
     [Route("api/[controller]/[action]")]
-    public class HouseController : Controller
+    public class HouseController : BaseController<House>
     {
-        private readonly IRepository _repository;
-
-        public HouseController(IRepository repository) => _repository = repository;
+        public HouseController(IRepository repository) : base(repository)
+        {
+        }
 
         /// <summary>
-        /// Получить все Адреса.
+        /// Получить все Дома.
         /// </summary>
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetAll([FromBody] ListParam listParam)
+        public override IActionResult GetAll([FromBody] ListParam listParam)
         {
-            var list = _repository.GetAll<House>()
+            var list = Repository.GetAll<House>()
                 .IncludeAll()
                 .Select(HouseDto.ProjectionExpression)
                 .FormData(listParam);

@@ -1,28 +1,26 @@
 ﻿using System.Linq;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Platform.Fatabase;
 using Platform.Fodels.Models.Address;
 using Platform.Services.Common;
 using Platform.Services.Dto.AddressDtos;
+using Platform.Web.Controllers.Base;
 
 namespace Platform.Web.Controllers.AddressControllers
 {
     [Route("api/[controller]/[action]")]
-    public class CountryController : Controller
+    public class CountryController : BaseController<Country>
     {
-        private readonly IRepository _repository;
-
-        public CountryController(IRepository repository) => _repository = repository;
+        public CountryController(IRepository repository) : base(repository)
+        {
+        }
 
         /// <summary>
-        /// Получить все Адреса.
+        /// Получить все Страны.
         /// </summary>
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetAll([FromBody] ListParam listParam)
+        public override IActionResult GetAll([FromBody] ListParam listParam)
         {
-            var list = _repository.GetAll<Country>()
+            var list = Repository.GetAll<Country>()
                 .Select(CountryDto.ProjectionExpression)
                 .FormData(listParam);
 
