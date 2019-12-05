@@ -13,13 +13,13 @@
         <Compile Include="Enums\PermissionNamesForFodels.fs" />
         <Compile Include="Entities\MenuInfoEntity.fs" />
         <Compile Include="Entities\MenuEntity.fs" />
+        <Compile Include="Attributes\LabelAttribute.fs" />
         <Compile Include="Attributes\PlatformAttribute.fs" />
         <Compile Include="Attributes\MenuAttribute.fs" />
         <Compile Include="Interfaces\IEntityBase.fs" />
         <Compile Include="Interfaces\IAddressElement.fs" />
         <Compile Include="Models\CurrencyReferenceBook.fs" />
         <Compile Include="Models\User.fs" />
-        <Compile Include="Models\WeatherForecast.fs" />
         <Compile Include="Models\Address\Country.fs" />
         <Compile Include="Models\Address\State.fs" />
         <Compile Include="Models\Address\City.fs" />

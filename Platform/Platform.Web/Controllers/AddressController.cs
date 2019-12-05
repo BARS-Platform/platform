@@ -1,13 +1,19 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Platform.Domain.Common;
 using Platform.Domain.DomainServices;
+using Platform.Fatabase;
 using Platform.Fodels.Enums;
 using Platform.Fodels.Models;
 using Platform.Fodels.Models.Address;
+using Platform.Services.Dto;
 using Platform.Services.Common;
+using Platform.Services.Dto.AddressDtos;
+using Platform.Services.Helpers;
 
 namespace Platform.Web.Controllers
 {
@@ -19,7 +25,7 @@ namespace Platform.Web.Controllers
 		public AddressController(AddressDomainService service)
 		{
 			_service = service;
-		}
+        }
 
 		/// <summary>
 		/// Add address element
@@ -74,5 +80,5 @@ namespace Platform.Web.Controllers
 			var result = function();
 			return result.Success ? (IActionResult) Ok(result) : Conflict(result);
 		}
-	}
+    }
 }

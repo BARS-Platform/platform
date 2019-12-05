@@ -25,8 +25,10 @@ namespace Platform.Services.Helpers
             return icon switch
             {
                 Icons.Home => "home",
-                Icons.Cart => "shopping_cart",
                 Icons.Star => "star",
+                Icons.Book => "fas fa-bible",
+                Icons.Person => "person",
+                Icons.Admin => "fas fa-user-shield",
                 _ => throw new ArgumentOutOfRangeException(nameof(icon), icon, null)
             };
         }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Platform.Fatabase;
 using Platform.Fodels.Interfaces;
+using Platform.Services.Common;
 
 namespace Platform.Web.Controllers.Base
 {
@@ -20,34 +21,34 @@ namespace Platform.Web.Controllers.Base
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public virtual T Get(int id) => Repository.Get<T>(id);
+        public virtual IActionResult Get(int id) => Ok(Repository.Get<T>(id));
         
         /// <summary>
         /// Метод для получения объектов.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public virtual IEnumerable<T> GetAll() => Repository.GetAll<T>();
+        [HttpPost]
+        public virtual IActionResult GetAll(ListParam listParam) => Ok(Repository.GetAll<T>().FormData(listParam));
         
         /// <summary>
         /// Метод для создания объекта.
         /// </summary>
         /// <returns></returns>
         [HttpPut]
-        public virtual T Create(T entity) => Repository.Create(entity);
+        public virtual IActionResult Create(T entity) => Ok(Repository.Create(entity));
         
         /// <summary>
         /// Метод для изменения объекта.
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public virtual T Update(T entity) => Repository.Update(entity);
+        public virtual IActionResult Update(T entity) => Ok(Repository.Update(entity));
         
         /// <summary>
         /// Метод для удаления объекта.
         /// </summary>
         /// <returns></returns>
         [HttpDelete]
-        public virtual bool Delete(T entity) => Repository.Delete(entity);
+        public virtual IActionResult Delete(T entity) => Ok(Repository.Delete(entity));
     }
 }
