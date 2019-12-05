@@ -7,12 +7,14 @@ using Platform.Fodels.Attributes;
 using Platform.Fodels.Interfaces;
 using Platform.Fodels.Enums;
 using Microsoft.OpenApi.Any;
+using Platform.Services.Dto;
 using Platform.Services.Helpers;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Platform.Web.Services.SwaggerServices
 {
     /// <summary>
-    /// Сервис для кастомизации схем Swagger
+    /// Сервис для кастомизации схем Swagger.
     /// </summary>
     public class PlatformSwaggerSchemasCustomizer
     {
@@ -20,24 +22,47 @@ namespace Platform.Web.Services.SwaggerServices
 
         public PlatformSwaggerSchemasCustomizer()
         {
-            _listModels = TypeHelper.GetTypes(typeof(IEntityBase));
+            _listModels = TypeHelper.GetTypes(typeof(IEntityDto));
+        }
+
+        public void AddAdditionalSchemas(ISchemaGenerator schemaGenerator, SchemaRepository schemaRepository)
+        {
+            foreach(var model in _listModels
+                .Where(x => !schemaRepository.Schemas
+                    .Select(schema => schema.Key.ToLower())
+                    .Contains(x.Name.ToLower())))
+            {
+                schemaGenerator.GenerateSchema(model, schemaRepository);
+            }
         }
 
         /// <summary>
-        /// Метод для изменения стандартных схем Swagger на основе атрибутов
+        /// Метод для изменения стандартных схем Swagger на основе атрибутов.
         /// </summary>
         public void CustomizeDefaultSwaggerSchemas(Dictionary<string, OpenApiSchema> defaultSchemas)
         {
             foreach(var model in defaultSchemas
                 .Where(x => _listModels.Select(x => x.Name).Contains(x.Key)))
             {
-                var modelPropertiesDict = GetModelPropertiesAttributesDict(model.Key);
+                var modelPropertiesPlatformAttributeDict = GetModelPropertiesPlatformAttributeDict(model.Key);
+
+                var labelAttributeDict = GetModelLabelsDict(model.Key);
+
+                if (labelAttributeDict.ContainsKey(model.Key.ToLower()))
+                {
+                    model.Value.Extensions.Add("modelName", labelAttributeDict[model.Key.ToLower()]);
+                }
 
                 foreach(var property in model.Value.Properties)
                 {
-                    if (modelPropertiesDict.ContainsKey(property.Key.ToLower()))
+                    if (modelPropertiesPlatformAttributeDict.ContainsKey(property.Key.ToLower()))
                     {
-                        property.Value.Extensions.Add("displayIn", modelPropertiesDict[property.Key.ToLower()]);
+                        property.Value.Extensions.Add("displayIn", modelPropertiesPlatformAttributeDict[property.Key.ToLower()]);
+                    }
+
+                    if (labelAttributeDict.ContainsKey(property.Key.ToLower()))
+                    {
+                        property.Value.Extensions.Add("label", labelAttributeDict[property.Key.ToLower()]);
                     }
                 }
             }
@@ -49,7 +74,7 @@ namespace Platform.Web.Services.SwaggerServices
         /// значение - объект со bool признаками
         /// отображения в Grid, Form.
         /// </summary>
-        private Dictionary<string, OpenApiObject> GetModelPropertiesAttributesDict(string modelName)
+        private Dictionary<string, OpenApiObject> GetModelPropertiesPlatformAttributeDict(string modelName)
         {            
             var modelType = _listModels
                 .Single(x => x.Name == modelName);
@@ -121,6 +146,31 @@ namespace Platform.Web.Services.SwaggerServices
                     ["grid"] = new OpenApiBoolean(gridValue),
                     ["form"] = new OpenApiBoolean(formValue)
                 });
+        }
+
+        private Dictionary<string, OpenApiString> GetModelLabelsDict(string modelName)
+        {
+            var modelType = _listModels
+                .Single(x => x.Name == modelName);
+
+            var modelProperties = modelType.GetProperties();
+
+            var labelsDictionary = new Dictionary<string, OpenApiString>();
+
+            if (modelType.GetCustomAttribute(typeof(LabelAttribute)) is LabelAttribute labelAttribute)
+            {
+                labelsDictionary[modelType.Name.ToLower()] = new OpenApiString(labelAttribute.Value);
+            }
+
+            foreach (var property in modelProperties)
+            {
+                if (property.GetCustomAttribute(typeof(LabelAttribute)) is LabelAttribute propLabelAttribute)
+                {
+                    labelsDictionary[property.Name.ToLower()] = new OpenApiString(propLabelAttribute.Value);
+                }
+            }
+
+            return labelsDictionary;
         }
     }
 }

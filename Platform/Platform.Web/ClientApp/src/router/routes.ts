@@ -1,6 +1,8 @@
 import { RouteConfig } from 'vue-router'
+import multiguard from 'vue-router-multiguard'
 
 import auth from './auth'
+import permission from './permission'
 
 const routes: Array<RouteConfig> = [
   {
@@ -17,14 +19,21 @@ const routes: Array<RouteConfig> = [
         component: () => import('@/pages/models/Index.vue'),
         name: 'models',
         props: true,
-        beforeEnter: auth
+        beforeEnter: multiguard([auth, permission])
       },
       {
         path: '/administration/:name',
         component: () => import('@/pages/models/Index.vue'),
         name: 'administration',
         props: true,
-        beforeEnter: auth
+        beforeEnter: multiguard([auth, permission])
+      },
+      {
+        path: '/dictionaries/:name',
+        component: () => import('@/pages/models/Index.vue'),
+        name: 'dictionaries',
+        props: true,
+        beforeEnter: multiguard([auth, permission])
       },
       { path: '/register', component: () => import('@/pages/authentication/Register.vue') },
       { path: '/login', component: () => import('@/pages/authentication/Login.vue') }

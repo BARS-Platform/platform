@@ -1,4 +1,4 @@
-namespace Platform.Fodels.Models.Address
+﻿namespace Platform.Fodels.Models.Address
 
 open Platform.Fodels.Enums
 open System
@@ -6,7 +6,7 @@ open Platform.Fodels.Interfaces
 open Platform.Fodels.Attributes
 
 
-type [<AllowNullLiteral>] [<MenuAttribute("Country", PermissionNamesForFodels.ViewModels, Sections.Models, "сountry", Icons.Star)>] Country() =
+type [<AllowNullLiteral>] [<MenuAttribute("Страны", PermissionNamesForFodels.ViewModels, Sections.Dictionary, "Country", Icons.Book)>] Country() =
     member this.Id
         with get () = this.id
         and set (value) = this.id <- value
