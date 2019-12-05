@@ -4,7 +4,8 @@ open Platform.Fodels.Attributes
 open Platform.Fodels.Enums
 open Platform.Fodels.Interfaces
 
-type [<AllowNullLiteral>] [<MenuAttribute("Permission", PermissionNamesForFodels.PermissionView, Sections.Administration, "Permission", Icons.Admin)>] Permission private () =
+// [<MenuAttribute("Permission", PermissionNamesForFodels.PermissionView, Sections.Administration, "Permission", Icons.Admin)>] 
+type [<AllowNullLiteral>] Permission private () =
     interface IEntityBase with
         member this.Id
             with get () = this.id
