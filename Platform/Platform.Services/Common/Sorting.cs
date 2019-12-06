@@ -1,6 +1,6 @@
 ﻿namespace Platform.Services.Common
 {
-    public class Filtration
+    public class Sorting
     {
         /// <summary>
         /// Наименование колонки в реестре,
@@ -9,8 +9,10 @@
         public string ColumnName { get; set; }
 
         /// <summary>
-        /// Значение фильтра.
+        /// Направление сортировки,
+        /// по возрастанию - true,
+        /// по убыванию - false.
         /// </summary>
-        public string ColumnValue { get; set; }
+        public bool Ascending { get; set; }
     }
 }

@@ -36,15 +36,47 @@ namespace Platform.Services.Helpers
                 throw new Exception("Не удалось получить данные.");
             }
 
-            var elementType = data.ElementType;
+            var modelType = data.ElementType;
 
             foreach (var filter in filters)
             {
-                data = data.Where(filter.GetPredicateByType(elementType));
+                if (!string.IsNullOrEmpty(filter.ColumnValue))
+                {
+                    var propertyType = modelType
+                        .GetProperties()
+                        .FirstOrDefault(x => x.Name.ToLower() == filter.ColumnName.ToLower())?.PropertyType 
+                        ?? throw new Exception("Не удалось получить фильтруемое свойство.");
+
+                    data = data.Where(filter.GetPredicateByFilter(propertyType));
+                }
             }
 
             return data;
         }
 
+        public static IQueryable<T> Order<T>(this IQueryable<T> data, Sorting sorting)
+        {
+            if (sorting == null)
+            {
+                return data;
+            }
+
+            if (data == null)
+            {
+                throw new Exception("Не удалось получить данные.");
+            }
+
+            if (!data.ElementType.GetProperties()
+                .Any(x => x.Name.ToLower() == sorting.ColumnName.ToLower()))
+            {
+                throw new Exception("Не удалось получить фильтруемое свойство.");
+            }
+
+            data = sorting.Ascending
+                ? data.OrderBy(sorting.GetPredicateBySorting())
+                : data.OrderByDescending(sorting.GetPredicateBySorting());
+
+            return data;
+        }
     }
 }
