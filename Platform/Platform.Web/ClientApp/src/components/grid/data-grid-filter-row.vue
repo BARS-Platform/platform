@@ -1,8 +1,9 @@
 <template>
   <q-tr :props="props" style="height: 15px">
     <q-th :key="column.name" v-for="column in props.cols">
-      <div class="flex justify-end items-center">
-        <q-btn v-if="isRegularColumn(column.name)" icon="fas fa-filter" size="xs" flat round>
+      <div class="row items-center">
+        <q-input class="col-11" v-if="isRegularColumn(column.name)" borderless :value="getValue(column.name)" disable dense />
+        <q-btn class="col-1" v-if="isRegularColumn(column.name)" icon="fas fa-filter" size="xs" flat round>
           <q-menu self="top right">
             <div class="no-wrap q-pa-md">
               <div class="row">

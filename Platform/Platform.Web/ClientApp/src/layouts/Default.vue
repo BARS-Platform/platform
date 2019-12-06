@@ -1,6 +1,6 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated="">
+  <q-layout view="hhh Lpr lFf">
+    <q-header elevated>
       <q-toolbar>
         <router-link to="/" tag="q-toolbar-title" style="cursor: pointer; max-width: 100px">Platform</router-link>
         <q-space />

@@ -1,5 +1,16 @@
 <template>
   <q-page class="flex" ref="page">
+    <q-drawer v-model="drawer" show-if-above :mini="!drawer || miniState" :width="250" :breakpoint="500" bordered content-class="bg-grey-3">
+      <q-scroll-area class="fit">
+        <q-list padding>
+          <q-item class="flex justify-end" clickable @click="miniState = !miniState">
+            <div>
+              <q-btn dense flat round unelevated :icon="miniState ? 'chevron_right' : 'chevron_left'" />
+            </div>
+          </q-item>
+        </q-list>
+      </q-scroll-area>
+    </q-drawer>
     <data-grid :model="Model" :height="tableHeight" :listResult="ListResult" :onRequest="onRequest" :loading="loading" />
     <q-resize-observer @resize="onResize" />
   </q-page>
@@ -28,7 +39,8 @@ export default class ModelIndex extends Vue {
   currentParam = ''
   currentHeight = 0
   loading = false
-
+  drawer = false
+  miniState = true
   get Model() {
     return this.modelStore.Model
   }
