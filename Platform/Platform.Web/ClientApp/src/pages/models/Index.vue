@@ -53,7 +53,7 @@ export default class ModelIndex extends Vue {
 
   async getcurrentData(pagination?: Pagination) {
     if (this.Model.modelName) {
-      let listParam = new ListParam(this.currentParam, pagination || this.ListResult.listParam.pagination)
+      let listParam = new ListParam(this.currentParam, pagination || this.ListResult.listParam.pagination, this.ListResult.listParam.filters)
       this.loading = true
       this.modelStore.getData(listParam).finally(() => (this.loading = false))
     }
@@ -66,6 +66,8 @@ export default class ModelIndex extends Vue {
     access.check(this.currentParam, this.$router)
 
     await this.modelStore.getCurrentModel(this.currentParam)
+
+    this.ListResult.listParam.filters = []
 
     await this.getcurrentData()
   }

@@ -2,7 +2,26 @@
   <q-tr :props="props" style="height: 15px">
     <q-th :key="column.name" v-for="column in props.cols">
       <div class="flex justify-end items-center">
-        <q-btn v-if="isRegularColumn(column.name)" icon="fas fa-filter" @click="inDevelopment" size="xs" flat round />
+        <q-btn v-if="isRegularColumn(column.name)" icon="fas fa-filter" size="xs" flat round>
+          <q-menu self="top right">
+            <div class="no-wrap q-pa-md">
+              <div class="row">
+                <q-input
+                  class="col q-ml-xs"
+                  :value="getValue(column.name)"
+                  :label="column.label"
+                  dense
+                  style="width: 270px"
+                  @input="setFilter(column.name, $event)"
+                />
+              </div>
+              <div class="flex justify-end items-center q-mt-md bg-grey-2">
+                <q-btn icon="done" @click="onRequest" size="sm" flat round />
+                <q-btn icon="delete" @click="clearFilter(column.name)" size="sm" flat round />
+              </div>
+            </div>
+          </q-menu>
+        </q-btn>
       </div>
     </q-th>
   </q-tr>
@@ -12,11 +31,46 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 
 import * as grid from '@/utils/grid'
-import { isActionColumn } from '../../utils/grid'
+import { isActionColumn } from '@/utils/grid'
+import { Filtration } from '@/models/data/filtration'
 
 @Component
 export default class DataGridFilterRow extends Vue {
   @Prop() props!: any
+  @Prop() filters!: Filtration[]
+  @Prop() onRequest!: Function
+
+  fils: Filtration[] = []
+
+  getValue(columnName: string) {
+    let fil = this.fils.find(x => x.columnName == columnName)
+    if (fil) {
+      return fil.columnValue
+    } else {
+      return ''
+    }
+  }
+
+  clearFilter(columnName: string) {
+    let fil = this.fils.find(x => x.columnName == columnName)
+    if (fil) {
+      let index = this.fils.indexOf(fil)
+      this.fils.splice(index, 1)
+    }
+  }
+
+  setFilter(columnName: string, value: string) {
+    let fil = this.fils.find(x => x.columnName == columnName)
+    if (fil) {
+      fil.columnValue = value
+    } else {
+      this.fils.push({
+        columnName: columnName,
+        columnValue: value
+      })
+    }
+    this.$emit('update:filters', this.fils)
+  }
 
   isRegularColumn(columnName: string) {
     return !grid.isActionColumn(columnName)

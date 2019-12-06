@@ -1,8 +1,10 @@
 import { Pagination } from '@/models/data/pagination'
+import { Filtration } from '@/models/data/filtration'
 
 export interface IListParam {
   modelName: string
   pagination: Pagination
+  filters: Filtration[]
 }
 
 export class ListParam implements IListParam {
@@ -14,8 +16,11 @@ export class ListParam implements IListParam {
     rowsPerPage: 5
   }
 
-  constructor(modelName?: string, pagination?: Pagination) {
+  public filters: Filtration[] = []
+
+  constructor(modelName?: string, pagination?: Pagination, filters?: Filtration[]) {
     this.modelName = modelName || this.modelName
     this.pagination = pagination || this.pagination
+    this.filters = filters || this.filters
   }
 }

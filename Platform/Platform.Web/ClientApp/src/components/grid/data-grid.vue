@@ -19,7 +19,7 @@
     </template>
     <template v-slot:header="props">
       <data-grid-header-row :props="props" />
-      <data-grid-filter-row :props="props" />
+      <data-grid-filter-row :props="props" :onRequest="onRequest" :filters.sync="listResult.listParam.filters" />
     </template>
     <template v-slot:body="props">
       <data-grid-body :props="props" />
