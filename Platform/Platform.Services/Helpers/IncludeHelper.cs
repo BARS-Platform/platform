@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using Platform.Fatabase;
 using Platform.Fodels.Enums;
 using Platform.Fodels.Models.Address;
 
@@ -10,46 +9,6 @@ namespace Platform.Services.Helpers
 {
 	public static class IncludeHelper
 	{
-		public static IQueryable<Apartment> IncludeAll(this IQueryable<Apartment> source)
-		{
-			return source
-				.Include(apartment => apartment.House)
-				.ThenInclude(house => house.Street)
-				.ThenInclude(street => street.City)
-				.ThenInclude(city => city.State)
-				.ThenInclude(state => state.Country);
-		}
-		
-		public static IQueryable<House> IncludeAll(this IQueryable<House> source)
-		{
-			return source
-				.Include(house => house.Street)
-				.ThenInclude(street => street.City)
-				.ThenInclude(city => city.State)
-				.ThenInclude(state => state.Country);
-		}
-		
-		public static IQueryable<Street> IncludeAll(this IQueryable<Street> source)
-		{
-			return source
-				.Include(street => street.City)
-				.ThenInclude(city => city.State)
-				.ThenInclude(state => state.Country);
-		}
-		
-		public static IQueryable<City> IncludeAll(this IQueryable<City> source)
-		{
-			return source
-				.Include(city => city.State)
-				.ThenInclude(state => state.Country);
-		}
-		
-		public static IQueryable<State> IncludeAll(this IQueryable<State> source)
-		{
-			return source
-				.Include(state => state.Country);
-		}
-		
 		public static IQueryable<T> IncludeAllAddressItems<T>(this IQueryable<T> source) where T : class, IAddressElement
 		{
 			var addressTypes = TypeHelper.GetTypes(typeof(IAddressElement));
