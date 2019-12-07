@@ -1,12 +1,12 @@
 <template>
   <q-tr :props="props">
-    <q-td style="width: 20px">
+    <q-td style="width: 20px; height: 44px">
       <q-btn size="xs" flat round icon="fas fa-pen" @click="inDevelopment" />
     </q-td>
-    <q-td :key="column.name" v-for="column in getRegularColumns(props.cols)">
+    <q-td :key="column.name" v-for="column in getRegularColumns(props.cols)" style="height:44px">
       {{ props.row[column.name] }}
     </q-td>
-    <q-td style="width: 20px">
+    <q-td style="width: 20px; height: 44px">
       <q-btn size="xs" flat round icon="fas fa-minus-circle" @click="inDevelopment" />
     </q-td>
   </q-tr>

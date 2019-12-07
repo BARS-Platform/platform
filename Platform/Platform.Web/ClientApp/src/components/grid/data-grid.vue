@@ -6,7 +6,7 @@
     @request="onRequest"
     :loading="loading"
     :pagination.sync="listResult.listParam.pagination"
-    :rows-per-page-options="[3, 5, 10, 25]"
+    :rows-per-page-options="[3, 5, 10, 15]"
     :pagination-label="paginationLabel"
     rows-per-page-label="Элементов на странице:"
     class="platform-table"

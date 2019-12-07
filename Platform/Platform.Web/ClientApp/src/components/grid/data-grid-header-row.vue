@@ -1,5 +1,5 @@
 <template>
-  <q-tr :props="props">
+  <q-tr :props="props" style="height: 56px">
     <q-th v-for="column in props.cols" :key="column.name">
       <div class="flex justify-between items-center">
         {{ column.label }}

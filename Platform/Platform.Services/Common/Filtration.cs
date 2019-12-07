@@ -9,6 +9,11 @@
         public string ColumnName { get; set; }
 
         /// <summary>
+        /// Значение оператора сравнения.
+        /// </summary>
+        public string ColumnOperator{ get; set; }
+
+        /// <summary>
         /// Значение фильтра.
         /// </summary>
         public string ColumnValue { get; set; }

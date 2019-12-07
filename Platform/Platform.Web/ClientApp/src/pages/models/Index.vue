@@ -60,6 +60,9 @@ export default class ModelIndex extends Vue {
   }
 
   async onRequest(props: any) {
+    if (props == 'filter') {
+      this.ListResult.listParam.pagination.page = 1
+    }
     await this.getcurrentData(props.pagination)
   }
 

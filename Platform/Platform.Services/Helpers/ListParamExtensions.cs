@@ -19,14 +19,14 @@ namespace Platform.Services.Helpers
                 || propertyType == typeof(long)
                 || propertyType == typeof(decimal))
             {
-                return hasEqualityOperator 
-                    ? predicate + $"={filter.ColumnValue}"
-                    : predicate + filter.ColumnValue;
+                return filter.ColumnOperator == "="
+                    ? $"{predicate}=={filter.ColumnValue}"
+                    : $"{predicate}{filter.ColumnOperator}{filter.ColumnValue}";
             }
 
             if (propertyType == typeof(string))
             {
-                return predicate + $@".Contains(""{filter.ColumnValue}"")";
+                return predicate + $@".ToLower().Contains(""{filter.ColumnValue}"")";
             }
 
             if (propertyType == typeof(DateTime))

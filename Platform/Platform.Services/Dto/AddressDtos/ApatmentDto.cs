@@ -19,7 +19,7 @@ namespace Platform.Services.Dto.AddressDtos
                 StreetName = apartment.House.Street.Name,
                 HouseNumber = apartment.House.Name,
                 //TODO Исправить тип в модели
-                ApartmentNumber = int.Parse(apartment.Name)
+                ApartmentNumber = Convert.ToInt32(apartment.Name)
             };
 
         public int Id { get; set; }
