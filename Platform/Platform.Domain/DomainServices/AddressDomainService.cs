@@ -1,13 +1,12 @@
 using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Platform.Domain.Common;
 using Platform.Fatabase;
 using Platform.Fodels.Enums;
 using Platform.Fodels.Models;
 using Platform.Fodels.Models.Address;
-using Platform.Services;
 using Platform.Services.Common;
+using Platform.Services.Dto.AddressDtos;
 using Platform.Services.Helpers;
 
 namespace Platform.Domain.DomainServices
@@ -75,6 +74,83 @@ namespace Platform.Domain.DomainServices
 			var res = _repository.Update(el);
 			return new OperationResult(true, res);
 		}
+		
+		/// <summary>
+		/// Получить все Страны.
+		/// </summary>
+		public OperationResult GetAllCountries(ListParam listParam)
+		{
+			var list = _repository.GetAll<Country>()
+				.Select(CountryDto.ProjectionExpression)
+				.FormData(listParam);
+
+			return GenerateAddressResult(list);
+		}
+		
+		/// <summary>
+		/// Получить все Регионы.
+		/// </summary>
+		public OperationResult GetAllStates(ListParam listParam)
+		{
+			var list = _repository.GetAll<State>()
+				.IncludeAll()
+				.Select(StateDto.ProjectionExpression)
+				.FormData(listParam);
+
+			return GenerateAddressResult(list);
+		}
+		
+		/// <summary>
+		/// Получить все Города.
+		/// </summary>
+		public OperationResult GetAllCities(ListParam listParam)
+		{
+			var list = _repository.GetAll<City>()
+				.IncludeAll()
+				.Select(CityDto.ProjectionExpression)
+				.FormData(listParam);
+
+			return GenerateAddressResult(list);
+		}
+		
+		/// <summary>
+		/// Получить все Улицы.
+		/// </summary>
+		public OperationResult GetAllStreets(ListParam listParam)
+		{
+			var list = _repository.GetAll<Street>()
+				.IncludeAll()
+				.Select(StreetDto.ProjectionExpression)
+				.FormData(listParam);
+
+			return GenerateAddressResult(list);
+		}
+		
+		/// <summary>
+		/// Получить все Дома.
+		/// </summary>
+		public OperationResult GetAllHouses(ListParam listParam)
+		{
+			var list = _repository.GetAll<House>()
+				.IncludeAll()
+				.Select(HouseDto.ProjectionExpression)
+				.FormData(listParam);
+
+			return GenerateAddressResult(list);
+		}
+		
+		/// <summary>
+		/// Получить все Квартиры.
+		/// </summary>
+		public OperationResult GetAllApartments(ListParam listParam)
+		{
+			var list = _repository.GetAll<Apartment>()
+				.IncludeAll()
+				.Select(ApartmentDto.ProjectionExpression)
+				.FormData(listParam);
+
+			return GenerateAddressResult(list);
+		}
 
 		private IAddressElement DynamicGetFromRepository(string typeName, int elementId)
 		{
@@ -97,6 +173,13 @@ namespace Platform.Domain.DomainServices
 				AddressItem.Apartment => _repository.GetWithRelated<Apartment>(elementId, queryable => queryable.IncludeAllAddressItems()),
 				_ => null
 			};
+		}
+
+		private OperationResult GenerateAddressResult<T>(ListResult<T> list)
+		{
+			return list == null
+				? new OperationResult(false, $"No {nameof(T)} found")
+				: new OperationResult(true, list);
 		}
 	}
 }

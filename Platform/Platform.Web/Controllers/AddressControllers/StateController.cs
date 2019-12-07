@@ -1,32 +1,24 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Platform.Domain.DomainServices;
 using Platform.Fatabase;
-using Platform.Fodels.Models.Address;
 using Platform.Services.Common;
-using Platform.Services.Dto.AddressDtos;
-using Platform.Services.Helpers;
 using Platform.Web.Controllers.Base;
 
 namespace Platform.Web.Controllers.AddressControllers
 {
     [Route("api/[controller]/[action]")]
-    public class StateController : BaseController<State>
+    public class StateController : BaseController
     {
-        public StateController(IRepository repository) : base(repository)
-        {
-        }
+        private readonly AddressDomainService _domainService;
+        
+        public StateController(IRepository repository, AddressDomainService domainService) : base(repository) =>
+            _domainService = domainService;
 
         /// <summary>
         /// Получить все Регионы.
         /// </summary>
-        public override IActionResult GetAll([FromBody] ListParam listParam)
-        {
-            var list = Repository.GetAll<State>()
-                .IncludeAll()
-                .Select(StateDto.ProjectionExpression)
-                .FormData(listParam);
-
-            return Ok(list);
-        }
+        [HttpPost]
+        public IActionResult GetAll([FromBody] ListParam listParam) =>
+            HandleRequest(() => _domainService.GetAllStates(listParam));
     }
 }

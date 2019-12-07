@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.SpaServices;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using VueCliMiddleware;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Platform.Migrations;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Platform.Web

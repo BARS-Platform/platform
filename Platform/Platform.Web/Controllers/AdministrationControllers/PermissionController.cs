@@ -1,60 +1,37 @@
-using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Platform.Fatabase;
-using Platform.Fodels.Models;
 using Platform.Services.Common;
-using Platform.Services.Dto;
 using Platform.Services.Helpers;
+using Platform.Services.Services;
 using Platform.Web.Controllers.Base;
 
 namespace Platform.Web.Controllers.AdministrationControllers
 {
     [Authorize(PermissionNamesHelper.ViewAdmin)]
     [Route("api/[controller]/[action]")]
-    public class PermissionController : BaseController<Permission>
+    public class PermissionController : BaseController
     {
-        public PermissionController(IRepository repository) : base(repository)
+        private readonly PermissionService _permissionService;
+        
+        public PermissionController(IRepository repository, PermissionService permissionService) : base(repository)
         {
+            _permissionService = permissionService;
         }
 
         [Authorize(PermissionNamesHelper.PermissionView)]
-        public override IActionResult Get(int id) => base.Get(id);
-
-        [Authorize(PermissionNamesHelper.PermissionView)]
-        public override IActionResult GetAll([FromBody] ListParam listParam) =>
-            Ok(Repository
-                .GetAll<Permission>()
-                .Select(PermissionDto.ProjectionExpression)
-                .FormData(listParam));
-
-        [Authorize(PermissionNamesHelper.PermissionEdit)]
-        public override IActionResult Create(Permission entity) => base.Create(entity);
-
-        [Authorize(PermissionNamesHelper.PermissionEdit)]
-        public override IActionResult Update(Permission entity) => base.Update(entity);
-
-        [Authorize(PermissionNamesHelper.PermissionEdit)]
-        public override IActionResult Delete(Permission entity) => base.Delete(entity);
-        
-        
+        [HttpPost]
+        public IActionResult GetAll([FromBody] ListParam listParam) => 
+            HandleRequest(() => _permissionService.GetAll(listParam));
 
         [Authorize(PermissionNamesHelper.PermissionEdit)]
         [HttpPut]
-        public void AddPermissionToRole(int roleId, int permissionId)
-        {
-            var role = Repository.Get<Role>(roleId);
-            var permission = Repository.Get<Permission>(permissionId);
-            Repository.Create(new RolePermission(role, permission));
-        }
+        public IActionResult AddPermissionToRole(int roleId, int permissionId) =>
+            HandleRequest(() => _permissionService.AddPermissionToRole(roleId, permissionId));
 
         [Authorize(PermissionNamesHelper.PermissionEdit)]
         [HttpPut]
-        public void AddPermissionToRoleByName(int roleId, string permissionId)
-        {
-            var role = Repository.Get<Role>(roleId);
-            var permission = Repository.FindByPredicate<Permission>(x => x.PermissionId == permissionId);
-            Repository.Create(new RolePermission(role, permission));
-        }
+        public IActionResult AddPermissionToRoleByName(int roleId, string permissionName) =>
+            HandleRequest(() => _permissionService.AddPermissionToRole(roleId, permissionName));
     }
 }

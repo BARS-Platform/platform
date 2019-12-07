@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Platform.Fatabase;
-using Platform.Fodels.Interfaces;
 using Platform.Fodels.Models;
 using Platform.Services.Requirements;
 

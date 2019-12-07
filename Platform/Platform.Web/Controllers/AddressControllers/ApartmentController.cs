@@ -1,32 +1,24 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Platform.Domain.DomainServices;
 using Platform.Fatabase;
-using Platform.Fodels.Models.Address;
 using Platform.Services.Common;
-using Platform.Services.Dto.AddressDtos;
-using Platform.Services.Helpers;
 using Platform.Web.Controllers.Base;
 
 namespace Platform.Web.Controllers.AddressControllers
 {
     [Route("api/[controller]/[action]")]
-    public class ApartmentController : BaseController<Apartment>
+    public class ApartmentController : BaseController
     {
-        public ApartmentController(IRepository repository) : base(repository)
-        {
-        }
+        private readonly AddressDomainService _domainService;
+        
+        public ApartmentController(IRepository repository, AddressDomainService domainService) : base(repository) =>
+            _domainService = domainService;
 
         /// <summary>
         /// Получить все Квартиры.
         /// </summary>
-        public override IActionResult GetAll([FromBody] ListParam listParam)
-        {
-            var list = Repository.GetAll<Apartment>()
-                .IncludeAll()
-                .Select(ApartmentDto.ProjectionExpression)
-                .FormData(listParam);
-
-            return Ok(list);
-        }
+        [HttpPost]
+        public IActionResult GetAll([FromBody] ListParam listParam) =>
+            HandleRequest(() => _domainService.GetAllApartments(listParam));
     }
 }

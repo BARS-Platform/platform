@@ -116,6 +116,7 @@ namespace Platform.Web
 
             services.AddTransient<PermissionService>();
             services.AddTransient<MenuService>();
+            services.AddTransient<RoleService>();
         }
 
         public static void RegisterSwagger(this IServiceCollection services)
