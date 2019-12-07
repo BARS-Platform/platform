@@ -2,6 +2,7 @@
 
 open Platform.Fodels.Enums
 open System
+open Microsoft.EntityFrameworkCore.Infrastructure
 open Platform.Fodels.Interfaces
 open Platform.Fodels.Attributes
 
@@ -28,6 +29,18 @@ type [<AllowNullLiteral>] [<MenuAttribute("Регионы", PermissionNamesForFo
             with get () = this.Name
             and set (value) = this.Name <- value
         member this.Type = AddressItem.State
+        
+    private new(lazyLoader: ILazyLoader) as newState =
+        State()
+        then
+            newState.LazyLoader <- lazyLoader
+        
+    [<DefaultValue>]
+    val mutable private lazyLoader: ILazyLoader
+    member this.LazyLoader
+        with get () = this.lazyLoader
+        and set (loader) =
+            this.lazyLoader <- loader
 
     [<DefaultValue>]
     val mutable private id: int
