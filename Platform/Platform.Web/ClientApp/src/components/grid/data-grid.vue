@@ -58,6 +58,7 @@ export default class DataGrid extends Vue {
   @Prop() onUpdate!: Function
   @Prop() onFilter!: Function
   @Prop() onDelete!: Function
+  @Prop() onCreate!: Function
   @Prop() loading!: Boolean
 
   paginationLabel(firstRowIndex: number, endRowIndex: number, totalRowsNumber: number) {
@@ -69,7 +70,7 @@ export default class DataGrid extends Vue {
       {
         icon: 'add_box',
         label: 'Создать новую запись',
-        action: this.inDevelopment
+        action: this.onCreate
       },
       {
         icon: 'autorenew',

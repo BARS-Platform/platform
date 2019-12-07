@@ -8,6 +8,7 @@ import { PlatformSchemaObject } from '@/models/OpenAPIV3/PlatformSchemaObject'
 import * as notify from '@/utils/notify'
 import { ListResult } from '@/models/data/listResult'
 import { ListParam } from '@/models/data/listParam'
+import { ModelDto } from '~/src/models/modelDto'
 
 @Module({
   dynamic: true,
@@ -60,6 +61,17 @@ export default class ModelModule extends VuexModule {
           listParam: listParam
         }
       })
+
+    return result
+  }
+
+  @Action({ rawError: true })
+  async createModel(dto: ModelDto) {
+    let result!: any
+    await api.createModel(dto).catch(() => {
+      notify.error('Произошла ошибка при загрузке данных')
+      result = {}
+    })
 
     return result
   }

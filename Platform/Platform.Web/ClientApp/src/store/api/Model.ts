@@ -2,6 +2,7 @@ import { api } from './api'
 import { ListResult } from '../../models/data/listResult'
 import { ListParam } from '~/src/models/data/listParam'
 import { Sorting } from '@/models/data/sorting'
+import { ModelDto } from '~/src/models/modelDto'
 
 export async function getData(listParam: ListParam): Promise<ListResult> {
   const response = await api.post(`/${listParam.modelName}/GetAll`, listParam)
@@ -11,6 +12,12 @@ export async function getData(listParam: ListParam): Promise<ListResult> {
   listResult.listParam.pagination.rowsNumber = response.data.data.totalCount
 
   return listResult
+}
+
+export async function createModel(dto: ModelDto): Promise<any> {
+  console.log(dto)
+  const response = await api.post(`/${dto.modelName}/Create`, dto)
+  return response.data.data.data
 }
 
 export async function deleteEntry({ modelName, entryId }: { modelName: string; entryId: number }): Promise<any> {

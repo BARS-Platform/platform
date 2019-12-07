@@ -1,5 +1,6 @@
 <template>
   <q-page class="flex" ref="page">
+    <form-dialog v-model="dialog" :dialog.sync="dialog" :model="Model" :modelName="currentParam"> </form-dialog>
     <data-grid-params />
     <data-grid
       :model="Model"
@@ -28,11 +29,13 @@ import * as access from '@/utils/access'
 import { ListParam } from '@/models/data/listParam'
 import { Pagination } from '../../models/data/pagination'
 import { Sorting } from '@/models/data/sorting'
+import FormDialog from '@/components/form/form-dialog.vue'
 
 @Component({
   components: {
     DataGrid,
-    DataGridParams
+    DataGridParams,
+    FormDialog
   }
 })
 export default class ModelIndex extends Vue {
@@ -41,6 +44,7 @@ export default class ModelIndex extends Vue {
   currentParam = ''
   currentHeight = 0
   loading = false
+  dialog: Boolean = false
 
   get Model() {
     return this.modelStore.Model
@@ -86,6 +90,10 @@ export default class ModelIndex extends Vue {
 
   async onRequest(props: any) {
     await this.getcurrentData(props.pagination)
+  }
+
+  onCreate(props: any) {
+    this.dialog = true
   }
 
   async getcurrentData(pagination?: Pagination) {
