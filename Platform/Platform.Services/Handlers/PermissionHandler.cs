@@ -27,12 +27,14 @@ namespace Platform.Services.Handlers
 
 			var roleIds = _repository
 				.FindAllByPredicate<Role>(x => roleNames.Contains(x.RoleName))
-				.Select(x => x.Id);
+				.Select(x => x.Id)
+				.ToList();
 
 			var permissionIds = _repository
-				.FindAllByPredicate<RolePermission>(x => roleIds.Any(id => id == x.Role.Id))
+				.FindAllByPredicate<RolePermission>(x => roleIds.Contains(x.Role.Id))
 				.Select(x => x.Permission)
-				.Select(x => x.PermissionId);
+				.Select(x => x.PermissionId)
+				.ToList();
 
 			if (permissionIds.Contains(requirement.Name))
 			{
