@@ -5,10 +5,10 @@ import { ListParam } from '~/src/models/data/listParams'
 export async function getData(listParam: ListParam): Promise<ListResult> {
   const response = await api.post(`/${listParam.modelName}/GetAll`, listParam)
 
-  listParam.pagination.rowsNumber = response.data.totalCount
+  listParam.pagination.rowsNumber = response.data.data.totalCount
 
   let listResult: ListResult = {
-    data: response.data.data,
+    data: response.data.data.data,
     listParam: listParam
   }
 
