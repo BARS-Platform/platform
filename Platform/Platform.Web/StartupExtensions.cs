@@ -191,20 +191,14 @@ namespace Platform.Web
                 var actualRole = repository.FindByPredicate<Role>(x => x.RoleName == role);
                 
                 var actualPermissions = repository
-                        .FindAllByPredicate<RolePermission>(x => x.Role.RoleName == role,
-                            query => query
-                                .Include(x => x.Role)
-                                .Include(x => x.Permission))
+                        .FindAllByPredicate<RolePermission>(x => x.Role.RoleName == role)
                         .Select(x => x.Permission.PermissionId)
                         .ToList();
 
                 var permissionsForDelete = actualPermissions
                     .Where(x => !permissionsForRole.Contains(x));
                 repository
-                    .FindAllByPredicate<RolePermission>(x => x.Role.RoleName == role,
-                        query => query
-                            .Include(x => x.Role)
-                            .Include(x => x.Permission))
+                    .FindAllByPredicate<RolePermission>(x => x.Role.RoleName == role)
                     .Where(x => permissionsForDelete.Contains(x.Permission.PermissionId))
                     .ToList()
                     .ForEach(rolePermission => repository.Delete(rolePermission));

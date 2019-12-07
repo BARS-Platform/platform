@@ -93,7 +93,6 @@ namespace Platform.Domain.DomainServices
 		public OperationResult GetAllStates(ListParam listParam)
 		{
 			var list = _repository.GetAll<State>()
-				.IncludeAll()
 				.Select(StateDto.ProjectionExpression)
 				.FormData(listParam);
 
@@ -106,7 +105,6 @@ namespace Platform.Domain.DomainServices
 		public OperationResult GetAllCities(ListParam listParam)
 		{
 			var list = _repository.GetAll<City>()
-				.IncludeAll()
 				.Select(CityDto.ProjectionExpression)
 				.FormData(listParam);
 
@@ -119,7 +117,6 @@ namespace Platform.Domain.DomainServices
 		public OperationResult GetAllStreets(ListParam listParam)
 		{
 			var list = _repository.GetAll<Street>()
-				.IncludeAll()
 				.Select(StreetDto.ProjectionExpression)
 				.FormData(listParam);
 
@@ -132,7 +129,6 @@ namespace Platform.Domain.DomainServices
 		public OperationResult GetAllHouses(ListParam listParam)
 		{
 			var list = _repository.GetAll<House>()
-				.IncludeAll()
 				.Select(HouseDto.ProjectionExpression)
 				.FormData(listParam);
 
@@ -145,7 +141,6 @@ namespace Platform.Domain.DomainServices
 		public OperationResult GetAllApartments(ListParam listParam)
 		{
 			var list = _repository.GetAll<Apartment>()
-				.IncludeAll()
 				.Select(ApartmentDto.ProjectionExpression)
 				.FormData(listParam);
 

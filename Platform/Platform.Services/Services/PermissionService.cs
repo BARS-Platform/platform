@@ -29,10 +29,7 @@ namespace Platform.Services.Services
                 .Select(x => x.Id);
             
             return _repository
-                .FindAllByPredicate<RolePermission>(rolePermission => roleIds.Any(x => x == rolePermission.Role.Id),
-                    query => query
-                        .Include(x => x.Role)
-                        .Include(x => x.Permission))
+                .FindAllByPredicate<RolePermission>(rolePermission => roleIds.Any(x => x == rolePermission.Role.Id))
                 .Select(x => x.Permission)
                 .ToList();
         }

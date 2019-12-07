@@ -30,10 +30,7 @@ namespace Platform.Services.Handlers
 				.Select(x => x.Id);
 
 			var permissionIds = _repository
-				.FindAllByPredicate<RolePermission>(x => roleIds.Any(id => id == x.Role.Id),
-					query => query
-						.Include(x => x.Role)
-						.Include(x => x.Permission))
+				.FindAllByPredicate<RolePermission>(x => roleIds.Any(id => id == x.Role.Id))
 				.Select(x => x.Permission)
 				.Select(x => x.PermissionId);
 

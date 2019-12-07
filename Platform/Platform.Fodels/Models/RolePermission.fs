@@ -1,5 +1,6 @@
 namespace Platform.Fodels.Models
 
+open Microsoft.EntityFrameworkCore.Infrastructure
 open Platform.Fodels.Interfaces
 
 type [<AllowNullLiteral>] RolePermission private () =
@@ -13,6 +14,18 @@ type [<AllowNullLiteral>] RolePermission private () =
         then
             newUserRole.Role <- role
             newUserRole.Permission <- permission
+            
+    private new(lazyLoader: ILazyLoader) as newRolePermission =
+        RolePermission()
+        then
+            newRolePermission.LazyLoader <- lazyLoader
+        
+    [<DefaultValue>]
+    val mutable private lazyLoader: ILazyLoader
+    member this.LazyLoader
+        with get () = this.lazyLoader
+        and set (loader) =
+            this.lazyLoader <- loader
             
     [<DefaultValue>]
     val mutable private id: int
