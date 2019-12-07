@@ -17,7 +17,7 @@ import ListMenuItem from '@/components/menu/list-menu-item.vue'
     ListMenuItem
   }
 })
-export default class extends Vue {
+export default class DropDownMenuItem extends Vue {
   @Prop() readonly menuItem!: MenuItem
 }
 </script>

@@ -1,13 +1,14 @@
 import { Property } from '@/models/property'
 
 export function getColumns(properties: Property[]) {
-  let columns: { name: string; label: string; field: string; align: string }[] = []
+  let columns: { name: string; label: string; field: string; align: string; type: string }[] = []
 
   columns.push({
     name: 'action_edit',
     label: '',
     field: '',
-    align: 'right'
+    align: 'right',
+    type: ''
   })
   properties
     .filter(x => x.displayIn.grid)
@@ -16,7 +17,8 @@ export function getColumns(properties: Property[]) {
         name: x.propertyName,
         label: x.label,
         field: x.propertyName,
-        align: 'left'
+        align: 'left',
+        type: x.type
       }
 
       columns.push(column)
@@ -26,8 +28,17 @@ export function getColumns(properties: Property[]) {
     name: 'action_delete',
     label: '',
     field: '',
-    align: 'right'
+    align: 'right',
+    type: ''
   })
 
   return columns
+}
+
+export function isActionColumn(columnName: string) {
+  return columnName.startsWith('action')
+}
+
+export function getRegularColumns(columns: { name: string }[]) {
+  return columns.filter(x => !isActionColumn(x.name))
 }

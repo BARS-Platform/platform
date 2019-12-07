@@ -74,7 +74,8 @@ module.exports = function(ctx) {
         'QSpace',
         'QForm',
         'QMenu',
-        'QSeparator'
+        'QSeparator',
+        'QResizeObserver',
       ],
 
       cssAddon: true,
