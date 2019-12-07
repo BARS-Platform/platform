@@ -1,7 +1,8 @@
 import { Property } from '@/models/property'
+import { Column } from '@/models/grid/column'
 
 export function getColumns(properties: Property[]) {
-  let columns: { name: string; label: string; field: string; align: string; type: string }[] = []
+  let columns: Column[] = []
 
   columns.push({
     name: 'action_edit',

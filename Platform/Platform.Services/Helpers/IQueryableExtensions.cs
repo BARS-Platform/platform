@@ -58,7 +58,7 @@ namespace Platform.Services.Helpers
         {
             if (sorting == null)
             {
-                return data;
+                return data.OrderBy("x=>x.Id");
             }
 
             if (data == null)

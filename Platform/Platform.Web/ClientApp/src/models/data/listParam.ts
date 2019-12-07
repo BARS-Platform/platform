@@ -13,7 +13,7 @@ export class ListParam implements IListParam {
   public pagination: Pagination = {
     page: 1,
     rowsNumber: 5,
-    rowsPerPage: 5
+    rowsPerPage: 15
   }
 
   public filters: Filtration[] = []

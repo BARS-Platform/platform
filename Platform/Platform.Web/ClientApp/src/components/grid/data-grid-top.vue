@@ -6,7 +6,7 @@
       :icon="action.icon"
       :label="action.label"
       @click="action.action"
-      class="q-ml-lg"
+      class="q-mr-lg"
       color="primary"
       no-caps
       flat
