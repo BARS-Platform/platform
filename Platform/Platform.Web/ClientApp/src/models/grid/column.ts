@@ -4,4 +4,5 @@ export interface Column {
   field: string
   align: string
   type: string
+  sortable: boolean
 }

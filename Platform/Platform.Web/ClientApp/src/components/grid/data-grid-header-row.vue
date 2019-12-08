@@ -1,9 +1,7 @@
 <template>
   <q-tr :props="props" style="height: 56px">
-    <q-th v-for="column in props.cols" :key="column.name">
-      <div class="flex justify-between items-center">
-        {{ column.label }}
-      </div>
+    <q-th v-for="column in props.cols" :key="column.name" :props="props">
+      {{ column.label }}
     </q-th>
   </q-tr>
 </template>

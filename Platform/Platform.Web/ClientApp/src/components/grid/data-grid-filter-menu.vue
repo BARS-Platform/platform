@@ -23,8 +23,8 @@
           />
         </div>
         <div class="flex justify-end items-center q-mt-md bg-grey-2">
-          <q-btn icon="done" @click="applyFilter('filter')" size="sm" flat round />
-          <q-btn icon="delete" @click="clearFilter(column.name)" size="sm" flat round />
+          <q-btn v-close-popup icon="done" @click.stop="applyFilter" size="sm" flat round />
+          <q-btn icon="delete" @click.stop="clearFilter(column.name)" size="sm" flat round />
         </div>
       </div>
     </q-menu>

@@ -9,7 +9,8 @@ export function getColumns(properties: Property[]) {
     label: '',
     field: '',
     align: 'right',
-    type: ''
+    type: '',
+    sortable: false
   })
   properties
     .filter(x => x.displayIn.grid)
@@ -19,7 +20,8 @@ export function getColumns(properties: Property[]) {
         label: x.label,
         field: x.propertyName,
         align: 'left',
-        type: x.type
+        type: x.type,
+        sortable: true
       }
 
       columns.push(column)
@@ -30,7 +32,8 @@ export function getColumns(properties: Property[]) {
     label: '',
     field: '',
     align: 'right',
-    type: ''
+    type: '',
+    sortable: false
   })
 
   return columns

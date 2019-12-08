@@ -4,7 +4,7 @@
       <div class="row items-center">
         <q-input class="col-11" v-if="isRegularColumn(column.name)" borderless :value="getFilter(column.name)" readonly dense />
         <div class="col-1 flex justify-end">
-          <data-grid-filter-menu :applyFilter="onRequest" :filters.sync="localFilters" :column="column" />
+          <data-grid-filter-menu :applyFilter="onFilter" :filters.sync="localFilters" :column="column" />
         </div>
       </div>
     </q-th>
@@ -30,7 +30,7 @@ import DataGridFilterMenu from '@/components/grid/data-grid-filter-menu.vue'
 export default class DataGridFilterRow extends Vue {
   @Prop() props!: any
   @Prop() filters!: Filtration[]
-  @Prop() onRequest!: Function
+  @Prop() onFilter!: Function
 
   localFilters: Filtration[] = []
 

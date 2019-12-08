@@ -1,17 +1,15 @@
 <template>
   <q-page class="flex" ref="page">
-    <q-drawer v-model="drawer" show-if-above :mini="!drawer || miniState" :width="250" :breakpoint="500" bordered content-class="bg-grey-3">
-      <q-scroll-area class="fit">
-        <q-list padding>
-          <q-item class="flex justify-end" clickable @click="miniState = !miniState">
-            <div>
-              <q-btn dense flat round unelevated :icon="miniState ? 'chevron_right' : 'chevron_left'" />
-            </div>
-          </q-item>
-        </q-list>
-      </q-scroll-area>
-    </q-drawer>
-    <data-grid :model="Model" :height="tableHeight" :listResult="ListResult" :onRequest="onRequest" :loading="loading" />
+    <data-grid-params />
+    <data-grid
+      :model="Model"
+      :height="tableHeight"
+      :onFilter="onFilter"
+      :listResult="ListResult"
+      :onUpdate="onUpdate"
+      :onRequest="onRequest"
+      :loading="loading"
+    />
     <q-resize-observer @resize="onResize" />
   </q-page>
 </template>
@@ -23,14 +21,17 @@ import { getModule } from 'vuex-module-decorators'
 import ModelModule from '@/store/modules/Model'
 
 import DataGrid from '@/components/grid/data-grid.vue'
+import DataGridParams from '@/components/grid/data-grid-params.vue'
 
 import * as access from '@/utils/access'
 import { ListParam } from '@/models/data/listParam'
 import { Pagination } from '../../models/data/pagination'
+import { Sorting } from '@/models/data/sorting'
 
 @Component({
   components: {
-    DataGrid
+    DataGrid,
+    DataGridParams
   }
 })
 export default class ModelIndex extends Vue {
@@ -39,8 +40,7 @@ export default class ModelIndex extends Vue {
   currentParam = ''
   currentHeight = 0
   loading = false
-  drawer = false
-  miniState = true
+
   get Model() {
     return this.modelStore.Model
   }
@@ -59,10 +59,17 @@ export default class ModelIndex extends Vue {
     return this.currentHeight - bottomHeight - headerHeight
   }
 
+  onUpdate() {
+    this.loading = true
+    this.modelStore.getData(this.ListResult.listParam).finally(() => (this.loading = false))
+  }
+
+  onFilter() {
+    this.ListResult.listParam.pagination.page = 1
+    this.getcurrentData(this.ListResult.listParam.pagination)
+  }
+
   async onRequest(props: any) {
-    if (props == 'filter') {
-      this.ListResult.listParam.pagination.page = 1
-    }
     await this.getcurrentData(props.pagination)
   }
 
@@ -82,7 +89,7 @@ export default class ModelIndex extends Vue {
 
     await this.modelStore.getCurrentModel(this.currentParam)
 
-    this.ListResult.listParam.filters = []
+    this.ListResult.listParam = new ListParam()
 
     await this.getcurrentData()
   }
