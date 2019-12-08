@@ -9,6 +9,7 @@
       :listResult="ListResult"
       :onUpdate="onUpdate"
       :onRequest="onRequest"
+      :onCreate="onCreate"
       :onDelete="onDelete"
       :loading="loading"
     />

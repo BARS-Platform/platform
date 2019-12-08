@@ -66,16 +66,20 @@ export default class DataGrid extends Vue {
   }
 
   get Actions() {
+    let formFields = this.model.properties.filter(x => x.displayIn.form)
+
     let actions: Action[] = [
       {
         icon: 'add_box',
         label: 'Создать новую запись',
-        action: this.onCreate
+        action: this.onCreate,
+        hidden: formFields.length === 0
       },
       {
         icon: 'autorenew',
         label: 'Обновить',
-        action: this.onUpdate
+        action: this.onUpdate,
+        hidden: false
       }
     ]
     return actions

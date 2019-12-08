@@ -17,7 +17,9 @@
           @input="setValues(field.propertyName, $event)"
           :value="getValue(field.propertyName)"
           :disable="isDisabled(index)"
-        ></component>
+          :filters="filters"
+        >
+        </component>
       </q-card-section>
 
       <q-card-actions align="right">
@@ -39,6 +41,7 @@ import { ModelDto } from '@/models/modelDto'
 import { FormField } from '@/models/formField'
 import FormDropdownField from '@/components/form/form-dropdown-field.vue'
 import { ListParam } from '../../models/data/listParam'
+import { Filtration } from '../../models/data/filtration'
 import { Property } from '@/models/property'
 
 @Component({
@@ -55,6 +58,7 @@ export default class FormDialog extends Vue {
   dto: ModelDto = {
     modelName: ''
   }
+  filters: Filtration[] = []
 
   get Fields() {
     return this.model.properties.filter(x => x.displayIn.form === true)
@@ -69,6 +73,16 @@ export default class FormDialog extends Vue {
   }
 
   setValues(fieldName: string, fieldValue: string) {
+    let filter = this.filters.find(x => x.columnName == fieldName)
+    if (filter) {
+      filter.columnValue = fieldValue
+    } else {
+      this.filters.push({
+        columnName: fieldName,
+        columnValue: fieldValue
+      })
+    }
+
     let field = this.modelValues.find(x => x.fieldName == fieldName)
     if (field) {
       field.value = fieldValue
