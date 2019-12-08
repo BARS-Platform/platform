@@ -11,7 +11,7 @@
           outlined
           v-for="field in Fields"
           :key="field.propertyName"
-          :is="'q-input'"
+          :is="getFieldType(field)"
           :label="field.label"
           @input="setValues(field.propertyName, $event)"
           :value="getValue(field.propertyName)"
@@ -35,9 +35,15 @@ import ModelModule from '@/store/modules/Model'
 
 import { ModelDto } from '@/models/modelDto'
 import { FormField } from '@/models/formField'
+import FormDropdownField from '@/components/form/form-dropdown-field.vue'
 import { ListParam } from '../../models/data/listParam'
+import { Property } from '@/models/property'
 
-@Component({})
+@Component({
+  components: {
+    FormDropdownField
+  }
+})
 export default class FormDialog extends Vue {
   private modelStore = getModule(ModelModule)
   @Prop() dialog: Boolean = false
@@ -49,7 +55,7 @@ export default class FormDialog extends Vue {
   }
 
   get Fields() {
-    let usualFields = this.model.properties.filter(x => x.displayIn.grid === true)
+    let usualFields = this.model.properties.filter(x => x.displayIn.form === true)
     return usualFields
   }
 
@@ -80,6 +86,11 @@ export default class FormDialog extends Vue {
     } else {
       return ''
     }
+  }
+
+  getFieldType(field: any) {
+    if (field.refModel) return 'form-dropdown-field'
+    return 'q-input'
   }
 
   onSaveClick() {
