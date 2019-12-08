@@ -18,6 +18,7 @@
         <Compile Include="Attributes\MenuAttribute.fs" />
         <Compile Include="Interfaces\IEntityBase.fs" />
         <Compile Include="Interfaces\IAddressElement.fs" />
+        <Compile Include="Models\Email.fs" />
         <Compile Include="Models\User.fs" />
         <Compile Include="Models\Address\Country.fs" />
         <Compile Include="Models\Address\State.fs" />
