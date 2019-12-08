@@ -9,13 +9,14 @@
         <component
           class="q-mt-md"
           outlined
-          v-for="field in Fields"
+          v-for="(field, index) in Fields"
           :key="field.propertyName"
           :is="getFieldType(field)"
           :label="field.label"
           :refModel="field.refModel"
           @input="setValues(field.propertyName, $event)"
           :value="getValue(field.propertyName)"
+          :disable="isDisabled(index)"
         ></component>
       </q-card-section>
 
@@ -101,6 +102,11 @@ export default class FormDialog extends Vue {
       this.modelValues = []
       this.modelStore.getData(this.modelStore.ListResult.listParam)
     })
+  }
+
+  isDisabled(index: number) {
+    if (index === 0) return false
+    return this.getValue(this.Fields[index - 1].propertyName) ? false : true
   }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <q-select outlined :value="value" :options="options" :label="label" @filter="filterFn" @input="$emit('input', $event)">
+  <q-select outlined :value="value" :options="options" :label="label" @filter="filterFn" @input="$emit('input', $event)" :disable="disable">
     <template v-slot:no-option>
       <q-item>
         <q-item-section class="text-grey">
@@ -24,6 +24,7 @@ export default class FormDropdownField extends Vue {
   @Prop() label!: string
   @Prop() refModel!: RefModel
   @Prop() value!: string
+  @Prop() disable!: Boolean
   options: string[] = []
 
   async filterFn(val: any, update: any, abort: any) {
