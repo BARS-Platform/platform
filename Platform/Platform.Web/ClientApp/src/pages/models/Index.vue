@@ -1,6 +1,15 @@
 <template>
   <q-page class="flex" ref="page">
-    <data-grid :model="Model" :height="tableHeight" :listResult="ListResult" :onRequest="onRequest" :loading="loading" />
+    <data-grid-params />
+    <data-grid
+      :model="Model"
+      :height="tableHeight"
+      :onFilter="onFilter"
+      :listResult="ListResult"
+      :onUpdate="onUpdate"
+      :onRequest="onRequest"
+      :loading="loading"
+    />
     <q-resize-observer @resize="onResize" />
   </q-page>
 </template>
@@ -12,14 +21,17 @@ import { getModule } from 'vuex-module-decorators'
 import ModelModule from '@/store/modules/Model'
 
 import DataGrid from '@/components/grid/data-grid.vue'
+import DataGridParams from '@/components/grid/data-grid-params.vue'
 
 import * as access from '@/utils/access'
 import { ListParam } from '@/models/data/listParam'
 import { Pagination } from '../../models/data/pagination'
+import { Sorting } from '@/models/data/sorting'
 
 @Component({
   components: {
-    DataGrid
+    DataGrid,
+    DataGridParams
   }
 })
 export default class ModelIndex extends Vue {
@@ -47,13 +59,23 @@ export default class ModelIndex extends Vue {
     return this.currentHeight - bottomHeight - headerHeight
   }
 
+  onUpdate() {
+    this.loading = true
+    this.modelStore.getData(this.ListResult.listParam).finally(() => (this.loading = false))
+  }
+
+  onFilter() {
+    this.ListResult.listParam.pagination.page = 1
+    this.getcurrentData(this.ListResult.listParam.pagination)
+  }
+
   async onRequest(props: any) {
     await this.getcurrentData(props.pagination)
   }
 
   async getcurrentData(pagination?: Pagination) {
     if (this.Model.modelName) {
-      let listParam = new ListParam(this.currentParam, pagination || this.ListResult.listParam.pagination)
+      let listParam = new ListParam(this.currentParam, pagination || this.ListResult.listParam.pagination, this.ListResult.listParam.filters)
       this.loading = true
       this.modelStore.getData(listParam).finally(() => (this.loading = false))
     }
@@ -66,6 +88,8 @@ export default class ModelIndex extends Vue {
     access.check(this.currentParam, this.$router)
 
     await this.modelStore.getCurrentModel(this.currentParam)
+
+    this.ListResult.listParam = new ListParam()
 
     await this.getcurrentData()
   }

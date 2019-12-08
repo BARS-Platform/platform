@@ -76,6 +76,7 @@ module.exports = function(ctx) {
         'QMenu',
         'QSeparator',
         'QResizeObserver',
+        'QScrollArea'
       ],
 
       cssAddon: true,
