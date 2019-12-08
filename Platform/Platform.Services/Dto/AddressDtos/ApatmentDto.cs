@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using Platform.Fodels.Attributes;
 using Platform.Fodels.Enums;
 using Platform.Fodels.Models.Address;
+using Platform.Services.Dto.Attributes;
 
 namespace Platform.Services.Dto.AddressDtos
 {
@@ -24,27 +25,32 @@ namespace Platform.Services.Dto.AddressDtos
 
         public int Id { get; set; }
 
-        [Platform(AttributesEnum.Grid)]
+        [Platform(AttributesEnum.Grid | AttributesEnum.Form)]
         [Label("Страна")]
+        [Ref(nameof(Country), CountryDto.RefProperty)]
         public string CountryName { get; set; }
 
-        [Platform(AttributesEnum.Grid)]
+        [Platform(AttributesEnum.Grid | AttributesEnum.Form)]
         [Label("Регион")]
+        [Ref(nameof(State), StateDto.RefProperty)]
         public string StateName { get; set; }
 
-        [Platform(AttributesEnum.Grid)]
+        [Platform(AttributesEnum.Grid | AttributesEnum.Form)]
         [Label("Город")]
+        [Ref(nameof(City), CityDto.RefProperty)]
         public string CityName { get; set; }
 
-        [Platform(AttributesEnum.Grid)]
+        [Platform(AttributesEnum.Grid | AttributesEnum.Form)]
         [Label("Улица")]
+        [Ref(nameof(Street), StreetDto.RefProperty)]
         public string StreetName { get; set; }
 
-        [Platform(AttributesEnum.Grid)]
+        [Platform(AttributesEnum.Grid | AttributesEnum.Form)]
         [Label("Дом")]
+        [Ref(nameof(House), HouseDto.RefProperty)]
         public string HouseNumber { get; set; }
 
-        [Platform(AttributesEnum.Grid)]
+        [Platform(AttributesEnum.Grid | AttributesEnum.Form)]
         [Label("Квартира")]
         public int ApartmentNumber { get; set; }
     }

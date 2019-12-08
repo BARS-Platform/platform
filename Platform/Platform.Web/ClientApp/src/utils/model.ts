@@ -10,7 +10,8 @@ export function convertProperties(props: any): Property[] {
       propertyName: key,
       displayIn: value.displayIn,
       label: value.label,
-      type: value.type
+      type: value.type,
+      refModel: value.refModel
     }
 
     properties.push(property)

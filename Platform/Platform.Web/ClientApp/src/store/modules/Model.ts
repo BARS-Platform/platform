@@ -67,13 +67,9 @@ export default class ModelModule extends VuexModule {
 
   @Action({ rawError: true })
   async createModel(dto: ModelDto) {
-    let result!: any
     await api.createModel(dto).catch(() => {
       notify.error('Произошла ошибка при загрузке данных')
-      result = {}
     })
-
-    return result
   }
 
   @Action({ rawError: true })

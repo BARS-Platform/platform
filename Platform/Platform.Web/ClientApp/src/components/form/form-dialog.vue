@@ -13,6 +13,7 @@
           :key="field.propertyName"
           :is="getFieldType(field)"
           :label="field.label"
+          :refModel="field.refModel"
           @input="setValues(field.propertyName, $event)"
           :value="getValue(field.propertyName)"
         ></component>
@@ -55,8 +56,7 @@ export default class FormDialog extends Vue {
   }
 
   get Fields() {
-    let usualFields = this.model.properties.filter(x => x.displayIn.form === true)
-    return usualFields
+    return this.model.properties.filter(x => x.displayIn.form === true)
   }
 
   get Dialog() {
@@ -88,9 +88,8 @@ export default class FormDialog extends Vue {
     }
   }
 
-  getFieldType(field: any) {
-    if (field.refModel) return 'form-dropdown-field'
-    return 'q-input'
+  getFieldType(field: Property) {
+    return field.refModel ? 'form-dropdown-field' : 'q-input'
   }
 
   onSaveClick() {

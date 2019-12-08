@@ -1,49 +1,41 @@
 <template>
-  <q-select
-    filled
-    v-model="model"
-    use-chips
-    label="Lazy load opts"
-    :options="options"
-    @filter="filterFn"
-    @filter-abort="abortFilterFn"
-  >
-	<template v-slot:no-option>
-          <q-item>
-            <q-item-section class="text-grey">
-              No results
-            </q-item-section>
-          </q-item>
-        </template>
-      </q-select>
+  <q-select outlined :value="value" :options="options" :label="label" @filter="filterFn" @input="$emit('input', $event)">
+    <template v-slot:no-option>
+      <q-item>
+        <q-item-section class="text-grey">
+          Данные не найдены
+        </q-item-section>
+      </q-item>
+    </template>
   </q-select>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator'
+import { ListParam } from '../../models/data/listParam'
+import { Pagination } from '../../models/data/pagination'
+import { getModule } from 'vuex-module-decorators'
+import DropdownModule from '@/store/modules/Dropdown'
+import { RefModel } from '../../models/refModel'
 
 @Component({})
 export default class FormDropdownField extends Vue {
-  stringOptions: string[] = ['Google', 'Facebook', 'Twitter', 'Apple', 'Oracle']
-  model: any = null
-  options: any = null
+  private dropdownStore = getModule(DropdownModule)
+  @Prop() label!: string
+  @Prop() refModel!: RefModel
+  @Prop() value!: string
+  options: string[] = []
 
-  filterFn(val: any, update: any, abort: any) {
-    if (this.options !== null) {
-      // already loaded
-      update()
-      return
-    }
-
-    setTimeout(() => {
-      update(() => {
-        this.options = this.stringOptions
-      })
-    }, 2000)
-  }
-
-  abortFilterFn() {
-    // console.log('delayed filter aborted')
+  async filterFn(val: any, update: any, abort: any) {
+    let listParam = new ListParam(this.refModel.modelName, {
+      page: 1,
+      rowsNumber: 0,
+      rowsPerPage: 100
+    })
+    let res = await this.dropdownStore.getData(listParam)
+    update(() => {
+      this.options = res.map(x => x[this.refModel.propertyName])
+    })
   }
 }
 </script>

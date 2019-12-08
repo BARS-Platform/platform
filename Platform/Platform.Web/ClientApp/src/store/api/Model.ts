@@ -14,10 +14,8 @@ export async function getData(listParam: ListParam): Promise<ListResult> {
   return listResult
 }
 
-export async function createModel(dto: ModelDto): Promise<any> {
-  console.log(dto)
-  const response = await api.post(`/${dto.modelName}/Create`, dto)
-  return response.data.data.data
+export async function createModel(dto: ModelDto) {
+  await api.post(`/${dto.modelName}/Create`, dto)
 }
 
 export async function deleteEntry({ modelName, entryId }: { modelName: string; entryId: number }): Promise<any> {
