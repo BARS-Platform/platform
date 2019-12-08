@@ -6,7 +6,7 @@
     @request="onRequest"
     :loading="loading"
     :pagination.sync="listResult.listParam.pagination"
-    :rows-per-page-options="[3, 5, 10, 25]"
+    :rows-per-page-options="[3, 5, 10, 15]"
     :pagination-label="paginationLabel"
     rows-per-page-label="Элементов на странице:"
     class="platform-table"
@@ -19,7 +19,7 @@
     </template>
     <template v-slot:header="props">
       <data-grid-header-row :props="props" />
-      <data-grid-filter-row :props="props" />
+      <data-grid-filter-row :props="props" :onFilter="onFilter" :filters.sync="listResult.listParam.filters" />
     </template>
     <template v-slot:body="props">
       <data-grid-body :props="props" />
@@ -55,6 +55,8 @@ export default class DataGrid extends Vue {
   @Prop() height!: number
   @Prop() listResult!: ListResult
   @Prop() onRequest!: Function
+	@Prop() onUpdate!: Function
+	@Prop() onFilter!: Function
   @Prop() loading!: Boolean
 
   paginationLabel(firstRowIndex: number, endRowIndex: number, totalRowsNumber: number) {
@@ -71,7 +73,7 @@ export default class DataGrid extends Vue {
       {
         icon: 'autorenew',
         label: 'Обновить',
-        action: this.onRequest
+        action: this.onUpdate
       }
     ]
     return actions

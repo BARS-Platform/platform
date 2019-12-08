@@ -11,10 +11,5 @@
         /// Количество строк для отображения.
         /// </summary>
         public int RowsPerPage { get; set; }
-
-        /// <summary>
-        /// Общее количество строк.
-        /// </summary>
-        public int RowsNumber { get; set; }
     }
 }
