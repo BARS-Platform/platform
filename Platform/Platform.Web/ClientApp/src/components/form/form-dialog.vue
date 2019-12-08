@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="Dialog">
+  <q-dialog v-model="Dialog" @hide="modelValues = []">
     <q-card class="q-pa-md" style="width:500px">
       <q-card-section>
         <div class="text-h6">{{ model.modelName }}</div>
@@ -15,18 +15,17 @@
           :label="field.label"
           :refModel="field.refModel"
           @input="setValues(field.propertyName, $event)"
-          @dropdownClick="checkFilters($event)"
           :value="getValue(field.propertyName)"
           :disable="isDisabled(index)"
           :field="field"
-          :dtoValues="modelValues"
+          :createFilters="createFilters"
         >
         </component>
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn label="Сохранить" color="primary" @click="onSaveClick" v-close-popup />
-        <q-btn label="Закрыть" color="primary" @click="modelValues = []" v-close-popup />
+        <q-btn label="Сохранить" color="primary" @click="onSaveClick" :disable="isSaveEnabled()" v-close-popup />
+        <q-btn label="Закрыть" color="primary" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -60,7 +59,6 @@ export default class FormDialog extends Vue {
   dto: ModelDto = {
     modelName: ''
   }
-  filters: Filtration[] = []
 
   get Fields() {
     return this.model.properties.filter(x => x.displayIn.form === true)
@@ -78,6 +76,20 @@ export default class FormDialog extends Vue {
     let field = this.modelValues.find(x => x.fieldName == fieldName)
     if (field) {
       field.value = fieldValue
+      let name = field.fieldName
+      let property = this.Fields.find(x => x.propertyName === name)
+      if (property) {
+        let fieldIndex = this.Fields.indexOf(property)
+        let fields = this.Fields.filter(x => this.Fields.indexOf(x) > fieldIndex)
+        if (fields) {
+          fields.forEach(x => {
+            let val = this.modelValues.find(y => y.fieldName === x.propertyName)
+            if (val) {
+              val.value = ''
+            }
+          })
+        }
+      }
     } else {
       this.modelValues.push({
         fieldName: fieldName,
@@ -115,17 +127,39 @@ export default class FormDialog extends Vue {
     return this.getValue(this.Fields[index - 1].propertyName) ? false : true
   }
 
-  checkFilters(field: Property) {
-    let fieldIndex = this.Fields.indexOf(field)
-    let fields = this.Fields.filter(x => this.Fields.indexOf(x) > fieldIndex)
-    if (fields) {
-      fields.forEach(x => {
-        let val = this.modelValues.find(y => y.fieldName === x.propertyName)
-        if (val) {
-          val.value = ''
+  isSaveEnabled() {
+    let result = false
+    this.Fields.forEach(x => {
+      let value = this.modelValues.find(y => y.fieldName === x.propertyName)
+      if (value) {
+        if (!value.value) {
+          result = true
+        }
+      } else {
+        result = true
+      }
+    })
+
+    return result
+  }
+
+  createFilters(field: Property) {
+    let filters: Filtration[] = []
+    let propIndex = this.Fields.indexOf(field)
+    let props = this.Fields.filter(x => this.Fields.indexOf(x) < propIndex)
+
+    if (props) {
+      props.forEach(x => {
+        let value = this.modelValues.find(y => y.fieldName === x.propertyName)
+        if (value) {
+          filters.push({
+            columnName: value.fieldName,
+            columnValue: value.value
+          })
         }
       })
     }
+    return filters
   }
 }
 </script>

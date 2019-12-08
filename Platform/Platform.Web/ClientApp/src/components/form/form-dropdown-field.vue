@@ -12,14 +12,13 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import { ListParam } from '../../models/data/listParam'
-import { Pagination } from '../../models/data/pagination'
+
 import { getModule } from 'vuex-module-decorators'
 import DropdownModule from '@/store/modules/Dropdown'
-import { RefModel } from '../../models/refModel'
-import { Filtration } from '../../models/data/filtration'
-import { Property } from '~/src/models/property'
-import { FormField } from '~/src/models/formField'
+
+import { ListParam } from '@/models/data/listParam'
+import { RefModel } from '@/models/refModel'
+import { Property } from '@/models/property'
 
 @Component({})
 export default class FormDropdownField extends Vue {
@@ -28,30 +27,12 @@ export default class FormDropdownField extends Vue {
   @Prop() refModel!: RefModel
   @Prop() value!: string
   @Prop() disable!: Boolean
-  @Prop() dtoValues!: FormField[]
   @Prop() field!: Property
+  @Prop() createFilters!: Function
   options: string[] = []
 
   async filterFn(val: any, update: any, abort: any) {
-    this.$emit('dropdownClick', this.field)
-    let filters: Filtration[] = []
-    let propertyName = this.field.propertyName
-
-    this.dtoValues.forEach(x => {
-      if (x.fieldName === propertyName) {
-        let filter = filters.find(x => x.columnName === propertyName)
-        if (filter) {
-          filters.splice(filters.indexOf(filter), 1)
-        }
-      } else {
-        if (x.value) {
-          filters.push({
-            columnName: x.fieldName,
-            columnValue: x.value
-          })
-        }
-      }
-    })
+    let filters = this.createFilters(this.field)
 
     let listParam = new ListParam(
       this.refModel.modelName,
@@ -64,9 +45,11 @@ export default class FormDropdownField extends Vue {
     )
 
     let res = await this.dropdownStore.getData(listParam)
-    update(() => {
-      this.options = res.map(x => x[this.refModel.propertyName])
-    })
+    if (res) {
+      update(() => {
+        this.options = res.map(x => x[this.refModel.propertyName])
+      })
+    }
   }
 }
 </script>
