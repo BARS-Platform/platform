@@ -15,9 +15,11 @@
           :label="field.label"
           :refModel="field.refModel"
           @input="setValues(field.propertyName, $event)"
+          @dropdownClick="checkFilters($event)"
           :value="getValue(field.propertyName)"
           :disable="isDisabled(index)"
-          :filters="filters"
+          :field="field"
+          :dtoValues="modelValues"
         >
         </component>
       </q-card-section>
@@ -73,16 +75,6 @@ export default class FormDialog extends Vue {
   }
 
   setValues(fieldName: string, fieldValue: string) {
-    let filter = this.filters.find(x => x.columnName == fieldName)
-    if (filter) {
-      filter.columnValue = fieldValue
-    } else {
-      this.filters.push({
-        columnName: fieldName,
-        columnValue: fieldValue
-      })
-    }
-
     let field = this.modelValues.find(x => x.fieldName == fieldName)
     if (field) {
       field.value = fieldValue
@@ -121,6 +113,19 @@ export default class FormDialog extends Vue {
   isDisabled(index: number) {
     if (index === 0) return false
     return this.getValue(this.Fields[index - 1].propertyName) ? false : true
+  }
+
+  checkFilters(field: Property) {
+    let fieldIndex = this.Fields.indexOf(field)
+    let fields = this.Fields.filter(x => this.Fields.indexOf(x) > fieldIndex)
+    if (fields) {
+      fields.forEach(x => {
+        let val = this.modelValues.find(y => y.fieldName === x.propertyName)
+        if (val) {
+          val.value = ''
+        }
+      })
+    }
   }
 }
 </script>

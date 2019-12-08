@@ -18,6 +18,8 @@ import { getModule } from 'vuex-module-decorators'
 import DropdownModule from '@/store/modules/Dropdown'
 import { RefModel } from '../../models/refModel'
 import { Filtration } from '../../models/data/filtration'
+import { Property } from '~/src/models/property'
+import { FormField } from '~/src/models/formField'
 
 @Component({})
 export default class FormDropdownField extends Vue {
@@ -26,10 +28,31 @@ export default class FormDropdownField extends Vue {
   @Prop() refModel!: RefModel
   @Prop() value!: string
   @Prop() disable!: Boolean
-  @Prop() filters!: Filtration[]
+  @Prop() dtoValues!: FormField[]
+  @Prop() field!: Property
   options: string[] = []
 
   async filterFn(val: any, update: any, abort: any) {
+    this.$emit('dropdownClick', this.field)
+    let filters: Filtration[] = []
+    let propertyName = this.field.propertyName
+
+    this.dtoValues.forEach(x => {
+      if (x.fieldName === propertyName) {
+        let filter = filters.find(x => x.columnName === propertyName)
+        if (filter) {
+          filters.splice(filters.indexOf(filter), 1)
+        }
+      } else {
+        if (x.value) {
+          filters.push({
+            columnName: x.fieldName,
+            columnValue: x.value
+          })
+        }
+      }
+    })
+
     let listParam = new ListParam(
       this.refModel.modelName,
       {
@@ -37,8 +60,9 @@ export default class FormDropdownField extends Vue {
         rowsNumber: 0,
         rowsPerPage: 100
       },
-      this.filters
+      filters
     )
+
     let res = await this.dropdownStore.getData(listParam)
     update(() => {
       this.options = res.map(x => x[this.refModel.propertyName])
