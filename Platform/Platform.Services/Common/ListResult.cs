@@ -17,12 +17,11 @@ namespace Platform.Services.Common
         {
 
             var filteredQuery = query.Filter(listParam.Filters);
-            var data = filteredQuery
-                    .Order(listParam.Sorting)
-                    .Paging(listParam.Pagination);
             return new ListResult<T>
             {
-                Data = data.ToList(),
+                Data = filteredQuery
+                    .Order(listParam.Sorting)
+                    .Paging(listParam.Pagination).ToList(),
                 TotalCount = filteredQuery.Count()
             };
         }
