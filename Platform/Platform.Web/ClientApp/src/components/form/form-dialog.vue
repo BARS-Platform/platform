@@ -14,6 +14,7 @@
           :is="getFieldType(field)"
           :label="field.label"
           :refModel="field.refModel"
+          :mask="field.type === 'integer' ? '###########################' : ''"
           @input="setValues(field.propertyName, $event)"
           :value="getValue(field.propertyName)"
           :disable="isDisabled(index)"
