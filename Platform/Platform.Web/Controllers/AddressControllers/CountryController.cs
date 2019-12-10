@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Platform.Domain.DomainServices;
 using Platform.Fatabase;
+using Platform.Fodels.Enums;
 using Platform.Fodels.Models;
+using Platform.Fodels.Models.Address;
 using Platform.Services.Common;
 using Platform.Services.Dto.AddressDtos;
 using Platform.Web.Controllers.Base;
@@ -25,7 +27,12 @@ namespace Platform.Web.Controllers.AddressControllers
 
         [HttpPost]
         public IActionResult Create([FromBody] CountryDto dto) =>
-            HandleRequest(() => _domainService.CreateCountry(dto));
+            HandleRequest(() => _domainService.CreateItem(new AddressDto
+            {
+                AddressItem = AddressItem.Country,
+                Name = dto.CountryName,
+                ParentId = 0
+            }));
 
         [HttpDelete]
         public IActionResult Delete(int entryId) =>
