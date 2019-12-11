@@ -10,7 +10,7 @@ namespace Platform.Services.Helpers
     {
         public static string GetPredicateByFilter(this Filtration filter, Type propertyType)
         {
-            filter.ConverFilter();
+            filter.ConvertFilter();
 
             var predicate = $"x => x.{filter.ColumnName}";
 
@@ -43,7 +43,7 @@ namespace Platform.Services.Helpers
             return $@"x => x.{sorting.ColumnName}";
         }
 
-        private static void ConverFilter(this Filtration filter)
+        private static void ConvertFilter(this Filtration filter)
         {
             filter.ColumnName = filter.ColumnName.First().ToString().ToUpper() 
                                 + filter.ColumnName.Substring(1);
