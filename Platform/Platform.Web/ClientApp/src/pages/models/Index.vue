@@ -71,7 +71,6 @@ export default class ModelIndex extends Vue {
   }
 
   onDelete(entryId: number) {
-    console.log(entryId)
     this.loading = true
     let entry = {
       modelName: this.currentParam,
