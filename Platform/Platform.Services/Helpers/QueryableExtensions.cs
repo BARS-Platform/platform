@@ -2,6 +2,7 @@
 using Platform.Services.Common;
 using System.Linq;
 using System.Linq.Dynamic;
+using Platform.Services.Dto;
 
 namespace Platform.Services.Helpers
 {
@@ -54,7 +55,8 @@ namespace Platform.Services.Helpers
             return data;
         }
 
-        public static IQueryable<T> Order<T>(this IQueryable<T> data, Sorting sorting)
+        public static IQueryable<T> Order<T>(this IQueryable<T> data, Sorting sorting) 
+            where T: IEntityDto
         {
             if (sorting == null)
             {

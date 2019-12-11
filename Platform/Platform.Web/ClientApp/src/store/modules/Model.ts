@@ -64,6 +64,13 @@ export default class ModelModule extends VuexModule {
     return result
   }
 
+  @Action({ rawError: true })
+  async deleteEntry({ modelName, entryId }: { modelName: string; entryId: number }) {
+    await api.deleteEntry({ modelName, entryId }).catch(() => {
+      notify.error('Произошла ошибка при  удалении')
+    })
+  }
+
   @Mutation
   SET_MODEL(model: Model) {
     this.model = model

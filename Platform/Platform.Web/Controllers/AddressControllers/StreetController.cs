@@ -20,5 +20,9 @@ namespace Platform.Web.Controllers.AddressControllers
         [HttpPost]
         public IActionResult GetAll([FromBody] ListParam listParam) =>
             HandleRequest(() => _domainService.GetAllStreets(listParam));
+
+        [HttpDelete]
+        public IActionResult Delete(int entryId) =>
+            HandleRequest(() => _domainService.RemoveItem(Fodels.Enums.AddressItem.Street, entryId));
     }
 }

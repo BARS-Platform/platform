@@ -8,6 +8,7 @@
       :listResult="ListResult"
       :onUpdate="onUpdate"
       :onRequest="onRequest"
+      :onDelete="onDelete"
       :loading="loading"
     />
     <q-resize-observer @resize="onResize" />
@@ -67,6 +68,20 @@ export default class ModelIndex extends Vue {
   onFilter() {
     this.ListResult.listParam.pagination.page = 1
     this.getcurrentData(this.ListResult.listParam.pagination)
+  }
+
+  onDelete(entryId: number) {
+    this.loading = true
+    let entry = {
+      modelName: this.currentParam,
+      entryId: entryId
+    }
+    this.modelStore
+      .deleteEntry(entry)
+      .then(() => {
+        this.modelStore.getData(this.ListResult.listParam)
+      })
+      .finally(() => (this.loading = false))
   }
 
   async onRequest(props: any) {

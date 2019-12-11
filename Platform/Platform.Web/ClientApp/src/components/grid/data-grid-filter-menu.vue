@@ -18,13 +18,14 @@
             :value="getFilter(column.name)"
             :label="column.label"
             dense
+            @keyup.enter="applyFilter"
             style="width: 270px"
             @input="setFilter(column, $event)"
           />
         </div>
         <div class="flex justify-end items-center q-mt-md bg-grey-2">
           <q-btn v-close-popup icon="done" @click.stop="applyFilter" size="sm" flat round />
-          <q-btn icon="delete" @click.stop="clearFilter(column.name)" size="sm" flat round />
+          <q-btn icon="delete" v-close-popup @click.stop="clearFilter(column.name)" size="sm" flat round />
         </div>
       </div>
     </q-menu>
@@ -101,6 +102,7 @@ export default class DataGridFilterMenu extends Vue {
       let index = this.LocalFilters.indexOf(filter)
       this.LocalFilters.splice(index, 1)
     }
+    this.applyFilter()
   }
 
   isRegularColumn(columnName: string) {

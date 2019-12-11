@@ -10,7 +10,10 @@ namespace Platform.Services.Services
     {
         private readonly IRepository _repository;
 
-        public RoleService(IRepository repository) => _repository = repository;
+        public RoleService(IRepository repository)
+        {
+            _repository = repository;
+        }
 
         public OperationResult GetAll(ListParam listParam)
         {

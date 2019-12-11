@@ -22,7 +22,7 @@
       <data-grid-filter-row :props="props" :onFilter="onFilter" :filters.sync="listResult.listParam.filters" />
     </template>
     <template v-slot:body="props">
-      <data-grid-body :props="props" />
+      <data-grid-body :props="props" :onDelete="onDelete" />
     </template>
   </q-table>
 </template>
@@ -55,8 +55,9 @@ export default class DataGrid extends Vue {
   @Prop() height!: number
   @Prop() listResult!: ListResult
   @Prop() onRequest!: Function
-	@Prop() onUpdate!: Function
-	@Prop() onFilter!: Function
+  @Prop() onUpdate!: Function
+  @Prop() onFilter!: Function
+  @Prop() onDelete!: Function
   @Prop() loading!: Boolean
 
   paginationLabel(firstRowIndex: number, endRowIndex: number, totalRowsNumber: number) {

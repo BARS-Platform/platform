@@ -105,18 +105,18 @@ namespace Platform.Web
             services.AddTransient<IRepository, BaseRepository>();
 
 			services.AddSingleton<PasswordCheckerService>();
-			services.AddSingleton<TokenService>();
-            services.AddSingleton<UserDomainService>();
-            services.AddSingleton<AddressDomainService>();
+			services.AddScoped<TokenService>();
+            services.AddScoped<UserDomainService>();
+            services.AddScoped<AddressDomainService>();
 
             services.AddSingleton<PlatformSwaggerSchemasCustomizer>();
 
             services.AddTransient<IAuthorizationHandler, RoleHandler>();
-            services.AddTransient<IAuthorizationHandler, PermissionHandler>();
+            services.AddScoped<IAuthorizationHandler, PermissionHandler>();
 
-            services.AddTransient<PermissionService>();
+            services.AddScoped<PermissionService>();
             services.AddTransient<MenuService>();
-            services.AddTransient<RoleService>();
+            services.AddScoped<RoleService>();
         }
 
         public static void RegisterSwagger(this IServiceCollection services)

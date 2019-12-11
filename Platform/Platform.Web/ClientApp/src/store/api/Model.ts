@@ -12,3 +12,7 @@ export async function getData(listParam: ListParam): Promise<ListResult> {
 
   return listResult
 }
+
+export async function deleteEntry({ modelName, entryId }: { modelName: string; entryId: number }): Promise<any> {
+  await api.delete(`/${modelName}/Delete?entryId=${entryId}`)
+}
