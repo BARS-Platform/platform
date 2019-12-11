@@ -13,12 +13,10 @@
             <q-card-section>
               <div class="text-subtitle1">Вы действительно хотите удалить запись?</div>
             </q-card-section>
-
             <q-separator />
-
             <q-card-actions align="right">
-              <q-btn style="min-width: 70px" color="positive" v-close-popup dense @click="onDelete(props.row.id)" outline>Да</q-btn>
-              <q-btn style="min-width: 70px" color="negative" v-close-popup outline>Нет</q-btn>
+              <q-btn size="md" style="min-width: 70px" color="negative" v-close-popup @click="onDelete(props.row.id)" outline>Да</q-btn>
+              <q-btn style="min-width: 70px" color="positive" v-close-popup outline>Нет</q-btn>
             </q-card-actions>
           </q-card>
         </q-menu>
