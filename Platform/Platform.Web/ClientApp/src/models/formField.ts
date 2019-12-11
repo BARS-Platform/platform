@@ -1,4 +1,5 @@
 export interface FormField {
   fieldName: string
-  value: string
+  isRefField: Boolean
+  value: any
 }

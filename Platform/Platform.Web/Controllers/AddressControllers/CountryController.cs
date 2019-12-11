@@ -34,6 +34,12 @@ namespace Platform.Web.Controllers.AddressControllers
                 ParentId = 0
             }));
 
+
+        [HttpPost]
+        public IActionResult Update([FromBody] CountryDto dto) =>
+            HandleRequest(() => _domainService
+                .UpdateItem(AddressItem.Country, dto.Id, dto.CountryName, 0));
+
         [HttpDelete]
         public IActionResult Delete(int entryId) =>
             HandleRequest(() => _domainService.RemoveItem(Fodels.Enums.AddressItem.Country, entryId));

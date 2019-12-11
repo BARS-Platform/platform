@@ -18,6 +18,10 @@ export async function createModel(dto: ModelDto) {
   await api.post(`/${dto.modelName}/Create`, dto)
 }
 
+export async function updateModel(dto: ModelDto) {
+  await api.post(`/${dto.modelName}/Update`, dto)
+}
+
 export async function deleteEntry({ modelName, entryId }: { modelName: string; entryId: number }): Promise<any> {
   await api.delete(`/${modelName}/Delete?entryId=${entryId}`)
 }

@@ -1,6 +1,14 @@
 <template>
   <q-page class="flex" ref="page">
-    <form-dialog v-model="dialog" :dialog.sync="dialog" :model="Model" :modelName="currentParam"> </form-dialog>
+    <form-dialog
+      v-model="dialog"
+      :dialog.sync="dialog"
+      :model="Model"
+      :modelName="currentParam"
+      :modelValues.sync="modelValues"
+      :isForCreate="editWindowIsForCreate"
+    >
+    </form-dialog>
     <data-grid-params />
     <data-grid
       :model="Model"
@@ -10,6 +18,7 @@
       :onUpdate="onUpdate"
       :onRequest="onRequest"
       :onCreate="onCreate"
+      :onEdit="onEdit"
       :onDelete="onDelete"
       :loading="loading"
     />
@@ -28,9 +37,10 @@ import DataGridParams from '@/components/grid/data-grid-params.vue'
 
 import * as access from '@/utils/access'
 import { ListParam } from '@/models/data/listParam'
-import { Pagination } from '../../models/data/pagination'
+import { Pagination } from '@/models/data/pagination'
 import { Sorting } from '@/models/data/sorting'
 import FormDialog from '@/components/form/form-dialog.vue'
+import { FormField } from '@/models/formField'
 
 @Component({
   components: {
@@ -46,6 +56,8 @@ export default class ModelIndex extends Vue {
   currentHeight = 0
   loading = false
   dialog: Boolean = false
+  editWindowIsForCreate: Boolean = true
+  modelValues: FormField[] = []
 
   get Model() {
     return this.modelStore.Model
@@ -93,8 +105,40 @@ export default class ModelIndex extends Vue {
     await this.getcurrentData(props.pagination)
   }
 
-  onCreate(props: any) {
+  onCreate() {
     this.dialog = true
+    this.editWindowIsForCreate = true
+  }
+
+  onEdit(props: any) {
+    this.dialog = true
+    this.editWindowIsForCreate = false
+    let entries = Object.entries(props) as [string, string][]
+    for (let [key, value] of entries) {
+      let property = this.Model.properties.find(x => x.propertyName === key)
+      if (property) {
+        if (property.refModel) {
+          let refValue = entries.find(x => x.find(y => y === property!.refModel!.propertyName))
+          if (refValue) {
+            let obj: any = {
+              id: value
+            }
+            obj[property.refModel.propertyName] = refValue[1]
+            this.modelValues.push({
+              fieldName: key,
+              isRefField: true,
+              value: obj
+            })
+          }
+        } else {
+          this.modelValues.push({
+            fieldName: key,
+            isRefField: false,
+            value: value
+          })
+        }
+      }
+    }
   }
 
   async getcurrentData(pagination?: Pagination) {

@@ -17,21 +17,31 @@ namespace Platform.Services.Dto.AddressDtos
             {
                 Id = city.Id,
                 CountryName = city.State.Country.Name,
+                CountryId = city.State.Country.Id,
                 StateName = city.State.Name,
+                StateId = city.State.Id,
                 CityName = city.Name
             };
 
         public int Id { get; set; }
 
-        [Platform(AttributesEnum.Grid | AttributesEnum.Form)]
+        [Platform(AttributesEnum.Grid)]
         [Label("Страна")]
-        [Ref(nameof(Country), CountryDto.RefProperty)]
         public string CountryName { get; set; }
 
-        [Platform(AttributesEnum.Grid | AttributesEnum.Form)]
+        [Platform(AttributesEnum.Form)]
+        [Label("Страна")]
+        [Ref(nameof(Country), CountryDto.RefProperty)]
+        public int CountryId { get; set; }
+
+        [Platform(AttributesEnum.Grid)]
+        [Label("Регион")]
+        public string StateName { get; set; }
+
+        [Platform(AttributesEnum.Form)]
         [Label("Регион")]
         [Ref(nameof(State), StateDto.RefProperty)]
-        public string StateName { get; set; }
+        public int StateId { get; set; }
 
         [Platform(AttributesEnum.Grid | AttributesEnum.Form)]
         [Label("Город")]

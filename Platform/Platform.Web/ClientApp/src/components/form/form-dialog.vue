@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="Dialog" @hide="modelValues = []">
+  <q-dialog v-model="Dialog" @hide="ModelValues = []">
     <q-card class="q-pa-md" style="width:500px">
       <q-card-section>
         <div class="text-h6">{{ model.modelName }}</div>
@@ -15,7 +15,7 @@
           :label="field.label"
           :refModel="field.refModel"
           :mask="field.type === 'integer' ? '###########################' : ''"
-          @input="setValues(field.propertyName, $event)"
+          @input="setValues(field, $event)"
           :value="getValue(field.propertyName)"
           :disable="isDisabled(index)"
           :field="field"
@@ -25,8 +25,8 @@
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn label="Сохранить" color="primary" @click="onSaveClick" :disable="isSaveEnabled()" v-close-popup />
-        <q-btn label="Закрыть" color="primary" v-close-popup />
+        <q-btn outline label="Сохранить" color="positive" @click="onSaveClick" :disable="isSaveEnabled()" />
+        <q-btn outline label="Закрыть" color="negative" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -35,6 +35,7 @@
 <script lang="ts">
 import { Component, Vue, Watch, Prop } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
+import * as notify from '@/utils/notify'
 
 import { Model } from '@/models/model'
 import ModelModule from '@/store/modules/Model'
@@ -42,8 +43,8 @@ import ModelModule from '@/store/modules/Model'
 import { ModelDto } from '@/models/modelDto'
 import { FormField } from '@/models/formField'
 import FormDropdownField from '@/components/form/form-dropdown-field.vue'
-import { ListParam } from '../../models/data/listParam'
-import { Filtration } from '../../models/data/filtration'
+import { ListParam } from '@/models/data/listParam'
+import { Filtration } from '@/models/data/filtration'
 import { Property } from '@/models/property'
 
 @Component({
@@ -56,13 +57,22 @@ export default class FormDialog extends Vue {
   @Prop() dialog: Boolean = false
   @Prop() model!: Model
   @Prop() modelName!: string
-  modelValues: FormField[] = []
+  @Prop() modelValues!: FormField[]
+  @Prop() isForCreate!: Boolean
   dto: ModelDto = {
     modelName: ''
   }
 
   get Fields() {
     return this.model.properties.filter(x => x.displayIn.form === true)
+  }
+
+  get ModelValues() {
+    return this.modelValues
+  }
+
+  set ModelValues(value: FormField[]) {
+    this.$emit('update:modelValues', value)
   }
 
   get Dialog() {
@@ -73,34 +83,37 @@ export default class FormDialog extends Vue {
     this.$emit('update:dialog', value)
   }
 
-  setValues(fieldName: string, fieldValue: string) {
-    let field = this.modelValues.find(x => x.fieldName == fieldName)
+  setValues(property: Property, fieldValue: any) {
+    let field = this.ModelValues.find(x => x.fieldName == property.propertyName)
     if (field) {
       field.value = fieldValue
-      let name = field.fieldName
-      let property = this.Fields.find(x => x.propertyName === name)
-      if (property) {
-        let fieldIndex = this.Fields.indexOf(property)
-        let fields = this.Fields.filter(x => this.Fields.indexOf(x) > fieldIndex)
-        if (fields) {
-          fields.forEach(x => {
-            let val = this.modelValues.find(y => y.fieldName === x.propertyName)
-            if (val) {
-              val.value = ''
-            }
-          })
+      if (property.refModel) {
+        let name = field.fieldName
+        let property = this.Fields.find(x => x.propertyName === name)
+        if (property) {
+          let fieldIndex = this.Fields.indexOf(property)
+          let fields = this.Fields.filter(x => this.Fields.indexOf(x) > fieldIndex)
+          if (fields) {
+            fields.forEach(x => {
+              let val = this.ModelValues.find(y => y.fieldName === x.propertyName)
+              if (val) {
+                val.value = ''
+              }
+            })
+          }
         }
       }
     } else {
-      this.modelValues.push({
-        fieldName: fieldName,
+      this.ModelValues.push({
+        fieldName: property.propertyName,
+        isRefField: property.refModel ? true : false,
         value: fieldValue
       })
     }
   }
 
   getValue(fieldName: string) {
-    let field = this.modelValues.find(x => x.fieldName == fieldName)
+    let field = this.ModelValues.find(x => x.fieldName == fieldName)
     if (field) {
       return field.value
     } else {
@@ -113,14 +126,25 @@ export default class FormDialog extends Vue {
   }
 
   onSaveClick() {
-    this.modelValues.forEach(x => {
-      this.dto[x.fieldName] = x.value
+    this.ModelValues.forEach(x => {
+      this.dto[x.fieldName] = x.isRefField ? x.value.id : x.value
     })
     this.dto.modelName = this.modelName
-    this.modelStore.createModel(this.dto).then(() => {
-      this.modelValues = []
-      this.modelStore.getData(this.modelStore.ListResult.listParam)
-    })
+    if (this.isForCreate) {
+      this.modelStore.createModel(this.dto).then(() => {
+        this.ModelValues = []
+        this.modelStore.getData(this.modelStore.ListResult.listParam)
+        notify.success('Добавлено')
+        this.Dialog = false
+      })
+    } else {
+      this.modelStore.updateModel(this.dto).then(() => {
+        this.ModelValues = []
+        this.modelStore.getData(this.modelStore.ListResult.listParam)
+        notify.success('Изменено')
+        this.Dialog = false
+      })
+    }
   }
 
   isDisabled(index: number) {
@@ -131,7 +155,7 @@ export default class FormDialog extends Vue {
   isSaveEnabled() {
     let result = false
     this.Fields.forEach(x => {
-      let value = this.modelValues.find(y => y.fieldName === x.propertyName)
+      let value = this.ModelValues.find(y => y.fieldName === x.propertyName)
       if (value) {
         if (!value.value) {
           result = true
@@ -151,8 +175,13 @@ export default class FormDialog extends Vue {
 
     if (props) {
       props.forEach(x => {
-        let value = this.modelValues.find(y => y.fieldName === x.propertyName)
-        if (value) {
+        let value = this.ModelValues.find(y => y.fieldName === x.propertyName)
+        if (value && x.refModel) {
+          filters.push({
+            columnName: value.fieldName,
+            columnValue: value.value.id
+          })
+        } else if (value) {
           filters.push({
             columnName: value.fieldName,
             columnValue: value.value

@@ -73,6 +73,13 @@ export default class ModelModule extends VuexModule {
   }
 
   @Action({ rawError: true })
+  async updateModel(dto: ModelDto) {
+    await api.updateModel(dto).catch(() => {
+      notify.error('Произошла ошибка при загрузке данных')
+    })
+  }
+
+  @Action({ rawError: true })
   async deleteEntry({ modelName, entryId }: { modelName: string; entryId: number }) {
     await api.deleteEntry({ modelName, entryId }).catch(() => {
       notify.error('Произошла ошибка при  удалении')

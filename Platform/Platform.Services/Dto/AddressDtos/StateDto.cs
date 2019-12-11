@@ -19,15 +19,20 @@ namespace Platform.Services.Dto.AddressDtos
             {
                 Id = state.Id,
                 CountryName = state.Country.Name,
+                CountryId = state.Country.Id,
                 StateName = state.Name
             };
         
         public int Id { get; set; }
         
-        [Platform(AttributesEnum.Grid | AttributesEnum.Form)]
+        [Platform(AttributesEnum.Grid)]
+        [Label("Страна")]
+        public string CountryName { get; set; }
+
+        [Platform(AttributesEnum.Form)]
         [Label("Страна")]
         [Ref(nameof(Country), CountryDto.RefProperty)]
-        public string CountryName { get; set; }
+        public int CountryId { get; set; }
 
         [Platform(AttributesEnum.Grid | AttributesEnum.Form)]
         [Label("Регион")]

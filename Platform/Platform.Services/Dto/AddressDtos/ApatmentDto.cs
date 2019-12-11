@@ -15,40 +15,65 @@ namespace Platform.Services.Dto.AddressDtos
             {
                 Id = apartment.Id,
                 CountryName = apartment.House.Street.City.State.Country.Name,
+                CountryId = apartment.House.Street.City.State.Country.Id,
                 StateName = apartment.House.Street.City.State.Name,
+                StateId = apartment.House.Street.City.State.Id,
                 CityName = apartment.House.Street.City.Name,
+                CityId = apartment.House.Street.City.Id,
                 StreetName = apartment.House.Street.Name,
+                StreetId = apartment.House.Street.Id,
                 HouseNumber = apartment.House.Name,
+                HouseId = apartment.House.Id,
                 //TODO Исправить тип в модели
                 ApartmentNumber = Convert.ToInt32(apartment.Name)
             };
 
         public int Id { get; set; }
 
-        [Platform(AttributesEnum.Grid | AttributesEnum.Form)]
+        [Platform(AttributesEnum.Grid)]
         [Label("Страна")]
-        [Ref(nameof(Country), CountryDto.RefProperty)]
         public string CountryName { get; set; }
 
-        [Platform(AttributesEnum.Grid | AttributesEnum.Form)]
+        [Platform(AttributesEnum.Form)]
+        [Label("Страна")]
+        [Ref(nameof(Country), CountryDto.RefProperty)]
+        public int CountryId { get; set; }
+
+        [Platform(AttributesEnum.Grid)]
         [Label("Регион")]
-        [Ref(nameof(State), StateDto.RefProperty)]
         public string StateName { get; set; }
 
-        [Platform(AttributesEnum.Grid | AttributesEnum.Form)]
+        [Platform(AttributesEnum.Form)]
+        [Label("Регион")]
+        [Ref(nameof(State), StateDto.RefProperty)]
+        public int StateId { get; set; }
+
+        [Platform(AttributesEnum.Grid)]
         [Label("Город")]
-        [Ref(nameof(City), CityDto.RefProperty)]
         public string CityName { get; set; }
 
-        [Platform(AttributesEnum.Grid | AttributesEnum.Form)]
+        [Platform(AttributesEnum.Form)]
+        [Label("Город")]
+        [Ref(nameof(City), CityDto.RefProperty)]
+        public int CityId { get; set; }
+
+        [Platform(AttributesEnum.Grid)]
         [Label("Улица")]
-        [Ref(nameof(Street), StreetDto.RefProperty)]
         public string StreetName { get; set; }
 
-        [Platform(AttributesEnum.Grid | AttributesEnum.Form)]
+        [Platform(AttributesEnum.Form)]
+        [Label("Улица")]
+        [Ref(nameof(Street), StreetDto.RefProperty)]
+        public int StreetId { get; set; }
+
+        [Platform(AttributesEnum.Grid)]
+        [Label("Дом")]
+        public string HouseNumber { get; set; }
+
+        [Platform(AttributesEnum.Form)]
         [Label("Дом")]
         [Ref(nameof(House), HouseDto.RefProperty)]
-        public string HouseNumber { get; set; }
+        public int HouseId { get; set; }
 
         [Platform(AttributesEnum.Grid | AttributesEnum.Form)]
         [Label("Квартира")]

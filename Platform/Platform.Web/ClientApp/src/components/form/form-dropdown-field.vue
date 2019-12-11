@@ -1,5 +1,15 @@
 <template>
-  <q-select outlined :value="value" :options="options" :label="label" @filter="filterFn" @input="$emit('input', $event)" :disable="disable">
+  <q-select
+    outlined
+    :value="value"
+    :options="options"
+    :label="label"
+    @filter="filterFn"
+    @input="$emit('input', $event)"
+    :disable="disable"
+    :option-label="refModel.propertyName"
+    option-value="id"
+  >
     <template v-slot:no-option>
       <q-item>
         <q-item-section class="text-grey">
@@ -29,7 +39,7 @@ export default class FormDropdownField extends Vue {
   @Prop() disable!: Boolean
   @Prop() field!: Property
   @Prop() createFilters!: Function
-  options: string[] = []
+  options: any[] = []
 
   async filterFn(val: any, update: any, abort: any) {
     let filters = this.createFilters(this.field)
@@ -47,7 +57,7 @@ export default class FormDropdownField extends Vue {
     let res = await this.dropdownStore.getData(listParam)
     if (res) {
       update(() => {
-        this.options = res.map(x => x[this.refModel.propertyName])
+        this.options = res
       })
     }
   }

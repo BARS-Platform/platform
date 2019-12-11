@@ -31,8 +31,13 @@ namespace Platform.Web.Controllers.AddressControllers
             {
                 AddressItem = AddressItem.Street,
                 Name = dto.StreetName,
-                ParentId = Repository.FindByPredicate<City>(x => x.Name == dto.CityName)?.Id ?? 0
+                ParentId = dto.CityId
             }));
+        
+        [HttpPost]
+        public IActionResult Update([FromBody] StreetDto dto) =>
+            HandleRequest(() => _domainService
+                .UpdateItem(AddressItem.Street, dto.Id, dto.StreetName, dto.CityId));
 
         [HttpDelete]
         public IActionResult Delete(int entryId) =>
