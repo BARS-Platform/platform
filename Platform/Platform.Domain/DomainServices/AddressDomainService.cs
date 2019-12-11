@@ -162,9 +162,9 @@ namespace Platform.Domain.DomainServices
 			{
 				AddressItem.Country => (IAddressElement) _repository.Get<Country>(elementId),
 				AddressItem.State => _repository.GetWithRelated<State>(elementId, s => s.Include(x => x.Country)),
-				AddressItem.City => _repository.GetWithRelated<Apartment>(elementId, queryable => queryable.IncludeAllAddressItems()),
-				AddressItem.Street => _repository.GetWithRelated<Apartment>(elementId, queryable => queryable.IncludeAllAddressItems()),
-				AddressItem.House => _repository.GetWithRelated<Apartment>(elementId, queryable => queryable.IncludeAllAddressItems()),
+				AddressItem.City => _repository.GetWithRelated<City>(elementId, queryable => queryable.IncludeAllAddressItems()),
+				AddressItem.Street => _repository.GetWithRelated<Street>(elementId, queryable => queryable.IncludeAllAddressItems()),
+				AddressItem.House => _repository.GetWithRelated<House>(elementId, queryable => queryable.IncludeAllAddressItems()),
 				AddressItem.Apartment => _repository.GetWithRelated<Apartment>(elementId, queryable => queryable.IncludeAllAddressItems()),
 				_ => null
 			};

@@ -1,4 +1,5 @@
-﻿using Platform.Services.Helpers;
+﻿using Platform.Services.Dto;
+using Platform.Services.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,7 +14,8 @@ namespace Platform.Services.Common
 
     public static class ListResult
     {
-        public static ListResult<T> FormData<T>(this IQueryable<T> query, ListParam listParam) 
+        public static ListResult<T> FormData<T>(this IQueryable<T> query, ListParam listParam)
+            where T : IEntityDto
         {
 
             var filteredQuery = query.Filter(listParam.Filters);
