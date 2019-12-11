@@ -10,14 +10,15 @@ namespace Platform.Services.Helpers
     {
         public static string GetPredicateByFilter(this Filtration filter, Type propertyType)
         {
-            var predicate = $"x => x.{filter.ColumnName}";
-            
+            filter.ConverFilter();
 
-            var hasEqualityOperator = filter.ColumnValue.First() == '=';
+            var predicate = $"x => x.{filter.ColumnName}";
 
             if (propertyType == typeof(int) 
                 || propertyType == typeof(long)
-                || propertyType == typeof(decimal))
+                || propertyType == typeof(decimal)
+                || propertyType == typeof(double)
+                || propertyType == typeof(float))
             {
                 return filter.ColumnOperator == "="
                     ? $"{predicate}=={filter.ColumnValue}"
@@ -40,6 +41,14 @@ namespace Platform.Services.Helpers
         public static string GetPredicateBySorting(this Sorting sorting)
         {
             return $@"x => x.{sorting.ColumnName}";
+        }
+
+        private static void ConverFilter(this Filtration filter)
+        {
+            filter.ColumnName = filter.ColumnName.First().ToString().ToUpper() 
+                                + filter.ColumnName.Substring(1);
+
+            filter.ColumnValue = filter.ColumnValue.ToLower();
         }
     }
 }
