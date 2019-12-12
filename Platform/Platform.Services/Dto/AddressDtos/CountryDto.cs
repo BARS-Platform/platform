@@ -9,6 +9,8 @@ namespace Platform.Services.Dto.AddressDtos
     [Label("Страна")]
     public class CountryDto : IEntityDto
     {
+        public const string RefProperty = "countryName";
+        
         public static readonly Expression<Func<Country, CountryDto>> ProjectionExpression = country =>
             new CountryDto
             {
@@ -18,7 +20,7 @@ namespace Platform.Services.Dto.AddressDtos
         
         public int Id { get; set; }
         
-        [Platform(AttributesEnum.Grid)]
+        [Platform(AttributesEnum.Grid | AttributesEnum.Form)]
         [Label("Страна")]
         public string CountryName { get; set; }
     }

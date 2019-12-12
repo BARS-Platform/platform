@@ -1,3 +1,5 @@
+import { RefModel } from './refModel'
+
 export interface Property {
   propertyName: string
   label: string
@@ -6,4 +8,5 @@ export interface Property {
     grid: Boolean
     form: Boolean
   }
+  refModel?: RefModel
 }
