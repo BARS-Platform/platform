@@ -1,32 +1,47 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Platform.Domain.DomainServices;
 using Platform.Fatabase;
+using Platform.Fodels.Enums;
+using Platform.Fodels.Models;
 using Platform.Fodels.Models.Address;
 using Platform.Services.Common;
 using Platform.Services.Dto.AddressDtos;
+using Platform.Web.Controllers.Base;
 
 namespace Platform.Web.Controllers.AddressControllers
 {
     [Route("api/[controller]/[action]")]
-    public class CountryController : Controller
+    public class CountryController : BaseController
     {
-        private readonly IRepository _repository;
-
-        public CountryController(IRepository repository) => _repository = repository;
+        private readonly AddressDomainService _domainService;
+        
+        public CountryController(IRepository repository, AddressDomainService domainService) : base(repository) =>
+            _domainService = domainService;
 
         /// <summary>
-        /// Получить все Адреса.
+        /// Получить все Страны.
         /// </summary>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetAll([FromBody] ListParam listParam)
-        {
-            var list = _repository.GetAll<Country>()
-                .Select(CountryDto.ProjectionExpression)
-                .FormData(listParam);
+        public IActionResult GetAll([FromBody] ListParam listParam) =>
+            HandleRequest(() => _domainService.GetAllCountries(listParam));
 
-            return Ok(list);
-        }
+        [HttpPost]
+        public IActionResult Create([FromBody] CountryDto dto) =>
+            HandleRequest(() => _domainService.CreateItem(new AddressDto
+            {
+                AddressItem = AddressItem.Country,
+                Name = dto.CountryName,
+                ParentId = 0
+            }));
+
+
+        [HttpPost]
+        public IActionResult Update([FromBody] CountryDto dto) =>
+            HandleRequest(() => _domainService
+                .UpdateItem(AddressItem.Country, dto.Id, dto.CountryName, 0));
+
+        [HttpDelete]
+        public IActionResult Delete(int entryId) =>
+            HandleRequest(() => _domainService.RemoveItem(Fodels.Enums.AddressItem.Country, entryId));
     }
 }

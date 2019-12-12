@@ -1,9 +1,5 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
 using Platform.Fodels.Entities;
-using Platform.Fodels.Models;
 using Platform.Services.Services;
 
 namespace Platform.Web.Controllers

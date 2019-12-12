@@ -12,7 +12,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 import { MenuItem } from '@/models/menuItem'
 
 @Component({})
-export default class extends Vue {
+export default class ListMenuItem extends Vue {
   @Prop() readonly section!: MenuItem
   @Prop() readonly menuItem!: MenuItem
 }

@@ -1,34 +1,46 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Platform.Domain.DomainServices;
 using Platform.Fatabase;
+using Platform.Fodels.Enums;
+using Platform.Fodels.Models;
 using Platform.Fodels.Models.Address;
 using Platform.Services.Common;
 using Platform.Services.Dto.AddressDtos;
-using Platform.Services.Helpers;
+using Platform.Web.Controllers.Base;
 
 namespace Platform.Web.Controllers.AddressControllers
 {
     [Route("api/[controller]/[action]")]
-    public class ApartmentController : Controller
+    public class ApartmentController : BaseController
     {
-        private readonly IRepository _repository;
+        private readonly AddressDomainService _domainService;
 
-        public ApartmentController(IRepository repository) => _repository = repository;
+        public ApartmentController(IRepository repository, AddressDomainService domainService) : base(repository) =>
+            _domainService = domainService;
 
         /// <summary>
-        /// Получить все Адреса.
+        /// Получить все Квартиры.
         /// </summary>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetAll([FromBody] ListParam listParam)
-        {
-            var list = _repository.GetAll<Apartment>()
-                .IncludeAll()
-                .Select(ApartmentDto.ProjectionExpression)
-                .FormData(listParam);
+        public IActionResult GetAll([FromBody] ListParam listParam) =>
+            HandleRequest(() => _domainService.GetAllApartments(listParam));
 
-            return Ok(list);
-        }
+        [HttpPost]
+        public IActionResult Create([FromBody] ApartmentDto dto) =>
+            HandleRequest(() => _domainService.CreateItem(new AddressDto
+            {
+                AddressItem = AddressItem.Apartment,
+                Name = dto.ApartmentNumber.ToString(),
+                ParentId = dto.HouseId
+            }));
+        
+        [HttpPost]
+        public IActionResult Update([FromBody] ApartmentDto dto) =>
+            HandleRequest(() => _domainService
+                .UpdateItem(AddressItem.Apartment, dto.Id, dto.ApartmentNumber.ToString(), dto.HouseId));
+
+        [HttpDelete]
+        public IActionResult Delete(int entryId) =>
+            HandleRequest(() => _domainService.RemoveItem(Fodels.Enums.AddressItem.Apartment, entryId));
     }
 }

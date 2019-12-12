@@ -1,34 +1,46 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Platform.Domain.DomainServices;
 using Platform.Fatabase;
+using Platform.Fodels.Enums;
+using Platform.Fodels.Models;
 using Platform.Fodels.Models.Address;
 using Platform.Services.Common;
 using Platform.Services.Dto.AddressDtos;
-using Platform.Services.Helpers;
+using Platform.Web.Controllers.Base;
 
 namespace Platform.Web.Controllers.AddressControllers
 {
     [Route("api/[controller]/[action]")]
-    public class StreetController : Controller
+    public class StreetController : BaseController
     {
-        private readonly IRepository _repository;
-
-        public StreetController(IRepository repository) => _repository = repository;
+        private readonly AddressDomainService _domainService;
+        
+        public StreetController(IRepository repository, AddressDomainService domainService) : base(repository) =>
+            _domainService = domainService;
 
         /// <summary>
-        /// Получить все Адреса.
+        /// Получить все Улицы.
         /// </summary>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetAll([FromBody] ListParam listParam)
-        {
-            var list = _repository.GetAll<Street>()
-                .IncludeAll()
-                .Select(StreetDto.ProjectionExpression)
-                .FormData(listParam);
+        public IActionResult GetAll([FromBody] ListParam listParam) =>
+            HandleRequest(() => _domainService.GetAllStreets(listParam));
+        
+        [HttpPost]
+        public IActionResult Create([FromBody] StreetDto dto) =>
+            HandleRequest(() => _domainService.CreateItem(new AddressDto
+            {
+                AddressItem = AddressItem.Street,
+                Name = dto.StreetName,
+                ParentId = dto.CityId
+            }));
+        
+        [HttpPost]
+        public IActionResult Update([FromBody] StreetDto dto) =>
+            HandleRequest(() => _domainService
+                .UpdateItem(AddressItem.Street, dto.Id, dto.StreetName, dto.CityId));
 
-            return Ok(list);
-        }
+        [HttpDelete]
+        public IActionResult Delete(int entryId) =>
+            HandleRequest(() => _domainService.RemoveItem(Fodels.Enums.AddressItem.Street, entryId));
     }
 }

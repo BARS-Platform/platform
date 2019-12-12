@@ -105,17 +105,18 @@ namespace Platform.Web
             services.AddTransient<IRepository, BaseRepository>();
 
 			services.AddSingleton<PasswordCheckerService>();
-			services.AddSingleton<TokenService>();
-            services.AddSingleton<UserDomainService>();
-            services.AddSingleton<AddressDomainService>();
+			services.AddScoped<TokenService>();
+            services.AddScoped<UserDomainService>();
+            services.AddScoped<AddressDomainService>();
 
             services.AddSingleton<PlatformSwaggerSchemasCustomizer>();
 
-            services.AddSingleton<IAuthorizationHandler, RoleHandler>();
-            services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+            services.AddTransient<IAuthorizationHandler, RoleHandler>();
+            services.AddScoped<IAuthorizationHandler, PermissionHandler>();
 
-            services.AddTransient<PermissionService>();
+            services.AddScoped<PermissionService>();
             services.AddTransient<MenuService>();
+            services.AddScoped<RoleService>();
         }
 
         public static void RegisterSwagger(this IServiceCollection services)
@@ -190,20 +191,14 @@ namespace Platform.Web
                 var actualRole = repository.FindByPredicate<Role>(x => x.RoleName == role);
                 
                 var actualPermissions = repository
-                        .FindAllByPredicate<RolePermission>(x => x.Role.RoleName == role,
-                            query => query
-                                .Include(x => x.Role)
-                                .Include(x => x.Permission))
+                        .FindAllByPredicate<RolePermission>(x => x.Role.RoleName == role)
                         .Select(x => x.Permission.PermissionId)
                         .ToList();
 
                 var permissionsForDelete = actualPermissions
                     .Where(x => !permissionsForRole.Contains(x));
                 repository
-                    .FindAllByPredicate<RolePermission>(x => x.Role.RoleName == role,
-                        query => query
-                            .Include(x => x.Role)
-                            .Include(x => x.Permission))
+                    .FindAllByPredicate<RolePermission>(x => x.Role.RoleName == role)
                     .Where(x => permissionsForDelete.Contains(x.Permission.PermissionId))
                     .ToList()
                     .ForEach(rolePermission => repository.Delete(rolePermission));
