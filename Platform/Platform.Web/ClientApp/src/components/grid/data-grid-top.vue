@@ -5,6 +5,7 @@
       :key="action.label"
       :icon="action.icon"
       :label="action.label"
+      :hidden="action.hidden"
       @click="action.action"
       class="q-mr-lg"
       color="primary"

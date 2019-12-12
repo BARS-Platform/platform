@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Platform.Domain.DomainServices;
 using Platform.Fatabase;
+using Platform.Fodels.Enums;
+using Platform.Fodels.Models;
+using Platform.Fodels.Models.Address;
 using Platform.Services.Common;
+using Platform.Services.Dto.AddressDtos;
 using Platform.Web.Controllers.Base;
 
 namespace Platform.Web.Controllers.AddressControllers
@@ -10,7 +14,7 @@ namespace Platform.Web.Controllers.AddressControllers
     public class ApartmentController : BaseController
     {
         private readonly AddressDomainService _domainService;
-        
+
         public ApartmentController(IRepository repository, AddressDomainService domainService) : base(repository) =>
             _domainService = domainService;
 
@@ -20,6 +24,20 @@ namespace Platform.Web.Controllers.AddressControllers
         [HttpPost]
         public IActionResult GetAll([FromBody] ListParam listParam) =>
             HandleRequest(() => _domainService.GetAllApartments(listParam));
+
+        [HttpPost]
+        public IActionResult Create([FromBody] ApartmentDto dto) =>
+            HandleRequest(() => _domainService.CreateItem(new AddressDto
+            {
+                AddressItem = AddressItem.Apartment,
+                Name = dto.ApartmentNumber.ToString(),
+                ParentId = dto.HouseId
+            }));
+        
+        [HttpPost]
+        public IActionResult Update([FromBody] ApartmentDto dto) =>
+            HandleRequest(() => _domainService
+                .UpdateItem(AddressItem.Apartment, dto.Id, dto.ApartmentNumber.ToString(), dto.HouseId));
 
         [HttpDelete]
         public IActionResult Delete(int entryId) =>

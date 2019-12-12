@@ -8,6 +8,7 @@ import { PlatformSchemaObject } from '@/models/OpenAPIV3/PlatformSchemaObject'
 import * as notify from '@/utils/notify'
 import { ListResult } from '@/models/data/listResult'
 import { ListParam } from '@/models/data/listParam'
+import { ModelDto } from '~/src/models/modelDto'
 
 @Module({
   dynamic: true,
@@ -62,6 +63,20 @@ export default class ModelModule extends VuexModule {
       })
 
     return result
+  }
+
+  @Action({ rawError: true })
+  async createModel(dto: ModelDto) {
+    await api.createModel(dto).catch(() => {
+      notify.error('Произошла ошибка при создании')
+    })
+  }
+
+  @Action({ rawError: true })
+  async updateModel(dto: ModelDto) {
+    await api.updateModel(dto).catch(() => {
+      notify.error('Произошла ошибка при редактировании')
+    })
   }
 
   @Action({ rawError: true })

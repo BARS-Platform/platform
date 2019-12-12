@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using VueCliMiddleware;
 using Microsoft.Extensions.Logging;
+using Platform.Web.Services.JsonConvert;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Platform.Web
@@ -16,7 +17,10 @@ namespace Platform.Web
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddControllers();
+			services
+                .AddControllers()
+				.AddJsonOptions(options =>
+                    options.JsonSerializerOptions.Converters.Add(new QuotedNumberConverter()));
 
 			services.AddJwtAuthentication();
 			services.AddPoliciesAuthorization();

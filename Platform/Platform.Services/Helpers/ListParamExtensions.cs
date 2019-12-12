@@ -20,6 +20,11 @@ namespace Platform.Services.Helpers
                 || propertyType == typeof(double)
                 || propertyType == typeof(float))
             {
+                if (string.IsNullOrEmpty(filter.ColumnOperator))
+                {
+                    return $"{predicate}=={filter.ColumnValue}";
+                }
+                
                 return filter.ColumnOperator == "="
                     ? $"{predicate}=={filter.ColumnValue}"
                     : $"{predicate}{filter.ColumnOperator}{filter.ColumnValue}";

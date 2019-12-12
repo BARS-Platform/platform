@@ -10,14 +10,14 @@ namespace Platform.Services.Helpers
     {
         public static IQueryable<T> Paging<T>(this IQueryable<T> data, Pagination pagination)
         {
-            if (pagination == null)
-            {
-                return data;
-            }
-
             if (data == null)
             {
                 throw new Exception("Не удалось получить данные.");
+            }
+
+            if (pagination == null || pagination.RowsPerPage == 0)
+            {
+                return data;
             }
 
             return data

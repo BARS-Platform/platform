@@ -7,6 +7,7 @@ using Platform.Fodels.Attributes;
 using Platform.Fodels.Enums;
 using Microsoft.OpenApi.Any;
 using Platform.Services.Dto;
+using Platform.Services.Dto.Attributes;
 using Platform.Services.Helpers;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -47,6 +48,8 @@ namespace Platform.Web.Services.SwaggerServices
 
                 var labelAttributeDict = GetModelLabelsDict(model.Key);
 
+                var refAttributeDict = GetModelRefAttributeDict(model.Key);
+
                 if (labelAttributeDict.ContainsKey(model.Key.ToLower()))
                 {
                     model.Value.Extensions.Add("modelName", labelAttributeDict[model.Key.ToLower()]);
@@ -62,6 +65,11 @@ namespace Platform.Web.Services.SwaggerServices
                     if (labelAttributeDict.ContainsKey(property.Key.ToLower()))
                     {
                         property.Value.Extensions.Add("label", labelAttributeDict[property.Key.ToLower()]);
+                    }
+
+                    if (refAttributeDict.ContainsKey(property.Key.ToLower()))
+                    {
+                        property.Value.Extensions.Add("refModel", refAttributeDict[property.Key.ToLower()]);
                     }
                 }
             }
@@ -170,6 +178,30 @@ namespace Platform.Web.Services.SwaggerServices
             }
 
             return labelsDictionary;
+        }
+
+        private Dictionary<string, OpenApiObject> GetModelRefAttributeDict(string modelName)
+        {
+            var modelType = _listModels
+                .Single(x => x.Name == modelName);
+
+            var modelProperties = modelType.GetProperties();
+
+            var refAttributeDict = new Dictionary<string, OpenApiObject>();
+
+            foreach (var property in modelProperties)
+            {
+                if (property.GetCustomAttribute(typeof(RefAttribute)) is RefAttribute refAttribute)
+                {
+                    refAttributeDict[property.Name.ToLower()] = new OpenApiObject()
+                    {
+                        ["modelName"] = new OpenApiString(refAttribute.ModelName),
+                        ["propertyName"] = new OpenApiString(refAttribute.PropertyName)
+                    };
+                }
+            }
+
+            return refAttributeDict;
         }
     }
 }

@@ -1,7 +1,7 @@
 <template>
   <q-tr :props="props">
     <q-td style="width: 20px; height: 44px">
-      <q-btn size="xs" flat round icon="fas fa-pen" @click="inDevelopment" />
+      <q-btn size="xs" flat round icon="fas fa-pen" @click="onEdit(props.row)" />
     </q-td>
     <q-td :key="column.name" v-for="column in getRegularColumns(props.cols)" style="height:44px">
       {{ props.row[column.name] }}
@@ -34,6 +34,7 @@ import { isActionColumn } from '../../utils/grid'
 @Component
 export default class DataGridBody extends Vue {
   @Prop() props!: any
+  @Prop() onEdit!: Function
   @Prop() onDelete!: Function
 
   getRegularColumns(colums: { name: string }[]) {

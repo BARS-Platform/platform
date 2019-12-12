@@ -17,14 +17,6 @@ namespace Platform.Services.Dto
                 Description = permission.Description
             };
         
-        public static  PermissionDto CreateDto(Permission permission) =>
-            new PermissionDto
-            {
-                Id = permission.Id,
-                PermissionId = permission.PermissionId,
-                Description = permission.Description
-            };
-        
         public int Id { get; set; }
         
         [Platform(AttributesEnum.Grid)]

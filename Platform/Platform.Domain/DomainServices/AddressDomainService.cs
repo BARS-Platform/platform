@@ -86,6 +86,19 @@ namespace Platform.Domain.DomainServices
 
 			return GenerateAddressResult(list);
 		}
+
+		public OperationResult CreateCountry(CountryDto dto)
+		{
+			var country = new Country
+			{
+				Name = dto.CountryName
+			};
+			var result = _repository.Create(country);
+
+			return result == null
+				? new OperationResult(false, "Country create error")
+				: new OperationResult(true, result);
+		}
 		
 		/// <summary>
 		/// Получить все Регионы.
