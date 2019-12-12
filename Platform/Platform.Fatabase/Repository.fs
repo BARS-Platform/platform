@@ -1,8 +1,11 @@
 ﻿namespace Platform.Fatabase
 
+open System
 open Platform.Fodels.Interfaces
 open Platform.Fatabase
 open System.Linq
+open System.Runtime.InteropServices
+open Microsoft.Win32.SafeHandles
 
 type BaseRepository(context: ApplicationDbContext) =
     interface IRepository with
@@ -41,3 +44,18 @@ type BaseRepository(context: ApplicationDbContext) =
             context.Update entity
             context.SaveChanges()
             entity
+            
+    [<DefaultValue>]
+    val mutable private _disposed: bool
+    member private __._handle : SafeHandle = new SafeFileHandle(IntPtr.Zero, true) :> SafeHandle
+    
+    interface IDisposable with
+        member __.Dispose() =
+            __.Dispose(true);
+            GC.SuppressFinalize __
+            
+    member __.Dispose(disposing: bool) =
+            if __._disposed then ()
+            else
+                if disposing then __._handle.Dispose()
+                else __._disposed <- true

@@ -1,4 +1,7 @@
+using System;
 using System.Linq;
+using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
 using Platform.Fatabase;
 using Platform.Fodels.Models;
 using Platform.Services.Common;
@@ -58,5 +61,30 @@ namespace Platform.Services.Services
                 ? new OperationResult(false, "Create error")
                 : new OperationResult(true, result);
         }
+        
+        #region IDisposable 
+
+        private bool _disposed;
+        private readonly SafeHandle _handle = new SafeFileHandle(IntPtr.Zero, true);
+
+        public void Dispose()
+        {
+            _repository.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+                _handle.Dispose();
+
+            _disposed = true;
+        }
+
+        #endregion
     }
 }

@@ -7,7 +7,7 @@ open Platform.Fodels.Interfaces
 open System.Linq
 
 type IRepository =
-    interface
+    inherit IDisposable
         abstract Create<'T when 'T :> IEntityBase and 'T: not struct> : 'T -> 'T
         abstract Delete<'T when 'T :> IEntityBase and 'T: not struct>  : 'T -> bool
         abstract Get<'T when 'T :> IEntityBase and 'T: not struct> : int -> 'T        
@@ -18,4 +18,3 @@ type IRepository =
         abstract FindByPredicate<'T when 'T :> IEntityBase and 'T: not struct> : Expression<Func<'T, bool>> * Func<IQueryable<'T>, IIncludableQueryable<'T, Object>> -> 'T
         abstract FindAllByPredicate<'T when 'T :> IEntityBase and 'T: not struct> : Expression<Func<'T, bool>> -> IQueryable<'T>
         abstract FindAllByPredicate<'T when 'T :> IEntityBase and 'T: not struct> : Expression<Func<'T, bool>> * Func<IQueryable<'T>, IIncludableQueryable<'T, Object>> -> IQueryable<'T>
-    end

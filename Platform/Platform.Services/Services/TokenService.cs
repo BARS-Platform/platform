@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Win32.SafeHandles;
 using Platform.Fatabase;
 using Platform.Fodels.Models;
 using Platform.Services.Common;
@@ -13,7 +15,7 @@ namespace Platform.Services.Services
 	/// <summary>
 	/// Service that generate JWT tokens.
 	/// </summary>
-	public class TokenService
+	public class TokenService : IDisposable
 	{
 		private readonly IRepository _repository;
 
@@ -58,5 +60,30 @@ namespace Platform.Services.Services
 					ClaimsIdentity.DefaultRoleClaimType);
 			return claimsIdentity;
 		}
+
+		#region IDisposable 
+
+		private bool _disposed;
+		private readonly SafeHandle _handle = new SafeFileHandle(IntPtr.Zero, true);
+
+		public void Dispose()
+		{
+			_repository.Dispose();
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (_disposed)
+				return;
+
+			if (disposing)
+				_handle.Dispose();
+
+			_disposed = true;
+		}
+
+		#endregion
 	}
 }

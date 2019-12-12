@@ -1,4 +1,7 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
 using Platform.Domain.Common;
 using Platform.Fatabase;
 using Platform.Fodels.Models;
@@ -68,5 +71,30 @@ namespace Platform.Domain.DomainServices
 				Data = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateToken(user))
 			};
 		}
+		
+		#region IDisposable 
+
+		private bool _disposed;
+		private readonly SafeHandle _handle = new SafeFileHandle(IntPtr.Zero, true);
+
+		public void Dispose()
+		{
+			_repository.Dispose();
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (_disposed)
+				return;
+
+			if (disposing)
+				_handle.Dispose();
+
+			_disposed = true;
+		}
+
+		#endregion
 	}
 }
