@@ -1,13 +1,6 @@
 <template>
   <q-page class="flex" ref="page">
-    <form-dialog
-      v-model="dialog"
-      :dialog.sync="dialog"
-      :model="Model"
-      :modelName="currentParam"
-      :modelValues.sync="modelValues"
-      :isForCreate="editWindowIsForCreate"
-    >
+    <form-dialog :dialog.sync="dialog" :model="Model" :modelName="currentParam" :modelValues.sync="modelValues" :isForCreate="editWindowIsForCreate">
     </form-dialog>
     <data-grid-params />
     <data-grid
@@ -114,30 +107,30 @@ export default class ModelIndex extends Vue {
     this.dialog = true
     this.editWindowIsForCreate = false
     let entries = Object.entries(props) as [string, string][]
+
     for (let [key, value] of entries) {
       let property = this.Model.properties.find(x => x.propertyName === key)
+      let isRefField = false
+      let fieldValue = value
       if (property) {
         if (property.refModel) {
           let refValue = entries.find(x => x.find(y => y === property!.refModel!.propertyName))
           if (refValue) {
             let obj: any = {
-              id: value
+              id: value,
+              [property.refModel.propertyName]: refValue[1]
             }
-            obj[property.refModel.propertyName] = refValue[1]
-            this.modelValues.push({
-              fieldName: key,
-              isRefField: true,
-              value: obj
-            })
+
+            fieldValue = obj
+            isRefField = true
           }
-        } else {
-          this.modelValues.push({
-            fieldName: key,
-            isRefField: false,
-            value: value
-          })
         }
       }
+      this.modelValues.push({
+        fieldName: key,
+        isRefField: isRefField,
+        value: fieldValue
+      })
     }
   }
 

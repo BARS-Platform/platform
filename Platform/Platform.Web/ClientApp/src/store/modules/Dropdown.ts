@@ -27,7 +27,7 @@ export default class DropdownModule extends VuexModule {
         data = response
       })
       .catch(() => {
-        notify.error('Произошла ошибка при загрузке данных')
+        notify.error(`Произошла ошибка при загрузке данных для ${listParam.modelName}`)
       })
 
     return data

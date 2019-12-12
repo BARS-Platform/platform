@@ -68,14 +68,14 @@ export default class ModelModule extends VuexModule {
   @Action({ rawError: true })
   async createModel(dto: ModelDto) {
     await api.createModel(dto).catch(() => {
-      notify.error('Произошла ошибка при загрузке данных')
+      notify.error('Произошла ошибка при создании')
     })
   }
 
   @Action({ rawError: true })
   async updateModel(dto: ModelDto) {
     await api.updateModel(dto).catch(() => {
-      notify.error('Произошла ошибка при загрузке данных')
+      notify.error('Произошла ошибка при редактировании')
     })
   }
 

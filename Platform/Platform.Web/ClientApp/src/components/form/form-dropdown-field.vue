@@ -49,7 +49,7 @@ export default class FormDropdownField extends Vue {
       {
         page: 1,
         rowsNumber: 0,
-        rowsPerPage: 100
+        rowsPerPage: 0
       },
       filters
     )
