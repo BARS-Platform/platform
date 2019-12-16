@@ -8,6 +8,7 @@ using Platform.Services.Dto.Attributes;
 namespace Platform.Services.Dto.AddressDtos
 {
     [Label("Квартира")]
+    [Ref(nameof(Apartment), "GetAll")]
     public class ApartmentDto : IEntityDto
     {
         public static readonly Expression<Func<Apartment, ApartmentDto>> ProjectionExpression = apartment =>
@@ -72,7 +73,7 @@ namespace Platform.Services.Dto.AddressDtos
 
         [Platform(AttributesEnum.Form)]
         [Label("Дом")]
-        [Ref(nameof(House), HouseDto.RefProperty)]
+        [Ref(nameof(House), "GetAll",HouseDto.RefProperty)]
         public int HouseId { get; set; }
 
         [Platform(AttributesEnum.Grid | AttributesEnum.Form)]
