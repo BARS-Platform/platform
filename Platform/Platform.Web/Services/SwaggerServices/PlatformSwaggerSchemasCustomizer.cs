@@ -55,7 +55,12 @@ namespace Platform.Web.Services.SwaggerServices
                     model.Value.Extensions.Add("modelName", labelAttributeDict[model.Key.ToLower()]);
                 }
 
-                foreach(var property in model.Value.Properties)
+                if (refAttributeDict.ContainsKey(model.Key.ToLower()))
+                {
+                    model.Value.Extensions.Add("refModel", refAttributeDict[model.Key.ToLower()]);
+                }
+
+                foreach (var property in model.Value.Properties)
                 {
                     if (modelPropertiesPlatformAttributeDict.ContainsKey(property.Key.ToLower()))
                     {
@@ -69,7 +74,7 @@ namespace Platform.Web.Services.SwaggerServices
 
                     if (refAttributeDict.ContainsKey(property.Key.ToLower()))
                     {
-                        property.Value.Extensions.Add("refModel", refAttributeDict[property.Key.ToLower()]);
+                        property.Value.Extensions.Add("refProperty", refAttributeDict[property.Key.ToLower()]);
                     }
                 }
             }
@@ -155,6 +160,11 @@ namespace Platform.Web.Services.SwaggerServices
                 });
         }
 
+        /// <summary>
+        /// Метод для формирования словаря, где
+        /// ключ - наименование свойства модели,
+        /// значение - значение label атрибута.
+        /// </summary>
         private Dictionary<string, OpenApiString> GetModelLabelsDict(string modelName)
         {
             var modelType = _listModels
@@ -180,6 +190,12 @@ namespace Platform.Web.Services.SwaggerServices
             return labelsDictionary;
         }
 
+        /// <summary>
+        /// Метод для формирования словаря, где
+        /// ключ - наименование модели или свойства ref модели,
+        /// значение - объект описывающий в себе:
+        /// контроллер, метод контроллера, и отображаемое свойство(только для форм).
+        /// </summary>
         private Dictionary<string, OpenApiObject> GetModelRefAttributeDict(string modelName)
         {
             var modelType = _listModels
@@ -189,14 +205,24 @@ namespace Platform.Web.Services.SwaggerServices
 
             var refAttributeDict = new Dictionary<string, OpenApiObject>();
 
+            if (modelType.GetCustomAttribute(typeof(RefAttribute)) is RefAttribute modelRefAttribute)
+            {
+                refAttributeDict[modelType.Name.ToLower()] = new OpenApiObject()
+                {
+                    ["controller"] = new OpenApiString(modelRefAttribute.Controller),
+                    ["controllerMethod"] = new OpenApiString(modelRefAttribute.ControllerMethod),
+                };
+            }
+
             foreach (var property in modelProperties)
             {
-                if (property.GetCustomAttribute(typeof(RefAttribute)) is RefAttribute refAttribute)
+                if (property.GetCustomAttribute(typeof(RefAttribute)) is RefAttribute propertyRefAttribute)
                 {
                     refAttributeDict[property.Name.ToLower()] = new OpenApiObject()
                     {
-                        ["modelName"] = new OpenApiString(refAttribute.ModelName),
-                        ["propertyName"] = new OpenApiString(refAttribute.PropertyName)
+                        ["controller"] = new OpenApiString(propertyRefAttribute.Controller),
+                        ["controllerMethod"] = new OpenApiString(propertyRefAttribute.ControllerMethod),
+                        ["propertyName"] = new OpenApiString(propertyRefAttribute.PropertyName)
                     };
                 }
             }

@@ -37,14 +37,13 @@ namespace Platform.Services.Helpers
                 throw new Exception("Не удалось получить данные.");
             }
 
-            var modelType = data.ElementType;
+            var modelProperties = data.ElementType.GetProperties();
 
             foreach (var filter in filters)
             {
                 if (!string.IsNullOrEmpty(filter.ColumnValue))
                 {
-                    var propertyType = modelType
-                        .GetProperties()
+                    var propertyType = modelProperties
                         .FirstOrDefault(x => x.Name.ToLower() == filter.ColumnName.ToLower())?.PropertyType 
                         ?? throw new Exception("Не удалось получить фильтруемое свойство.");
 
