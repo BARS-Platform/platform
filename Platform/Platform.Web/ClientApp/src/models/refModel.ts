@@ -1,4 +1,4 @@
 export interface RefModel {
-  modelName: string
-  propertyName: string
+  controller: string
+  controllerMethod: string
 }

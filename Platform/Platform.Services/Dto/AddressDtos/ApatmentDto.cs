@@ -25,7 +25,6 @@ namespace Platform.Services.Dto.AddressDtos
                 StreetId = apartment.House.Street.Id,
                 HouseNumber = apartment.House.Name,
                 HouseId = apartment.House.Id,
-                //TODO Исправить тип в модели
                 ApartmentNumber = Convert.ToInt32(apartment.Name)
             };
 
@@ -37,7 +36,7 @@ namespace Platform.Services.Dto.AddressDtos
 
         [Platform(AttributesEnum.Form)]
         [Label("Страна")]
-        [Ref(nameof(Country), CountryDto.RefProperty)]
+        [Ref(nameof(Country), "GetAll", CountryDto.RefProperty)]
         public int CountryId { get; set; }
 
         [Platform(AttributesEnum.Grid)]
@@ -46,7 +45,7 @@ namespace Platform.Services.Dto.AddressDtos
 
         [Platform(AttributesEnum.Form)]
         [Label("Регион")]
-        [Ref(nameof(State), StateDto.RefProperty)]
+        [Ref(nameof(State), "GetAll", StateDto.RefProperty)]
         public int StateId { get; set; }
 
         [Platform(AttributesEnum.Grid)]
@@ -55,7 +54,7 @@ namespace Platform.Services.Dto.AddressDtos
 
         [Platform(AttributesEnum.Form)]
         [Label("Город")]
-        [Ref(nameof(City), CityDto.RefProperty)]
+        [Ref(nameof(City), "GetAll", CityDto.RefProperty)]
         public int CityId { get; set; }
 
         [Platform(AttributesEnum.Grid)]
@@ -64,7 +63,7 @@ namespace Platform.Services.Dto.AddressDtos
 
         [Platform(AttributesEnum.Form)]
         [Label("Улица")]
-        [Ref(nameof(Street), StreetDto.RefProperty)]
+        [Ref(nameof(Street), "GetAll", StreetDto.RefProperty)]
         public int StreetId { get; set; }
 
         [Platform(AttributesEnum.Grid)]
@@ -73,7 +72,7 @@ namespace Platform.Services.Dto.AddressDtos
 
         [Platform(AttributesEnum.Form)]
         [Label("Дом")]
-        [Ref(nameof(House), "GetAll",HouseDto.RefProperty)]
+        [Ref(nameof(House), "GetAll", HouseDto.RefProperty)]
         public int HouseId { get; set; }
 
         [Platform(AttributesEnum.Grid | AttributesEnum.Form)]

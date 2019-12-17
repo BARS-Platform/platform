@@ -1,4 +1,4 @@
-import { RefModel } from './refModel'
+import { RefProperty } from './refProperty'
 
 export interface Property {
   propertyName: string
@@ -8,5 +8,5 @@ export interface Property {
     grid: Boolean
     form: Boolean
   }
-  refModel?: RefModel
+  refProperty?: RefProperty
 }
