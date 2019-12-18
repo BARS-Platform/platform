@@ -7,7 +7,7 @@ using Platform.Services.Dto.Attributes;
 
 namespace Platform.Services.Dto.AddressDtos
 {
-    [Label("Квартира")]
+    [Label("Квартиры")]
     [Ref(nameof(Apartment), "GetAll")]
     public class ApartmentDto : IEntityDto
     {

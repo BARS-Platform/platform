@@ -1,10 +1,12 @@
-﻿namespace Platform.Services.Common
+﻿using System.Collections.Generic;
+
+namespace Platform.Services.Common
 {
     public class ListParam
     {
         public Pagination Pagination{ get; set; }
 
-        public Filtration[] Filters { get; set; }
+        public List<Filtration> Filters { get; set; }
 
         public Sorting Sorting { get; set; }
     }

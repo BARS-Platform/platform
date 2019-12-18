@@ -1,8 +1,13 @@
 <template>
   <q-page class="flex" ref="page">
-    <form-dialog :dialog.sync="dialog" :model="Model" :modelName="currentParam" :modelValues.sync="modelValues" :isForCreate="editWindowIsForCreate">
-    </form-dialog>
-    <data-grid-params />
+    <form-dialog
+      :dialog.sync="dialog"
+      :model="Model"
+      :modelName="currentParam"
+      :modelValues.sync="modelValues"
+      :isForCreate="editWindowIsForCreate"
+    />
+    <!-- <data-grid-params /> -->
     <data-grid
       :model="Model"
       :height="tableHeight"
@@ -135,8 +140,13 @@ export default class ModelIndex extends Vue {
   }
 
   async getcurrentData(pagination?: Pagination) {
-    if (this.Model.modelName) {
-      let listParam = new ListParam(this.currentParam, pagination || this.ListResult.listParam.pagination, this.ListResult.listParam.filters)
+    if (this.Model) {
+      let listParam = new ListParam(
+        this.Model.modelApi.controller || this.currentParam,
+        pagination || this.ListResult.listParam.pagination,
+        this.ListResult.listParam.filters,
+        this.Model.modelApi.controllerMethod
+      )
       this.loading = true
       this.modelStore.getData(listParam).finally(() => (this.loading = false))
     }

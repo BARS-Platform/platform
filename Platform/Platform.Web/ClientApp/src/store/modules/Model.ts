@@ -38,7 +38,7 @@ export default class ModelModule extends VuexModule {
 
     model = new Model(schemaModel)
 
-    if (model.modelName === '' || model.properties.length === 0) {
+    if (model.properties.length === 0) {
       notify.error('Данная модель не найдена в схеме swagger')
       model = new Model()
     }

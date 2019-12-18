@@ -52,12 +52,12 @@ namespace Platform.Web.Services.SwaggerServices
 
                 if (labelAttributeDict.ContainsKey(model.Key.ToLower()))
                 {
-                    model.Value.Extensions.Add("modelName", labelAttributeDict[model.Key.ToLower()]);
+                    model.Value.Extensions.Add("modelLabel", labelAttributeDict[model.Key.ToLower()]);
                 }
 
                 if (refAttributeDict.ContainsKey(model.Key.ToLower()))
                 {
-                    model.Value.Extensions.Add("refModel", refAttributeDict[model.Key.ToLower()]);
+                    model.Value.Extensions.Add("modelApi", refAttributeDict[model.Key.ToLower()]);
                 }
 
                 foreach (var property in model.Value.Properties)

@@ -7,7 +7,7 @@ using Platform.Services.Dto.Attributes;
 
 namespace Platform.Services.Dto.AddressDtos
 {
-    [Label("Город")]
+    [Label("Города")]
     public class CityDto : IEntityDto
     {
         public const string RefProperty = "cityName";
