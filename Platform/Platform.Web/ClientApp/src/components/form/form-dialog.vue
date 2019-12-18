@@ -13,7 +13,7 @@
           :key="field.propertyName"
           :is="getFieldType(field)"
           :label="field.label"
-          :refModel="field.refModel"
+          :refProperty="field.refProperty"
           :mask="field.type === 'integer' ? '###########################' : ''"
           @input="setValues(field, $event)"
           :value="getValue(field.propertyName)"
@@ -88,7 +88,7 @@ export default class FormDialog extends Vue {
     let field = this.ModelValues.find(x => x.fieldName == property.propertyName)
     if (field) {
       field.value = fieldValue
-      if (property.refModel) {
+      if (property.refProperty) {
         let name = field.fieldName
         let property = this.Fields.find(x => x.propertyName === name)
         if (property) {
@@ -107,7 +107,7 @@ export default class FormDialog extends Vue {
     } else {
       this.ModelValues.push({
         fieldName: property.propertyName,
-        isRefField: property.refModel ? true : false,
+        isRefField: property.refProperty ? true : false,
         value: fieldValue
       })
     }
@@ -119,7 +119,7 @@ export default class FormDialog extends Vue {
   }
 
   getFieldType(field: Property) {
-    return field.refModel ? 'form-dropdown-field' : 'q-input'
+    return field.refProperty ? 'form-dropdown-field' : 'q-input'
   }
 
   onSaveClick() {
@@ -171,7 +171,7 @@ export default class FormDialog extends Vue {
       props.forEach(x => {
         let value = this.ModelValues.find(y => y.fieldName === x.propertyName)
         if (value) {
-          let columnValue = x.refModel ? value.value.id : value.value
+          let columnValue = x.refProperty ? value.value.id : value.value
           filters.push({
             columnName: value.fieldName,
             columnValue: columnValue

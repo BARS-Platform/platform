@@ -113,12 +113,12 @@ export default class ModelIndex extends Vue {
       let isRefField = false
       let fieldValue = value
       if (property) {
-        if (property.refModel) {
-          let refValue = entries.find(x => x.find(y => y === property!.refModel!.propertyName))
+        if (property.refProperty) {
+          let refValue = entries.find(x => x.find(y => y === property!.refProperty!.propertyName))
           if (refValue) {
             let obj: any = {
               id: value,
-              [property.refModel.propertyName]: refValue[1]
+              [property.refProperty.propertyName]: refValue[1]
             }
 
             fieldValue = obj
