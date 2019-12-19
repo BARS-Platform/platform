@@ -6,7 +6,7 @@ using Platform.Fodels.Models.Address;
 
 namespace Platform.Services.Dto.AddressDtos
 {
-    [Label("Страна")]
+    [Label("Страны")]
     public class CountryDto : IEntityDto
     {
         public const string RefProperty = "countryName";

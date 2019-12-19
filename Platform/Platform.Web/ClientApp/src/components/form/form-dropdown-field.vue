@@ -7,7 +7,7 @@
     @filter="filterFn"
     @input="$emit('input', $event)"
     :disable="disable"
-    :option-label="refModel.propertyName"
+    :option-label="refProperty.propertyName"
     option-value="id"
   >
     <template v-slot:no-option>
@@ -27,14 +27,14 @@ import { getModule } from 'vuex-module-decorators'
 import DropdownModule from '@/store/modules/Dropdown'
 
 import { ListParam } from '@/models/data/listParam'
-import { RefModel } from '@/models/refModel'
 import { Property } from '@/models/property'
+import { RefProperty } from '@/models/refProperty'
 
 @Component({})
 export default class FormDropdownField extends Vue {
   private dropdownStore = getModule(DropdownModule)
   @Prop() label!: string
-  @Prop() refModel!: RefModel
+  @Prop() refProperty!: RefProperty
   @Prop() value!: string
   @Prop() disable!: Boolean
   @Prop() field!: Property
@@ -45,13 +45,14 @@ export default class FormDropdownField extends Vue {
     let filters = this.createFilters(this.field)
 
     let listParam = new ListParam(
-      this.refModel.modelName,
+      this.refProperty.controller,
       {
         page: 1,
         rowsNumber: 0,
         rowsPerPage: 0
       },
-      filters
+      filters,
+      this.refProperty.controllerMethod
     )
 
     let res = await this.dropdownStore.getData(listParam)

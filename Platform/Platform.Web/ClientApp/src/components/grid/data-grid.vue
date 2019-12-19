@@ -1,6 +1,6 @@
 <template>
   <q-table
-    v-if="model.modelName && Columns && listResult"
+    v-if="model && Columns && listResult"
     :data="listResult.data"
     :columns="Columns"
     @request="onRequest"
@@ -15,7 +15,7 @@
     separator="cell"
   >
     <template v-slot:top>
-      <data-grid-top :actions="Actions" />
+      <data-grid-top :actions="Actions" :model="model" />
     </template>
     <template v-slot:header="props">
       <data-grid-header-row :props="props" />

@@ -23,7 +23,7 @@ namespace Platform.Web.Controllers.AddressControllers
         /// </summary>
         [HttpPost]
         public IActionResult GetAll([FromBody] ListParam listParam) =>
-            HandleRequest(() => _domainService.GetAllApartments(listParam));
+            HandleRequest(() => _domainService.GetAllApartments(listParam));        
 
         [HttpPost]
         public IActionResult Create([FromBody] ApartmentDto dto) =>

@@ -11,7 +11,7 @@ export function convertProperties(props: any): Property[] {
       displayIn: value.displayIn,
       label: value.label,
       type: value.type,
-      refModel: value.refModel
+      refProperty: value.refProperty
     }
 
     properties.push(property)

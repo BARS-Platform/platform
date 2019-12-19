@@ -3,6 +3,7 @@ import { ListParam } from '~/src/models/data/listParam'
 import { RowData } from '~/src/models/rowData'
 
 export async function getData(listParam: ListParam): Promise<RowData[]> {
-  const response = await api.post(`/${listParam.modelName}/GetAll`, listParam)
+  let method = listParam.methodName ? listParam.methodName : 'GetAll'
+  const response = await api.post(`/${listParam.modelName}/${method}`, listParam)
   return response.data.data.data
 }
