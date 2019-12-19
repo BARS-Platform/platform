@@ -9,7 +9,7 @@ using Platform.Services.Dto.Attributes;
 
 namespace Platform.Services.Dto.AddressDtos
 {
-    [Label("Регион")]
+    [Label("Регионы")]
     public class StateDto : IEntityDto
     {
         public const string RefProperty = "stateName";
