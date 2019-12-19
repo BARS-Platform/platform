@@ -3,6 +3,7 @@ using Platform.Services.Common;
 using System.Linq;
 using System.Linq.Dynamic;
 using Platform.Services.Dto;
+using System.Collections.Generic;
 
 namespace Platform.Services.Helpers
 {
@@ -25,7 +26,7 @@ namespace Platform.Services.Helpers
                 .Take(pagination.RowsPerPage);
         }
 
-        public static IQueryable<T> Filter<T>(this IQueryable<T> data, Filtration[] filters)
+        public static IQueryable<T> Filter<T>(this IQueryable<T> data, List<Filtration> filters)
         {
             if (filters == null || !filters.Any())
             {
@@ -37,14 +38,13 @@ namespace Platform.Services.Helpers
                 throw new Exception("Не удалось получить данные.");
             }
 
-            var modelType = data.ElementType;
+            var modelProperties = data.ElementType.GetProperties();
 
             foreach (var filter in filters)
             {
                 if (!string.IsNullOrEmpty(filter.ColumnValue))
                 {
-                    var propertyType = modelType
-                        .GetProperties()
+                    var propertyType = modelProperties
                         .FirstOrDefault(x => x.Name.ToLower() == filter.ColumnName.ToLower())?.PropertyType 
                         ?? throw new Exception("Не удалось получить фильтруемое свойство.");
 

@@ -4,6 +4,7 @@ import { Sorting } from '@/models/data/sorting'
 
 export interface IListParam {
   modelName: string
+  methodName: string
   pagination: Pagination
   filters: Filtration[]
   sorting: Sorting | null
@@ -11,6 +12,7 @@ export interface IListParam {
 
 export class ListParam implements IListParam {
   public modelName: string = ''
+  public methodName: string = ''
 
   public pagination: Pagination = {
     page: 1,
@@ -22,8 +24,9 @@ export class ListParam implements IListParam {
 
   public sorting: Sorting | null = null
 
-  constructor(modelName?: string, pagination?: Pagination, filters?: Filtration[]) {
+  constructor(modelName?: string, pagination?: Pagination, filters?: Filtration[], methodName?: string) {
     this.modelName = modelName || this.modelName
+    this.methodName = methodName || this.methodName
     this.pagination = pagination || this.pagination
     this.filters = filters || this.filters
     if (this.pagination.sortBy) {

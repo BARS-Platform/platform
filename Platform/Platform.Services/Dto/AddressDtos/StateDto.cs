@@ -9,7 +9,7 @@ using Platform.Services.Dto.Attributes;
 
 namespace Platform.Services.Dto.AddressDtos
 {
-    [Label("Регион")]
+    [Label("Регионы")]
     public class StateDto : IEntityDto
     {
         public const string RefProperty = "stateName";
@@ -31,7 +31,7 @@ namespace Platform.Services.Dto.AddressDtos
 
         [Platform(AttributesEnum.Form)]
         [Label("Страна")]
-        [Ref(nameof(Country), CountryDto.RefProperty)]
+        [Ref(nameof(Country), "GetAll", CountryDto.RefProperty)]
         public int CountryId { get; set; }
 
         [Platform(AttributesEnum.Grid | AttributesEnum.Form)]
